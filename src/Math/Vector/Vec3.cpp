@@ -31,11 +31,14 @@ Vec3::~Vec3()
 
 float Vec3::GetMagnitude() const
 {
-	return 0.0f;
+	return sqrt(pow(mf_x, 2) + pow(mf_y, 2) + pow(mf_z, 2));
 }
 
 void Vec3::Normalize()
 {
+	mf_x = mf_x / sqrt(pow(mf_x, 2));
+	mf_y = mf_y / sqrt(pow(mf_y, 2));
+	mf_z = mf_z / sqrt(pow(mf_z, 2));
 }
 
 Vec3& Vec3::operator*(float pf_scalar)

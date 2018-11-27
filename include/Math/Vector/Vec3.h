@@ -7,6 +7,8 @@ namespace Math::Vector
 
 	public:
 		Vec3();
+		Vec3(const float pf_x, const float pf_y, const float pf_z);
+
 		~Vec3();
 
 		float mf_x;

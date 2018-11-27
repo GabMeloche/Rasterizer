@@ -9,6 +9,12 @@ Vec3::Vec3()
 	mf_y = 0;
 	mf_z = 0;
 }
+Vec3::Vec3(const float pf_x, const float pf_y, const float pf_z)
+{
+	mf_x = pf_x;
+	mf_y = pf_y;
+	mf_z = pf_z;
+}
 
 Vec3::~Vec3()
 {

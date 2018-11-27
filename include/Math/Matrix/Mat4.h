@@ -14,6 +14,6 @@ namespace Math::Matrix
 		Mat4(Mat4& p_Matrix);
 
 		Mat4& operator*(const Mat4& p_mat);
-		Mat4& operator*(const Vector::Vec4& p_vec);
+		Vector::Vec4& operator*(const Math::Vector::Vec4& p_vec);
 	};
 }

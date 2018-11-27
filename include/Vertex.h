@@ -1,8 +1,9 @@
 #pragma once
+#include <Math/Vector/Vec3.h>
+
+using namespace Math::Vector;
 
 struct Vertex
 {
-	float x;
-	float y;
-	float z;
+	Vec3 m_position;
 };

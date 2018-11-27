@@ -11,7 +11,7 @@ namespace Math::Vector
 		float mf_z;
 		float mf_w;
 
-		Vec4(const Vec3& p_vec3, float pf_w = 1.0f);
+		Vec4(const Vec3& p_vec3 = Vec3(), float pf_w = 1.0f);
 		~Vec4() = default;
 		Vec4(const Vec4& p_other);
 

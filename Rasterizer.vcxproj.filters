@@ -14,4 +14,17 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Dependencies\x64\README-SDL.txt" />
+    <Text Include="Dependencies\x86\README-SDL.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Dependencies\x64\SDL2.dll" />
+    <None Include="Dependencies\x86\SDL2.dll" />
+  </ItemGroup>
 </Project>

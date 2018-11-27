@@ -1,4 +1,5 @@
 #include <Math/Vector/Vec3.h>
+#include <math.h>
 
 
 using namespace Math::Vector;
@@ -39,23 +40,23 @@ void Vec3::Normalize()
 
 Vec3& Vec3::operator*(float pf_scalar)
 {
-	Vec3 p_tmp;
+	Vec3* p_tmp = new Vec3;
 
-	p_tmp.mf_x = mf_x * pf_scalar;
-	p_tmp.mf_x = mf_y * pf_scalar;
-	p_tmp.mf_x = mf_z * pf_scalar;
+	p_tmp->mf_x = mf_x * pf_scalar;
+	p_tmp->mf_x = mf_y * pf_scalar;
+	p_tmp->mf_x = mf_z * pf_scalar;
 
-	return p_tmp;
+	return *p_tmp;
 
 }
 
 Vec3& Vec3::operator+(Vec3& p_other)
 {
-	Vec3 p_tmp;
+	Vec3* p_tmp = new Vec3;
 
-	p_tmp.mf_x = mf_x + p_other.mf_x;
-	p_tmp.mf_x = mf_y + p_other.mf_y;
-	p_tmp.mf_x = mf_z + p_other.mf_z;
+	p_tmp->mf_x = mf_x + p_other.mf_x;
+	p_tmp->mf_x = mf_y + p_other.mf_y;
+	p_tmp->mf_x = mf_z + p_other.mf_z;
 
-	return p_tmp;
+	return *p_tmp;
 }

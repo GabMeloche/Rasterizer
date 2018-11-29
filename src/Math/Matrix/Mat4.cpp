@@ -49,22 +49,25 @@ Math::Vector::Vec4& Mat4::operator*(const Math::Vector::Vec4& p_Vector)
 {
 	auto* TmpVec = new Vector::Vec4;
 
-	for (int i = 0; i < 4; i++)
-	{
-		TmpVec->mf_x += this->mf_Matrice4[0][i] * p_Vector.mf_x;
-	}
-	for (int i = 0; i < 4; i++)
-	{
-		TmpVec->mf_y += this->mf_Matrice4[1][i] * p_Vector.mf_y;
-	}
-    for (int i = 0; i < 4; i++)
-	{
-		TmpVec->mf_z += this->mf_Matrice4[2][i] * p_Vector.mf_z;
-	}
-    for (int i = 0; i < 4; i++)
-	{
-		TmpVec->mf_w += this->mf_Matrice4[3][i] * p_Vector.mf_w;
-	}
+	TmpVec->mf_x += this->mf_Matrice4[0][0] * p_Vector.mf_x;
+	TmpVec->mf_x += this->mf_Matrice4[0][1] * p_Vector.mf_y;
+	TmpVec->mf_x += this->mf_Matrice4[0][2] * p_Vector.mf_z;
+	TmpVec->mf_x += this->mf_Matrice4[0][3] * p_Vector.mf_w;
+    
+	TmpVec->mf_y += this->mf_Matrice4[1][0] * p_Vector.mf_x;
+	TmpVec->mf_y += this->mf_Matrice4[1][1] * p_Vector.mf_y;
+	TmpVec->mf_y += this->mf_Matrice4[1][2] * p_Vector.mf_z;
+	TmpVec->mf_y += this->mf_Matrice4[1][3] * p_Vector.mf_w;
+    
+	TmpVec->mf_z += this->mf_Matrice4[2][0] * p_Vector.mf_x;
+	TmpVec->mf_z += this->mf_Matrice4[2][1] * p_Vector.mf_y;
+	TmpVec->mf_z += this->mf_Matrice4[2][2] * p_Vector.mf_z;
+	TmpVec->mf_z += this->mf_Matrice4[2][3] * p_Vector.mf_w;
+    
+	TmpVec->mf_w += this->mf_Matrice4[3][0] * p_Vector.mf_x;
+	TmpVec->mf_w += this->mf_Matrice4[3][1] * p_Vector.mf_y;
+	TmpVec->mf_w += this->mf_Matrice4[3][2] * p_Vector.mf_z;
+	TmpVec->mf_w += this->mf_Matrice4[3][3] * p_Vector.mf_w;
     
     return *TmpVec;
 }

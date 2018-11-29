@@ -1,19 +1,32 @@
 #include <Math/Matrix/Mat4.h>
 #include <string.h>
+#include <iostream>
 
 using namespace Math::Matrix;
 
+Mat4::Mat4()
+{
+   	float f_TmpMat[4][4] = {
+		{1, 0, 0, 0},
+		{0, 1, 0, 0},
+		{0, 0, 1, 0},
+		{0, 0, 0, 1}
+	};
+
+	SetMatrix(f_TmpMat);
+}
+
+
 Mat4::Mat4(Mat4& p_Matrix)
 {
-	//float f_TmpMat[4][4] = {
-	//	{1, 0, 0, 0},
-	//	{0, 1, 0, 0},
-	//	{0, 0, 1, 0},
-	//	{0, 0, 0, 1}
-	//};
-
-	memcpy(mf_Matrice4, , sizeof(mf_Matrice4));
+	memcpy(mf_Matrice4, &p_Matrix, sizeof(mf_Matrice4));
 }
+
+void Mat4::SetMatrix(float p_Matrix[][4])
+{
+	memcpy(mf_Matrice4, p_Matrix, sizeof(mf_Matrice4));
+}
+
 
 
 Mat4& Mat4::operator*(const Mat4 & p_mat)
@@ -54,5 +67,16 @@ Math::Vector::Vec4& Mat4::operator*(const Math::Vector::Vec4& p_vec)
 	}
     
     return *TmpVec;
+}
+
+Mat4 Math::Matrix::Mat4::CreateTranslationMatrix(const Vector::Vec3 & translation)
+{
+	Mat4 TmpMat;
+
+	TmpMat.mf_Matrice4[0][3] = translation.mf_x;
+	TmpMat.mf_Matrice4[1][3] = translation.mf_y;
+	TmpMat.mf_Matrice4[2][3] = translation.mf_z;
+
+	return TmpMat;
 }
 

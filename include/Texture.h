@@ -9,7 +9,6 @@ public:
 	unsigned int mui_h;
 	
 	Color* m_pixels;
-	SDL_Texture* m_texture;
 
 public:
 	Texture(unsigned int pui_w, unsigned int pui_h);

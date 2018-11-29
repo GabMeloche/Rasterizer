@@ -6,7 +6,6 @@
 Texture::Texture(unsigned int pui_w, unsigned int pui_h) : mui_w {pui_w}, mui_h {pui_w}
 {
 	m_pixels = new Color[pui_w * pui_h];
-	m_texture = nullptr;
 
 	for (unsigned int i = 0; i < pui_w * pui_h; ++i)
 	{
@@ -16,7 +15,6 @@ Texture::Texture(unsigned int pui_w, unsigned int pui_h) : mui_w {pui_w}, mui_h 
 
 Texture::~Texture()
 {
-	delete m_texture;
 	delete m_pixels;
 }
 

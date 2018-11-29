@@ -6,7 +6,7 @@ Texture::Texture(unsigned int pui_w, unsigned int pui_h) : mui_w {pui_w}, mui_h 
 {
 	m_pixels = new Color[pui_w * pui_h];
 
-	for (int i = 0; i < pui_w * pui_h; ++i)
+	for (unsigned int i = 0; i < pui_w * pui_h; ++i)
 	{
 		m_pixels[i] = {0, 0, 0, 1};
 	}
@@ -24,7 +24,7 @@ Texture::Texture(const Texture& p_other)
 
 	m_pixels = new Color[mui_w * mui_h];
 
-	for (int i = 0; i < mui_w * mui_h; ++i)
+	for (unsigned int i = 0; i < mui_w * mui_h; ++i)
 	{
 		m_pixels[i] = p_other.m_pixels[i];
 	}

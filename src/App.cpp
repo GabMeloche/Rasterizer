@@ -44,7 +44,7 @@ void App::MainLoop()
 
 void App::Render()
 {
-	SDL_SetRenderDrawColor(m_renderer, 255, 0, 0, 255);
+	SDL_SetRenderDrawColor(m_renderer, 25, 25, 25, 255);
 	SDL_RenderClear(m_renderer);
 	SDL_RenderPresent(m_renderer);
 

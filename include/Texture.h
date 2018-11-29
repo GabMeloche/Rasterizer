@@ -1,12 +1,16 @@
 #pragma once
 #include <Color.h>
+#include <SDL.h>
 
 class Texture
 {
 public:
 	unsigned int mui_w;
 	unsigned int mui_h;
+	
 	Color* m_pixels;
+	SDL_Texture* m_texture;
+
 public:
 	Texture(unsigned int pui_w, unsigned int pui_h);
 	~Texture();

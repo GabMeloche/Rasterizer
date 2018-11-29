@@ -31,7 +31,7 @@ void App::MainLoop()
 	{
 		SDL_PollEvent(&m_event);
 
-		if (m_event.type == SDL_KEYDOWN && m_event.key.keysym.sym == SDLK_ESCAPE)
+		if (m_event.type == SDL_KEYDOWN && m_event.key.keysym.sym == SDLK_ESCAPE || m_event.type == SDL_QUIT)
 		{
 			SDL_DestroyRenderer(m_renderer);
 			SDL_DestroyWindow(m_window);

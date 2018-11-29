@@ -1,54 +1,58 @@
 #include <Math/Matrix/Mat4.h>
+#include <string.h>
 
 using namespace Math::Matrix;
 
 Mat4::Mat4(Mat4& p_Matrix)
 {
-    for (int i = 0; i < 4; i++)
-    {
-		for (int j = 0; j < 4; j++)
-			mf_Matrice4[i][j] = p_Matrix.mf_Matrice4[i][j];
-    }
+	//float f_TmpMat[4][4] = {
+	//	{1, 0, 0, 0},
+	//	{0, 1, 0, 0},
+	//	{0, 0, 1, 0},
+	//	{0, 0, 0, 1}
+	//};
+
+	memcpy(mf_Matrice4, , sizeof(mf_Matrice4));
 }
 
 
 Mat4& Mat4::operator*(const Mat4 & p_mat)
 {
-	Mat4 m_mat3;
+	auto* TmpMat = new Mat4;
 
     for (int i = 0; i < 4; i++)
     {
         for (int j = 0; j < 4; j++)
         {
 			for (int k = 0; k < 4; k++)
-				m_mat3.mf_Matrice4[i][j] += this->mf_Matrice4[i][k] * p_mat.mf_Matrice4[k][j];
+				TmpMat->mf_Matrice4[i][j] += this->mf_Matrice4[i][k] * p_mat.mf_Matrice4[k][j];
         }
     }
 
-	return m_mat3;
+	return *TmpMat;
 }
 
 Math::Vector::Vec4& Mat4::operator*(const Math::Vector::Vec4& p_vec)
 {
-	Vector::Vec4 tmp_Vec;
+	auto* TmpVec = new Vector::Vec4;
 
 	for (int i = 0; i < 4; i++)
 	{
-		tmp_Vec.mf_x += this->mf_Matrice4[0][i] * p_vec.mf_x;
+		TmpVec->mf_x += this->mf_Matrice4[0][i] * p_vec.mf_x;
 	}
 	for (int i = 0; i < 4; i++)
 	{
-		tmp_Vec.mf_y += this->mf_Matrice4[1][i] * p_vec.mf_y;
+		TmpVec->mf_y += this->mf_Matrice4[1][i] * p_vec.mf_y;
 	}
     for (int i = 0; i < 4; i++)
 	{
-		tmp_Vec.mf_z += this->mf_Matrice4[2][i] * p_vec.mf_z;
+		TmpVec->mf_z += this->mf_Matrice4[2][i] * p_vec.mf_z;
 	}
     for (int i = 0; i < 4; i++)
 	{
-		tmp_Vec.mf_w += this->mf_Matrice4[3][i] * p_vec.mf_w;
+		TmpVec->mf_w += this->mf_Matrice4[3][i] * p_vec.mf_w;
 	}
-
-    return tmp_Vec;
+    
+    return *TmpVec;
 }
 

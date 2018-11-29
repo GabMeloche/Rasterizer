@@ -24,10 +24,10 @@
     <ClCompile Include="src\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Math\Matrix\Mat4.cpp">
+    <ClCompile Include="src\Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Texture.cpp">
+    <ClCompile Include="src\App.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -47,6 +47,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Math\Vector\Vec3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\App.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Math\Matrix\Mat4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

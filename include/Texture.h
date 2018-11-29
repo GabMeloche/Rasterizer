@@ -3,7 +3,7 @@
 
 class Texture
 {
-private:
+public:
 	unsigned int mui_w;
 	unsigned int mui_h;
 	Color* m_pixels;

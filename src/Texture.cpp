@@ -1,6 +1,7 @@
 #include <Texture.h>
 #include <Color.h>
 #include <cassert>
+#include <iostream>
 
 Texture::Texture(unsigned int pui_w, unsigned int pui_h) : mui_w {pui_w}, mui_h {pui_w}
 {
@@ -30,11 +31,16 @@ Texture::Texture(const Texture& p_other)
 	}
 
 }
+
+// pui_x and pui_y go from 0 to mui_x -1 / mui_y - 1. First index is 0, 0 and last index is mui_x - 1, mui_y - 1
 void Texture::SetPixelColor(unsigned int pui_x, unsigned int pui_y, const Color& p_c)
 {
-	assert(pui_x <= mui_w);
-	assert(pui_y <= mui_h);
+	assert(pui_x < mui_w);
+	assert(pui_y < mui_h);
+	unsigned int tmp = 10;
 
-	++pui_y;
-	m_pixels[pui_x * pui_y] = p_c;
+	if (pui_y == 0)
+		tmp = 1;
+
+	m_pixels[pui_x + pui_y * tmp] = p_c;
 }

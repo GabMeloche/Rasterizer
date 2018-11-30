@@ -3,6 +3,7 @@
 #include <Vertex.h>
 #include <vector>
 #include <cmath>
+#include <iostream>
 
 Mesh* Mesh::CreateCube()
 {
@@ -75,6 +76,7 @@ Mesh * Mesh::CreateSphere(int pi_latitudeCount, int pi_longitudeCount)
 			float y = sin(M_PI * j / pi_longitudeCount) * sin(2 * M_PI * i / pi_latitudeCount);
 			float z = cos(M_PI * j / pi_longitudeCount);
 			v.m_position = { x, y, z };
+			std::cout << "x: " << x << "; y: " << y << "; z: " << z << std::endl;
 			mesh->m_vertices.emplace_back(v);
 		}
 	}

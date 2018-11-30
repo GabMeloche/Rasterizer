@@ -27,8 +27,6 @@ void Mat4::SetMatrix(float p_Matrix[][4])
 	memcpy(mf_Matrice4, p_Matrix, sizeof(mf_Matrice4));
 }
 
-
-
 Mat4& Mat4::operator*(const Mat4 & p_Matrix)
 {
 	auto* TmpMat = new Mat4;
@@ -70,6 +68,21 @@ Math::Vector::Vec4& Mat4::operator*(const Math::Vector::Vec4& p_Vector)
 	TmpVec->mf_w += this->mf_Matrice4[3][3] * p_Vector.mf_w;
     
     return *TmpVec;
+}
+
+Mat4 Math::Matrix::Mat4::CreateTransformMatrix(const Vector::Vec3 & rotation, const Vector::Vec3 & position, const Vector::Vec3 & scale)
+{
+	Mat4 TmpMatTrans;
+	Mat4 TmpMatScale;
+	Mat4 TmpMatRotate;
+
+	TmpMatTrans = CreateTranslationMatrix(position);
+	TmpMatRotate = CreateRotationMatrix(rotation);
+	TmpMatScale = CreateScaleMatrix(scale);
+
+	Mat4 FinalMat = TmpMatTrans * TmpMatRotate * TmpMatScale;
+
+	return FinalMat;
 }
 
 Mat4 Math::Matrix::Mat4::CreateTranslationMatrix(const Vector::Vec3 & p_Translation)

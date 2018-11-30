@@ -21,57 +21,7 @@ App::~App()
 
 void App::Startup()
 {
-	Clear();
 
-	tex = new Texture(1024, 768);
-	SDL_Color* color;
-
-	Uint32 rmask, gmask, bmask, amask;
-
-	if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
-	{
-		rmask = 0xff000000;
-		gmask = 0x00ff0000;
-		bmask = 0x0000ff00;
-		amask = 0x000000ff;
-
-	}
-	else
-	{
-		rmask = 0x000000ff;
-		gmask = 0x0000ff00;
-		bmask = 0x00ff0000;
-		amask = 0xff000000;
-	}
-
-	tex->m_surface = SDL_CreateRGBSurface(0, tex->mui_w, tex->mui_h, 8, 0, 0, 0, 0);
-	
-	if (tex->m_surface == nullptr) {
-		std::cout << "Surface NULL\n";
-	}
-	tex->m_pformat = tex->m_surface->format;
-
-	if (tex->m_pformat->BitsPerPixel != 8) {
-		std::cout << "Not an 8-bit surface.\n";
-	}
-	
-	SDL_LockSurface(tex->m_surface);
-	tex->m_pixels = (Uint32*)tex->m_surface->pixels;
-	//[(400 * tex->m_surface->w) + 600];
-
-	Uint32 *target_pixel = tex->m_pixels + 400 * tex->m_surface->w +
-		600 * sizeof *target_pixel;
-
-	Uint32 pixel = 0xff000000;
-
-	*target_pixel = pixel;
-
-	//color = &tex->m_pformat->palette->colors[(Uint8)index];
-	SDL_UnlockSurface(tex->m_surface);
-
-	//SDL_CreateTextureFromSurface(m_renderer, tex->m_surface);
-
-	//std::cout << "Pixel color:" << (int)color->r << ' ' << (int)color->g << ' ' << (int)color->b << '\n';
 	MainLoop();
 }
 
@@ -89,7 +39,7 @@ void App::MainLoop()
 			SDL_Quit();
 			is_over = true;
 		}
-		SDL_RenderCopy(m_renderer, tex->m_texture, nullptr, nullptr);
+		Test();
 		Render();
 	}
 }
@@ -101,6 +51,39 @@ void App::Clear()
 void App::Render()
 {
 	SDL_RenderPresent(m_renderer);
+}
+
+void App::Test()
+{
+	int x0 = 1000;
+	int	y0 = 300;
+	int	x1 = 300;
+	int	y1 = 450;
+
+	int dx = abs(x1 - x0), sx = x0<x1 ? 1 : -1;
+	int dy = -abs(y1 - y0), sy = y0<y1 ? 1 : -1;
+	int err = dx + dy, e2; /* error value e_xy */
+
+	for (;;) {  /* loop */
+		SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
+		SDL_RenderDrawPoint(m_renderer, x0, y0);
+		
+		if (x0 == x1 && y0 == y1) 
+			break;
+		
+		e2 = 2 * err;
+
+		if (e2 >= dy) 
+		{ 
+			err += dy; x0 += sx; 
+		} 
+		/* e_xy+e_x > 0 */
+		if (e2 <= dx) 
+		{ 
+			err += dx; y0 += sy; 
+		} 
+		/* e_xy+e_y < 0 */
+	}
 }
 
 

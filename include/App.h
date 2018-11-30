@@ -18,5 +18,6 @@ public:
 	void MainLoop();
 	void Clear();
 	void Render();
+	void Test();
 };
 

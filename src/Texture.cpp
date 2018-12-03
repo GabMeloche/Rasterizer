@@ -9,7 +9,7 @@ Texture::Texture(unsigned int pui_w, unsigned int pui_h) : mui_w {pui_w}, mui_h 
 
 	for (unsigned int i = 0; i < pui_w * pui_h; ++i)
 	{
-		m_pixels[i] = {0, 0, 0, 1};
+		m_pixels[i] = {255, 255, 255, 255};
 	}
 }
 

@@ -10,9 +10,8 @@ public:
 	
 	Color* m_pixels;
 
-	int m_pitch;
-
 public:
+
 	Texture(unsigned int pui_w, unsigned int pui_h);
 	~Texture();
 	Texture(const Texture& p_other);

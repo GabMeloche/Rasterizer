@@ -17,6 +17,7 @@ namespace Math::Vector
 		float mf_z;
 
 		float GetMagnitude() const;
+		static float DistanceBtwPts(const Vec3& p_v1, const Vec3& p_v2);
 		void Normalize();
 
 		Vec3& operator*(float pf_scalar);

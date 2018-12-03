@@ -2,6 +2,7 @@
 #include <vector>
 #include <Vertex.h>
 #include <Triangle.h>
+#include <Mesh.h>
 
 class Mesh
 {
@@ -13,4 +14,5 @@ private:
 public:
 	static Mesh* CreateCube();
 	static Mesh* CreateSphere(int pi_latitudeCount, int pi_longitudeCount);
+	void makeTriangles();
 };

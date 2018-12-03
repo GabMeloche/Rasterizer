@@ -4,6 +4,7 @@
 #include <vector>
 #include <cmath>
 #include <iostream>
+#include <cassert>
 
 Mesh* Mesh::CreateCube()
 {
@@ -18,7 +19,8 @@ Mesh* Mesh::CreateCube()
 	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -0.5f, -0.5f, 1.0f } });
 	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 0.5f, -0.5f, 1.0f } });
 
-	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[0], 
+	mesh->makeTriangles();
+	/*mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[0], 
 											mesh->m_vertices[1], 
 											mesh->m_vertices[2] });
 	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[1],
@@ -58,7 +60,7 @@ Mesh* Mesh::CreateCube()
 		mesh->m_vertices[7] });
 	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[2],
 		mesh->m_vertices[7],
-		mesh->m_vertices[6] }); //bottom
+		mesh->m_vertices[6] }); //bottom*/
 
 	return mesh;
 }
@@ -80,5 +82,47 @@ Mesh * Mesh::CreateSphere(int pi_latitudeCount, int pi_longitudeCount)
 			mesh->m_vertices.emplace_back(v);
 		}
 	}
+	mesh->makeTriangles();
 	return mesh;
+}
+
+void Mesh::makeTriangles()
+{
+	//TODO : Need to sort vertices ordre croissant before operations
+
+	for (size_t i = 0; i < m_vertices.size(); ++i)
+	{
+		float shortestDist1 = Vec3::DistanceBtwPts(m_vertices[i].m_position, m_vertices
+			[i == 0 ? 2 : 0].m_position);;
+		float shortestDist2 = Vec3::DistanceBtwPts(m_vertices[i].m_position, m_vertices
+			[i == 1 ? 0 : 1].m_position);;
+		int indice1 = 0;
+		int indice2 = 1;
+
+		for (size_t j = 2; j < m_vertices.size(); ++j)
+		{
+			if (j == i)
+				continue;
+
+			float distance = Vec3::DistanceBtwPts(m_vertices[i].m_position, m_vertices[j].m_position);
+
+			if (distance <= shortestDist2 && distance > shortestDist1 && distance != 0.0f)
+			{
+				shortestDist2 = distance;
+				indice2 = (int)j;
+			}
+			if (distance <= shortestDist1 && distance != 0.0f)
+			{
+				shortestDist1 = distance;
+				indice1 = (int)j;
+			}
+			
+		}
+		std::cout << "Triangle " << i << " goes with: " << indice1 << ", " << indice2 << std::endl;
+		m_triangles.emplace_back(Triangle{ m_vertices[i],
+			m_vertices[indice1],
+			m_vertices[indice2] });
+	}
+
+	std::cout << "Number of triangles: " << m_triangles.size() << std::endl;
 }

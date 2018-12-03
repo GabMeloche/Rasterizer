@@ -6,9 +6,9 @@ using namespace Math::Vector;
 
 Vec3::Vec3()
 {
-	mf_x = 0;
-	mf_y = 0;
-	mf_z = 0;
+	mf_x = 0.0f;
+	mf_y = 0.0f;
+	mf_z = 0.0f;
 }
 Vec3::Vec3(const float pf_x, const float pf_y, const float pf_z)
 {
@@ -32,6 +32,13 @@ Vec3::~Vec3()
 float Vec3::GetMagnitude() const
 {
 	return sqrt(pow(mf_x, 2) + pow(mf_y, 2) + pow(mf_z, 2));
+}
+
+float Vec3::DistanceBtwPts(const Vec3& p_v1, const Vec3& p_v2)
+{
+	return sqrt(pow(p_v1.mf_x - p_v2.mf_x, 2) 
+		+ pow(p_v1.mf_y - p_v2.mf_y, 2) 
+		+ pow(p_v1.mf_z - p_v2.mf_z, 2));
 }
 
 void Vec3::Normalize()

@@ -1,4 +1,4 @@
-#include "..\include\Entity.h"
+#include <Entity.h>
 
 Entity::~Entity()
 {
@@ -12,4 +12,9 @@ Entity::Entity(const Entity& p_other)
 {
 	m_mesh = p_other.m_mesh;
 	m_mat = p_other.m_mat;
+}
+
+Mesh * Entity::getMesh()
+{
+	return m_mesh;
 }

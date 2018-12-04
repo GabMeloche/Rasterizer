@@ -1,11 +1,13 @@
 #pragma once
 #include <Math/Vector/Vec3.h>
+#include <Color.h>
 
 using namespace Math::Vector;
 
 struct Vertex
 {
 	Vec3 m_position;
+	Color m_color;
 
 	bool operator<(const Vertex& p_other)
 	{

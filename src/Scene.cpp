@@ -14,3 +14,8 @@ Scene::Scene(const Scene & p_other)
 {
 	m_entities = p_other.m_entities;
 }
+
+std::vector<Entity> Scene::getEntities()
+{
+	return m_entities;
+}

@@ -9,6 +9,6 @@ public:
 	Rasterizer();
 	~Rasterizer();
 
-	void RenderScene(Scene* m_Scene, Texture* m_Target, SDL_Renderer* p_Renderer);
+	void RenderScene(int v0x, int v0y, int v1x, int v1y, Texture& m_Target, SDL_Renderer* p_Renderer);
 };
 

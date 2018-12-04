@@ -2,8 +2,8 @@
 
 struct Color
 {
-	unsigned char ucm_r;
-	unsigned char ucm_g;
-	unsigned char ucm_b;
-	unsigned char ucm_a;
+	unsigned int ucm_r;
+	unsigned int ucm_g;
+	unsigned int ucm_b;
+	unsigned int ucm_a;
 };

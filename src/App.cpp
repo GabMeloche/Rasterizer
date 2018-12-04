@@ -2,6 +2,7 @@
 #include <iostream>
 #include <Texture.h>
 #include <Rasterizer.h>
+#include <Triangle.h>
 
 App::App()
 {
@@ -40,7 +41,48 @@ void App::MainLoop()
 			SDL_Quit();
 			is_over = true;
 		}
-		m_rasterizer->RenderScene(nullptr, m_texture, m_renderer);
+
+		Triangle m_triangle;
+
+		//RED PIXEL
+		m_triangle.m_v1.m_position.mf_x = 500;
+		m_triangle.m_v1.m_position.mf_y = 200;
+		m_texture->m_pixels[500 + 200 * m_texture->mui_w].ucm_r = 255;
+		m_texture->m_pixels[500 + 200 * m_texture->mui_w].ucm_g = 0;
+		m_texture->m_pixels[500 + 200 * m_texture->mui_w].ucm_b = 0;
+
+		//GREEN PIXEL
+		m_triangle.m_v2.m_position.mf_x = 250;
+		m_triangle.m_v2.m_position.mf_y = 450;
+		m_texture->m_pixels[250 + 450 * m_texture->mui_w].ucm_r = 0;
+		m_texture->m_pixels[250 + 450 * m_texture->mui_w].ucm_g = 255;
+		m_texture->m_pixels[250 + 450 * m_texture->mui_w].ucm_b = 0;
+
+		//BLUE PIXEL
+		m_triangle.m_v3.m_position.mf_x = 750;
+		m_triangle.m_v3.m_position.mf_y = 450;
+		m_texture->m_pixels[750 + 450 * m_texture->mui_w].ucm_r = 0;
+		m_texture->m_pixels[750 + 450 * m_texture->mui_w].ucm_g = 0;
+		m_texture->m_pixels[750 + 450 * m_texture->mui_w].ucm_b = 255;
+
+
+		float invslope1 = (m_triangle.m_v2.m_position.mf_x - m_triangle.m_v1.m_position.mf_x) 
+						/ (m_triangle.m_v2.m_position.mf_y - m_triangle.m_v1.m_position.mf_y);
+
+		float invslope2 = (m_triangle.m_v3.m_position.mf_x - m_triangle.m_v1.m_position.mf_x) 
+						/ (m_triangle.m_v3.m_position.mf_y - m_triangle.m_v1.m_position.mf_y);
+
+		float curx1 = m_triangle.m_v1.m_position.mf_x;
+		float curx2 = m_triangle.m_v1.m_position.mf_x;
+
+		for (int scanlineY = m_triangle.m_v1.m_position.mf_y; scanlineY <= m_triangle.m_v2.m_position.mf_y; scanlineY++)
+		{
+			//drawLine((int)curx1, scanlineY, (int)curx2, scanlineY);
+			m_rasterizer->RenderScene((int)curx1, scanlineY, (int)curx2, scanlineY, *m_texture, m_renderer);
+			curx1 += invslope1;
+			curx2 += invslope2;
+		}
+
 		Render();
 	}
 }

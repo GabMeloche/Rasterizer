@@ -11,16 +11,16 @@ Mesh* Mesh::CreateCube()
 	Mesh* mesh = new Mesh;
 
 	mesh->m_vertices.emplace_back(Vertex{ Vec3{-0.5f, 0.5f, 0.0f} });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{0.5f, 0.5f, 0.0f} });
 	mesh->m_vertices.emplace_back(Vertex{ Vec3{-0.5f, -0.5f, 0.0f} });
 	mesh->m_vertices.emplace_back(Vertex{ Vec3{0.5f, -0.5f, 0.0f} });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{0.5f, 0.5f, 0.0f} });
 	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -0.5f, 0.5f, 1.0f } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 0.5f, 0.5f, 1.0f } });
 	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -0.5f, -0.5f, 1.0f } });
 	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 0.5f, -0.5f, 1.0f } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 0.5f, 0.5f, 1.0f } });
 
-	mesh->makeTriangles();
-	/*mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[0], 
+	//mesh->makeTriangles();
+	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[0], 
 											mesh->m_vertices[1], 
 											mesh->m_vertices[2] });
 	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[1],
@@ -60,7 +60,7 @@ Mesh* Mesh::CreateCube()
 		mesh->m_vertices[7] });
 	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[2],
 		mesh->m_vertices[7],
-		mesh->m_vertices[6] }); //bottom*/
+		mesh->m_vertices[6] }); //bottom
 
 	return mesh;
 }
@@ -88,14 +88,15 @@ Mesh * Mesh::CreateSphere(int pi_latitudeCount, int pi_longitudeCount)
 
 void Mesh::makeTriangles()
 {
-	//TODO : Need to sort vertices ordre croissant before operations
+	//this->sort();
 
 	for (size_t i = 0; i < m_vertices.size(); ++i)
 	{
 		float shortestDist1 = Vec3::DistanceBtwPts(m_vertices[i].m_position, m_vertices
-			[i == 0 ? 2 : 0].m_position);;
+			[i == 0 ? 2 : 0].m_position);
 		float shortestDist2 = Vec3::DistanceBtwPts(m_vertices[i].m_position, m_vertices
-			[i == 1 ? 0 : 1].m_position);;
+			[i == 1 ? 0 : 1].m_position);
+
 		int indice1 = 0;
 		int indice2 = 1;
 
@@ -125,4 +126,20 @@ void Mesh::makeTriangles()
 	}
 
 	std::cout << "Number of triangles: " << m_triangles.size() << std::endl;
+}
+
+void Mesh::sort()
+{
+	for (size_t i = 0; i < m_vertices.size() - 1; ++i)
+	{
+		for (size_t j = 0; j < m_vertices.size() - i - 1; ++j)
+		{
+			if (m_vertices[j + 1] < m_vertices[j])
+			{
+				Vertex tmp = m_vertices[j + 1];
+				m_vertices[j + 1] = m_vertices[j];
+				m_vertices[j] = tmp;
+			}
+		}
+	}
 }

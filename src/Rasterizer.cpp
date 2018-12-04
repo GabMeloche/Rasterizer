@@ -13,7 +13,7 @@ Rasterizer::~Rasterizer()
 {
 }
 
-void Rasterizer::RenderScene(int v0x, int v0y, int v1x, int v1y, Texture& p_Target, SDL_Renderer* p_Renderer)
+void Rasterizer::RenderScene(int v0x, int v0y, int v1x, int v1y, Texture& p_Target, SDL_Renderer* p_Renderer, Scene* p_scene)
 {
 	int x0 = v0x;
 	int	y0 = v0y;
@@ -29,6 +29,7 @@ void Rasterizer::RenderScene(int v0x, int v0y, int v1x, int v1y, Texture& p_Targ
 	int err = dx + dy;
 	int e2;
 
+	//ZBuffer(&p_Target, p_scene);
 	//std::cout << p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_r << '\n';
 	for (;;)
 	{
@@ -60,4 +61,43 @@ void Rasterizer::RenderScene(int v0x, int v0y, int v1x, int v1y, Texture& p_Targ
 			y0 += sy;
 		}
 	}
+}
+
+void Rasterizer::ZBuffer(Texture* p_texture, Scene* p_scene)
+{
+	std::vector<Entity>& allEntities = p_scene->getEntities();
+	float** zBuffer = new float*[1024];
+	Color** frameBuffer = new Color*[1024];
+
+	for (size_t i = 0; i < 1024; ++i)
+	{
+		zBuffer[i] = new float[768];
+		frameBuffer[i] = new Color[768];
+
+		for (size_t j = 0; j < 768; ++j)
+		{
+			zBuffer[i][j] = 0.0f;
+			frameBuffer[i][j] = p_texture->GetPixelColor(i, j);
+		}
+	}
+
+	for (size_t i = 0; i < allEntities.size(); ++i)
+	{
+		for (size_t j = 0; j < 1024 * 768; ++j)
+		{
+			for (size_t k = 0; k < 1024 * 768; ++k)
+			{
+				float currDepth = allEntities[i].getMesh()->getVertices()[0].m_position.mf_z;
+
+				if (currDepth > zBuffer[j][k])
+				{
+					zBuffer[j][k] = currDepth;
+					frameBuffer[j][k] = { 255, 255, 255, 255 };
+					p_texture->SetPixelColor(j, k, { 255, 255, 255, 255 });
+				}
+			}
+		}
+	}
+	delete zBuffer;
+	delete frameBuffer;
 }

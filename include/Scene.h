@@ -11,5 +11,5 @@ public:
 	~Scene();
 	Scene(const Scene& p_other);
 
-	std::vector<Entity> getEntities();
+	std::vector<Entity>& getEntities();
 };

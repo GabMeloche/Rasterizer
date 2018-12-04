@@ -17,4 +17,5 @@ public:
 	Texture(const Texture& p_other);
 
 	void SetPixelColor(unsigned int pui_x, unsigned int pui_y, const Color& p_c);
+	Color & GetPixelColor(unsigned int pui_x, unsigned int pui_y);
 };

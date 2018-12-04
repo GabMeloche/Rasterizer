@@ -40,3 +40,11 @@ void Texture::SetPixelColor(unsigned int pui_x, unsigned int pui_y, const Color&
 
 	m_pixels[pui_x + pui_y * mui_w] = p_c;
 }
+
+Color& Texture::GetPixelColor(unsigned int pui_x, unsigned int pui_y)
+{
+	assert(pui_x < mui_w);
+	assert(pui_y < mui_h);
+
+	return m_pixels[pui_x + pui_y * mui_w];
+}

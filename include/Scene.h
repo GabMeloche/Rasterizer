@@ -10,4 +10,6 @@ public:
 	Scene() = default;
 	~Scene();
 	Scene(const Scene& p_other);
+
+	std::vector<Entity> getEntities();
 };

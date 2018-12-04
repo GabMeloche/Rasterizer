@@ -11,4 +11,6 @@ public:
 	Entity() = default;
 	~Entity();
 	Entity(const Entity& p_other);
+
+	Mesh* getMesh();
 };

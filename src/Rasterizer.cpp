@@ -25,6 +25,7 @@ void Rasterizer::RenderScene(Scene* m_scene, Texture& p_Target, SDL_Renderer* p_
 		float invslope2 = (m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v3.m_position.mf_x - m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_x)
 						/ (m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v3.m_position.mf_y - m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_y);
 
+
 		float curx1 = m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_x;
 		float curx2 = m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_x;
 
@@ -48,9 +49,9 @@ void Rasterizer::RenderScene(Scene* m_scene, Texture& p_Target, SDL_Renderer* p_
 			//std::cout << p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_r << '\n';
 			for (;;)
 			{
-				p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_r = (int)-sqrt(pow(500 - x0, 2) + pow(200 - y0, 2)) / 2;
-				p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_g = (int)-sqrt(pow(250 - x0, 2) + pow(600 - y0, 2)) / 2;
-				p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_b = (int)-sqrt(pow(750 - x0, 2) + pow(600 - y0, 2)) / 2;
+				p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_r = (int)-sqrt(pow(m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_x - x0, 2) + pow(m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_y - y0, 2)) / 2;
+				p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_g = (int)-sqrt(pow(m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v2.m_position.mf_x - x0, 2) + pow(m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v2.m_position.mf_y - y0, 2)) / 2;
+				p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_b = (int)-sqrt(pow(m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v3.m_position.mf_x - x0, 2) + pow(m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v3.m_position.mf_y - y0, 2)) / 2;
 
 				SDL_SetRenderDrawColor(p_Renderer, p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_r,
 					p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_g,

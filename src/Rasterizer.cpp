@@ -14,22 +14,22 @@ Rasterizer::~Rasterizer()
 }
 
 
-void Rasterizer::RenderScene(Scene* m_scene, Texture& p_Target, SDL_Renderer* p_Renderer)
+void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_Renderer)
 {
-	for (int i = 0; i < m_scene->getEntities().size(); i++)
+	for (int i = 0; i < p_scene->getEntities().size(); i++)
 	{
 
-		float invslope1 = (m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v2.m_position.mf_x - m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_x)
-						/ (m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v2.m_position.mf_y - m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_y);
+		float invslope1 = (p_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v2.m_position.mf_x - p_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_x)
+						/ (p_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v2.m_position.mf_y - p_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_y);
 
-		float invslope2 = (m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v3.m_position.mf_x - m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_x)
-						/ (m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v3.m_position.mf_y - m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_y);
+		float invslope2 = (p_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v3.m_position.mf_x - p_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_x)
+						/ (p_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v3.m_position.mf_y - p_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_y);
 
 
-		float curx1 = m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_x;
-		float curx2 = m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_x;
+		float curx1 = p_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_x;
+		float curx2 = p_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_x;
 
-		for (int scanlineY = m_scene->getEntities()[0]->getMesh()->getTriangles()[0].m_v1.m_position.mf_y; scanlineY <= m_scene->getEntities()[0]->getMesh()->getTriangles()[0].m_v2.m_position.mf_y; scanlineY++)
+		for (int scanlineY = p_scene->getEntities()[0]->getMesh()->getTriangles()[0].m_v1.m_position.mf_y; scanlineY <= p_scene->getEntities()[0]->getMesh()->getTriangles()[0].m_v2.m_position.mf_y; scanlineY++)
 		{
 			int x0 = (int)curx1;
 			int	y0 = scanlineY;
@@ -49,9 +49,9 @@ void Rasterizer::RenderScene(Scene* m_scene, Texture& p_Target, SDL_Renderer* p_
 			//std::cout << p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_r << '\n';
 			for (;;)
 			{
-				p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_r = (int)-sqrt(pow(m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_x - x0, 2) + pow(m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_y - y0, 2)) / 2;
-				p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_g = (int)-sqrt(pow(m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v2.m_position.mf_x - x0, 2) + pow(m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v2.m_position.mf_y - y0, 2)) / 2;
-				p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_b = (int)-sqrt(pow(m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v3.m_position.mf_x - x0, 2) + pow(m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v3.m_position.mf_y - y0, 2)) / 2;
+				p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_r = (int)-sqrt(pow(p_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_x - x0, 2) + pow(p_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_y - y0, 2)) / 2;
+				p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_g = (int)-sqrt(pow(p_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v2.m_position.mf_x - x0, 2) + pow(p_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v2.m_position.mf_y - y0, 2)) / 2;
+				p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_b = (int)-sqrt(pow(p_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v3.m_position.mf_x - x0, 2) + pow(p_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v3.m_position.mf_y - y0, 2)) / 2;
 
 				SDL_SetRenderDrawColor(p_Renderer, p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_r,
 					p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_g,

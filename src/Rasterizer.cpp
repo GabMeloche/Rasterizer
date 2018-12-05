@@ -14,6 +14,14 @@ Rasterizer::~Rasterizer()
 }
 
 
+void Rasterizer::Convert2Dto3D(Vertex& m_inPoint)
+{
+	std::cout << m_inPoint.m_position.mf_x << '\n';
+	m_inPoint.m_position.mf_x = ((m_inPoint.m_position.mf_x / 5) + 1) * 0.5 * 1024;
+	m_inPoint.m_position.mf_y = 768 - ((m_inPoint.m_position.mf_y / 5) + 1) * 0.5 * 768;
+	std::cout << m_inPoint.m_position.mf_x << '\n';
+}
+
 void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_Renderer)
 {
 	float v1x;
@@ -25,6 +33,10 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 
 	for (int i = 0; i < p_scene->getEntities().size(); i++)
 	{
+		Convert2Dto3D(p_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1);
+		Convert2Dto3D(p_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v2);
+		Convert2Dto3D(p_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v3);
+
 		v1x = p_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_x;
 		v1y = p_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_y;
 		v2x = p_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v2.m_position.mf_x;

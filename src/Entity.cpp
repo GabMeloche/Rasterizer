@@ -14,6 +14,11 @@ Entity::Entity(const Entity& p_other)
 	m_mat = p_other.m_mat;
 }
 
+void Entity::setMesh(Mesh* mesh)
+{
+	m_mesh = mesh;
+}
+
 Mesh * Entity::getMesh()
 {
 	return m_mesh;

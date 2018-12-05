@@ -13,7 +13,8 @@ private:
 public:
 	static Mesh* CreateCube();
 	static Mesh* CreateSphere(int pi_latitudeCount, int pi_longitudeCount);
-
+	static Mesh* CreateTriangle();
+	std::vector<Triangle> getTriangles();
 	std::vector<Vertex> getVertices();
 	void makeTriangles();
 	void sort();

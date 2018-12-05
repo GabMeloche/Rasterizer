@@ -12,5 +12,6 @@ public:
 	~Entity();
 	Entity(const Entity& p_other);
 
+	void setMesh(Mesh* mesh);
 	Mesh* getMesh();
 };

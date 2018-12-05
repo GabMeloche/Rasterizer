@@ -5,6 +5,8 @@
 
 class Rasterizer
 {
+private:
+	float** m_zBuffer;
 public:
 	Rasterizer();
 	~Rasterizer();

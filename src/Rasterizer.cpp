@@ -5,12 +5,23 @@
 
 Rasterizer::Rasterizer()
 {
+	m_zBuffer = new float*[1024];
 
+	for (size_t i = 0; i < 1024; ++i)
+	{
+		m_zBuffer[i] = new float[768];
+
+		for (size_t j = 0; j < 768; ++j)
+		{
+			m_zBuffer[i][j] = 0.0f;
+		}
+	}
 }
 
 
 Rasterizer::~Rasterizer()
 {
+	delete m_zBuffer;
 }
 
 
@@ -25,12 +36,13 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 
 	for (int i = 0; i < p_scene->getEntities().size(); i++)
 	{
-		v1x = p_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_x;
-		v1y = p_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_y;
-		v2x = p_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v2.m_position.mf_x;
-		v2y = p_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v2.m_position.mf_y;
-		v3x = p_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v3.m_position.mf_x;
-		v3y = p_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v3.m_position.mf_y;
+		Triangle pos = p_scene->getEntities()[i]->getMesh()->getTriangles()[0];
+		v1x = pos.m_v1.m_position.mf_x;
+		v1y = pos.m_v1.m_position.mf_y;
+		v2x = pos.m_v2.m_position.mf_x;
+		v2y = pos.m_v2.m_position.mf_y;
+		v3x = pos.m_v3.m_position.mf_x;
+		v3y = pos.m_v3.m_position.mf_y;
 
 		float invslope1 = (v2x - v1x)
 						/ (v2y - v1y);
@@ -60,10 +72,10 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 			int err = dx + dy;
 			int e2;
 
-			//ZBuffer(&p_Target, p_scene);
 			//std::cout << p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_r << '\n';
 			while(true)
 			{
+				ZBuffer(&p_Target, p_scene);
 				p_Target.m_pixels[x0 + y0 * m_width].ucm_r = (int)-sqrt(pow(v1x - x0, 2) + pow(v1y - y0, 2)) / 2;
 				p_Target.m_pixels[x0 + y0 * m_width].ucm_g = (int)-sqrt(pow(v2x - x0, 2) + pow(v2y - y0, 2)) / 2;
 				p_Target.m_pixels[x0 + y0 * m_width].ucm_b = (int)-sqrt(pow(v3x - x0, 2) + pow(v3y - y0, 2)) / 2;
@@ -101,38 +113,25 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 void Rasterizer::ZBuffer(Texture* p_texture, Scene* p_scene)
 {
 	std::vector<Entity*>& allEntities = p_scene->getEntities();
-	float** zBuffer = new float*[1024];
-	Color** frameBuffer = new Color*[1024];
-
-	for (size_t i = 0; i < 1024; ++i)
-	{
-		zBuffer[i] = new float[768];
-		frameBuffer[i] = new Color[768];
-
-		for (size_t j = 0; j < 768; ++j)
-		{
-			zBuffer[i][j] = 0.0f;
-			//frameBuffer[i][j] = p_texture->GetPixelColor(i, j);
-		}
-	}
+	//Color** frameBuffer = new Color*[1024];
 
 	for (size_t i = 0; i < allEntities.size(); ++i)
 	{
-		for (size_t j = 0; j < 1024 * 768; ++j)
+		for (size_t j = 0; j < 1024; ++j)
 		{
-			for (size_t k = 0; k < 1024 * 768; ++k)
+			for (size_t k = 0; k < 768; ++k)
 			{
-				float currDepth = allEntities[i]->getMesh()->getVertices()[0].m_position.mf_z;
+				float currDepth = allEntities[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_z;
 
-				if (currDepth > zBuffer[j][k])
+				if (currDepth > m_zBuffer[j][k])
 				{
-					zBuffer[j][k] = currDepth;
-					frameBuffer[j][k] = { 255, 255, 255, 255 };
-					p_texture->SetPixelColor(j, k, { 255, 255, 255, 255 });
+					m_zBuffer[j][k] = currDepth;
+					//frameBuffer[j][k] = { 255, 255, 255, 255 };
+					p_texture->SetPixelColor(j, k, { 0, 100, 255, 255 });
 				}
+					//std::cout << m_zBuffer[j][k] << std::endl;
 			}
 		}
 	}
-	delete zBuffer;
-	delete frameBuffer;
+	//delete frameBuffer;
 }

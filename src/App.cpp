@@ -25,7 +25,18 @@ App::~App()
 
 void App::Startup()
 {
+	Mesh* triangle = new Mesh;
+	triangle = Mesh::CreateTriangle(700, 200, 0);
+	Mesh* triangle2 = new Mesh;
+	triangle2 = Mesh::CreateTriangle(250, 200, 0);
 
+	Entity* entity = new Entity;
+	entity->setMesh(triangle);
+	Entity* entity2 = new Entity;
+	entity2->setMesh(triangle2);
+
+	m_scene->getEntities().emplace_back(entity);
+	m_scene->getEntities().emplace_back(entity2);
 	MainLoop();
 }
 
@@ -44,12 +55,6 @@ void App::MainLoop()
 			is_over = true;
 		}
 
-		Mesh* triangle = new Mesh;
-		triangle = Mesh::CreateTriangle();
-
-		Entity* entity = new Entity;
-		entity->setMesh(triangle);
-		m_scene->getEntities().emplace_back(entity);
 		m_rasterizer->RenderScene(m_scene, *m_texture, m_renderer);
 		Render();
 	}

@@ -44,6 +44,8 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 
 		for (int scanlineY = v1y; scanlineY <= v2y; scanlineY++)
 		{
+			int m_width = p_Target.mui_w;
+
 			int x0 = (int)curx1;
 			int	y0 = scanlineY;
 			int	x1 = (int)curx2;
@@ -60,16 +62,16 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 
 			//ZBuffer(&p_Target, p_scene);
 			//std::cout << p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_r << '\n';
-			for (;;)
+			while(true)
 			{
-				p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_r = (int)-sqrt(pow(v1x - x0, 2) + pow(v1y - y0, 2)) / 2;
-				p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_g = (int)-sqrt(pow(v2x - x0, 2) + pow(v2y - y0, 2)) / 2;
-				p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_b = (int)-sqrt(pow(v3x - x0, 2) + pow(v3y - y0, 2)) / 2;
+				p_Target.m_pixels[x0 + y0 * m_width].ucm_r = (int)-sqrt(pow(v1x - x0, 2) + pow(v1y - y0, 2)) / 2;
+				p_Target.m_pixels[x0 + y0 * m_width].ucm_g = (int)-sqrt(pow(v2x - x0, 2) + pow(v2y - y0, 2)) / 2;
+				p_Target.m_pixels[x0 + y0 * m_width].ucm_b = (int)-sqrt(pow(v3x - x0, 2) + pow(v3y - y0, 2)) / 2;
 
-				SDL_SetRenderDrawColor(p_Renderer, p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_r,
-					p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_g,
-					p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_b,
-					p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_a);
+				SDL_SetRenderDrawColor(p_Renderer, p_Target.m_pixels[x0 + y0 * m_width].ucm_r,
+					p_Target.m_pixels[x0 + y0 * m_width].ucm_g,
+					p_Target.m_pixels[x0 + y0 * m_width].ucm_b,
+					p_Target.m_pixels[x0 + y0 * m_width].ucm_a);
 
 				SDL_RenderDrawPoint(p_Renderer, x0, y0);
 

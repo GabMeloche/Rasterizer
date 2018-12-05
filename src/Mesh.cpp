@@ -101,7 +101,7 @@ Mesh * Mesh::CreateTriangle(int x, int y, int z)
 	m_texture->m_pixels[500 + 200 * m_texture->mui_w].ucm_b = 0;*/
 
 	//GREEN PIXEL
-	m_triangle.m_v2.m_position.mf_x = x;
+	m_triangle.m_v2.m_position.mf_x = x - 250;
 	m_triangle.m_v2.m_position.mf_y = y + 400;
 	m_triangle.m_v1.m_position.mf_z = z;
 	/*m_texture->m_pixels[250 + 600 * m_texture->mui_w].ucm_r = 0;
@@ -109,9 +109,9 @@ Mesh * Mesh::CreateTriangle(int x, int y, int z)
 	m_texture->m_pixels[250 + 600 * m_texture->mui_w].ucm_b = 0;*/
 
 	//BLUE PIXEL
-	m_triangle.m_v3.m_position.mf_x = (x / 2) + x;
+	m_triangle.m_v3.m_position.mf_x = x + 250;
 	m_triangle.m_v3.m_position.mf_y = y + 400;
-
+	m_triangle.m_v1.m_position.mf_z = z;
 	/*m_texture->m_pixels[750 + 600 * m_texture->mui_w].ucm_r = 0;
 	m_texture->m_pixels[750 + 600 * m_texture->mui_w].ucm_g = 0;
 	m_texture->m_pixels[750 + 600 * m_texture->mui_w].ucm_b = 255;*/

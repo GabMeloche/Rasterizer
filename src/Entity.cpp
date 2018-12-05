@@ -31,14 +31,14 @@ float* Entity::CheckTriangleZone()
 	std::vector<float> xValues;
 	std::vector<float> yValues;
 
-	for (size_t i = 0; i < m_triangles.size(); ++i)
+	/*for (size_t i = 0; i < m_mesh->m_triangles.size(); ++i)
 	{
-		for (size_t k = 0; j < 2; ++j)
+		for (size_t j = 0; j < 2; ++j)
 		{
 			xValues.emplace_back(m_triangles[j][k].m_position.mf_x);
 			yValues.emplace_back(m_triangles[j][k].m_position.mf_y);
 		}
-	}
+	}*/
 
 	std::sort(xValues.begin(), xValues.end());
 	std::sort(yValues.begin(), yValues.end());

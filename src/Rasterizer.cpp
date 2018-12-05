@@ -84,6 +84,7 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 			while(true)
 			{
 				ZBuffer(&p_Target, p_scene);
+
 				p_Target.m_pixels[x0 + y0 * m_width].ucm_r = (int)-sqrt(pow(v1x - x0, 2) + pow(v1y - y0, 2)) / 2;
 				p_Target.m_pixels[x0 + y0 * m_width].ucm_g = (int)-sqrt(pow(v2x - x0, 2) + pow(v2y - y0, 2)) / 2;
 				p_Target.m_pixels[x0 + y0 * m_width].ucm_b = (int)-sqrt(pow(v3x - x0, 2) + pow(v3y - y0, 2)) / 2;
@@ -125,6 +126,7 @@ void Rasterizer::ZBuffer(Texture* p_texture, Scene* p_scene)
 
 	for (size_t i = 0; i < allEntities.size(); ++i)
 	{
+
 		for (size_t j = 0; j < 1024; ++j)
 		{
 			for (size_t k = 0; k < 768; ++k)

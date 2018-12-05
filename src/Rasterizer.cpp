@@ -16,65 +16,69 @@ Rasterizer::~Rasterizer()
 
 void Rasterizer::RenderScene(Scene* m_scene, Texture& p_Target, SDL_Renderer* p_Renderer)
 {
-	float invslope1 = (m_scene->getEntities()[0]->getMesh()->getTriangles()[0].m_v2.m_position.mf_x - m_scene->getEntities()[0]->getMesh()->getTriangles()[0].m_v1.m_position.mf_x)
-					/ (m_scene->getEntities()[0]->getMesh()->getTriangles()[0].m_v2.m_position.mf_y - m_scene->getEntities()[0]->getMesh()->getTriangles()[0].m_v1.m_position.mf_y);
-
-	float invslope2 = (m_scene->getEntities()[0]->getMesh()->getTriangles()[0].m_v3.m_position.mf_x - m_scene->getEntities()[0]->getMesh()->getTriangles()[0].m_v1.m_position.mf_x)
-					/ (m_scene->getEntities()[0]->getMesh()->getTriangles()[0].m_v3.m_position.mf_y - m_scene->getEntities()[0]->getMesh()->getTriangles()[0].m_v1.m_position.mf_y);
-
-	float curx1 = m_scene->getEntities()[0]->getMesh()->getTriangles()[0].m_v1.m_position.mf_x;
-	float curx2 = m_scene->getEntities()[0]->getMesh()->getTriangles()[0].m_v1.m_position.mf_x;
-
-	for (int scanlineY = m_scene->getEntities()[0]->getMesh()->getTriangles()[0].m_v1.m_position.mf_y; scanlineY <= m_scene->getEntities()[0]->getMesh()->getTriangles()[0].m_v2.m_position.mf_y; scanlineY++)
+	for (int i = 0; i < m_scene->getEntities().size(); i++)
 	{
-		int x0 = (int)curx1;
-		int	y0 = scanlineY;
-		int	x1 = (int)curx2;
-		int	y1 = scanlineY;
 
-		int dx = abs(x1 - x0);
-		int	sx = x0<x1 ? 1 : -1;
+		float invslope1 = (m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v2.m_position.mf_x - m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_x)
+						/ (m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v2.m_position.mf_y - m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_y);
 
-		int dy = -abs(y1 - y0);
-		int	sy = y0<y1 ? 1 : -1;
+		float invslope2 = (m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v3.m_position.mf_x - m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_x)
+						/ (m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v3.m_position.mf_y - m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_y);
 
-		int err = dx + dy;
-		int e2;
+		float curx1 = m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_x;
+		float curx2 = m_scene->getEntities()[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_x;
 
-		//ZBuffer(&p_Target, p_scene);
-		//std::cout << p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_r << '\n';
-		for (;;)
+		for (int scanlineY = m_scene->getEntities()[0]->getMesh()->getTriangles()[0].m_v1.m_position.mf_y; scanlineY <= m_scene->getEntities()[0]->getMesh()->getTriangles()[0].m_v2.m_position.mf_y; scanlineY++)
 		{
-			p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_r = (int)-sqrt(pow(500 - x0, 2) + pow(200 - y0, 2)) / 2;
-			p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_g = (int)-sqrt(pow(250 - x0, 2) + pow(600 - y0, 2)) / 2;
-			p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_b = (int)-sqrt(pow(750 - x0, 2) + pow(600 - y0, 2)) / 2;
+			int x0 = (int)curx1;
+			int	y0 = scanlineY;
+			int	x1 = (int)curx2;
+			int	y1 = scanlineY;
 
-			SDL_SetRenderDrawColor(p_Renderer, p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_r,
-				p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_g,
-				p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_b,
-				p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_a);
+			int dx = abs(x1 - x0);
+			int	sx = x0<x1 ? 1 : -1;
 
-			SDL_RenderDrawPoint(p_Renderer, x0, y0);
+			int dy = -abs(y1 - y0);
+			int	sy = y0<y1 ? 1 : -1;
 
-			if (x0 == x1 && y0 == y1)
-				break;
+			int err = dx + dy;
+			int e2;
 
-			e2 = 2 * err;
-
-			if (e2 >= dy)
+			//ZBuffer(&p_Target, p_scene);
+			//std::cout << p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_r << '\n';
+			for (;;)
 			{
-				err += dy;
-				x0 += sx;
-			}
+				p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_r = (int)-sqrt(pow(500 - x0, 2) + pow(200 - y0, 2)) / 2;
+				p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_g = (int)-sqrt(pow(250 - x0, 2) + pow(600 - y0, 2)) / 2;
+				p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_b = (int)-sqrt(pow(750 - x0, 2) + pow(600 - y0, 2)) / 2;
 
-			if (e2 <= dx)
-			{
-				err += dx;
-				y0 += sy;
+				SDL_SetRenderDrawColor(p_Renderer, p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_r,
+					p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_g,
+					p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_b,
+					p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_a);
+
+				SDL_RenderDrawPoint(p_Renderer, x0, y0);
+
+				if (x0 == x1 && y0 == y1)
+					break;
+
+				e2 = 2 * err;
+
+				if (e2 >= dy)
+				{
+					err += dy;
+					x0 += sx;
+				}
+
+				if (e2 <= dx)
+				{
+					err += dx;
+					y0 += sy;
+				}
 			}
+			curx1 += invslope1;
+			curx2 += invslope2;
 		}
-		curx1 += invslope1;
-		curx2 += invslope2;
 	}
 }
 

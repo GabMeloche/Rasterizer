@@ -22,6 +22,18 @@ Mat4::Mat4(Mat4& p_Matrix)
 	memcpy(mf_Matrice4, &p_Matrix, sizeof(mf_Matrice4));
 }
 
+Mat4::Mat4(Math::Vector::Vec3& p_vec)
+{
+	float f_TmpMat[4][4] = {
+	{p_vec.mf_x, 0, 0, 0},
+	{0, p_vec.mf_y, 0, 0},
+	{0, 0, p_vec.mf_z, 0},
+	{0, 0, 0, 1}
+	};
+
+	SetMatrix(f_TmpMat);
+}
+
 void Mat4::SetMatrix(float p_Matrix[][4])
 {
 	memcpy(mf_Matrice4, p_Matrix, sizeof(mf_Matrice4));

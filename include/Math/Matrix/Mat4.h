@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Math/Vector/Vec4.h>
+#include <Math/Vector/Vec3.h>
 
 namespace Math::Matrix
 {
@@ -12,6 +13,7 @@ namespace Math::Matrix
 		Mat4();
 		~Mat4() = default;
 		Mat4(Mat4& p_Matrix);
+		Mat4(Math::Vector::Vec3& p_vec);
 
 		void SetMatrix(float p_Matrix[][4]);
 

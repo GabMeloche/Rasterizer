@@ -20,7 +20,7 @@ struct Triangle
 		case 1:
 			return m_v2;
 		case 2:
-			return m_v2;
+			return m_v3;
 		default:
 			break;
 		}

@@ -61,6 +61,7 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 
 		float curx1 = v1x;
 		float curx2 = v1x;
+		ZBuffer(&p_Target, p_scene);
 
 		for (int scanlineY = v1y; scanlineY <= v2y; scanlineY++)
 		{
@@ -83,11 +84,10 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 			//std::cout << p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_r << '\n';
 			while(true)
 			{
-				ZBuffer(&p_Target, p_scene);
 
-				p_Target.m_pixels[x0 + y0 * m_width].ucm_r = (int)-sqrt(pow(v1x - x0, 2) + pow(v1y - y0, 2)) / 2;
+				/*p_Target.m_pixels[x0 + y0 * m_width].ucm_r = (int)-sqrt(pow(v1x - x0, 2) + pow(v1y - y0, 2)) / 2;
 				p_Target.m_pixels[x0 + y0 * m_width].ucm_g = (int)-sqrt(pow(v2x - x0, 2) + pow(v2y - y0, 2)) / 2;
-				p_Target.m_pixels[x0 + y0 * m_width].ucm_b = (int)-sqrt(pow(v3x - x0, 2) + pow(v3y - y0, 2)) / 2;
+				p_Target.m_pixels[x0 + y0 * m_width].ucm_b = (int)-sqrt(pow(v3x - x0, 2) + pow(v3y - y0, 2)) / 2;*/
 
 				SDL_SetRenderDrawColor(p_Renderer, p_Target.m_pixels[x0 + y0 * m_width].ucm_r,
 					p_Target.m_pixels[x0 + y0 * m_width].ucm_g,
@@ -122,26 +122,29 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 void Rasterizer::ZBuffer(Texture* p_texture, Scene* p_scene)
 {
 	std::vector<Entity*>& allEntities = p_scene->getEntities();
-	//Color** frameBuffer = new Color*[1024];
+	size_t size = allEntities.size();
 
-	for (size_t i = 0; i < allEntities.size(); ++i)
+	for (size_t i = 0; i < size; ++i)
 	{
+		float currDepth = allEntities[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_z;
+		float* triangleZone = allEntities[i]->CheckTriangleZone();
 
-		for (size_t j = 0; j < 1024; ++j)
+
+		for (size_t j = triangleZone[0]; j < triangleZone[1]; ++j)
 		{
-			for (size_t k = 0; k < 768; ++k)
+			for (size_t k = triangleZone[2]; k < triangleZone[3]; ++k)
 			{
-				float currDepth = allEntities[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_z;
 
 				if (currDepth > m_zBuffer[j][k])
 				{
 					m_zBuffer[j][k] = currDepth;
-					//frameBuffer[j][k] = { 255, 255, 255, 255 };
-					p_texture->SetPixelColor(j, k, { 0, 100, 255, 255 });
+
+					if (i == 0)
+						p_texture->SetPixelColor(j, k, { 0, 0, 255, 255 });
+					else
+						p_texture->SetPixelColor(j, k, { 255, 0, 0, 255 });
 				}
-					//std::cout << m_zBuffer[j][k] << std::endl;
 			}
 		}
 	}
-	//delete frameBuffer;
 }

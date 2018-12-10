@@ -45,12 +45,14 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 	for (int i = 0; i < p_scene->getEntities().size(); i++)
 	{
 		Triangle pos = p_scene->getEntities()[i]->getMesh()->getTriangles()[0];
-		v1x = pos.m_v1.m_position.mf_x;
-		v1y = pos.m_v1.m_position.mf_y;
-		v2x = pos.m_v2.m_position.mf_x;
-		v2y = pos.m_v2.m_position.mf_y;
-		v3x = pos.m_v3.m_position.mf_x;
-		v3y = pos.m_v3.m_position.mf_y;
+		v1x = pos.m_v1.m_posMatrix->mf_Matrice4[0][0];
+		v1y = pos.m_v1.m_posMatrix->mf_Matrice4[1][1];
+
+		v2x = pos.m_v2.m_posMatrix->mf_Matrice4[0][0];
+		v2y = pos.m_v2.m_posMatrix->mf_Matrice4[1][1];
+
+		v3x = pos.m_v3.m_posMatrix->mf_Matrice4[0][0];
+		v3y = pos.m_v3.m_posMatrix->mf_Matrice4[1][1];
 
 		float invslope1 = (v2x - v1x)
 						/ (v2y - v1y);

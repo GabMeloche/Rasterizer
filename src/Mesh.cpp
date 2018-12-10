@@ -90,11 +90,23 @@ Mesh * Mesh::CreateTriangle(int x, int y, int z)
 {
 	Mesh* mesh = new Mesh;
 	Triangle m_triangle;
+	Mat4 Ortho;
+	float OrthoMatrix[4][4] = {
+		{ 1,0,0,0 },
+	{ 0,1,0,0 },
+	{ 0,0,0,0 },
+	{ 0,0,0,1 }
+	};
+
+	Ortho.SetMatrix(OrthoMatrix);
 
 	//RED PIXEL
 	m_triangle.m_v1.m_position.mf_x = x;
 	m_triangle.m_v1.m_position.mf_y = y;
 	m_triangle.m_v1.m_position.mf_z = z;
+
+	m_triangle.m_v1.m_posMatrix = new Mat4(m_triangle.m_v1.m_position);
+	*m_triangle.m_v1.m_posMatrix = *m_triangle.m_v1.m_posMatrix * Ortho;
 
 	/*m_texture->m_pixels[500 + 200 * m_texture->mui_w].ucm_r = 255;
 	m_texture->m_pixels[500 + 200 * m_texture->mui_w].ucm_g = 0;
@@ -104,6 +116,10 @@ Mesh * Mesh::CreateTriangle(int x, int y, int z)
 	m_triangle.m_v2.m_position.mf_x = x - 250;
 	m_triangle.m_v2.m_position.mf_y = y + 400;
 	m_triangle.m_v2.m_position.mf_z = z;
+
+	m_triangle.m_v2.m_posMatrix = new Mat4(m_triangle.m_v2.m_position);
+	*m_triangle.m_v2.m_posMatrix = *m_triangle.m_v2.m_posMatrix * Ortho;
+
 	/*m_texture->m_pixels[250 + 600 * m_texture->mui_w].ucm_r = 0;
 	m_texture->m_pixels[250 + 600 * m_texture->mui_w].ucm_g = 255;
 	m_texture->m_pixels[250 + 600 * m_texture->mui_w].ucm_b = 0;*/
@@ -112,6 +128,10 @@ Mesh * Mesh::CreateTriangle(int x, int y, int z)
 	m_triangle.m_v3.m_position.mf_x = x + 250;
 	m_triangle.m_v3.m_position.mf_y = y + 400;
 	m_triangle.m_v3.m_position.mf_z = z;
+
+	m_triangle.m_v3.m_posMatrix = new Mat4(m_triangle.m_v3.m_position);
+	*m_triangle.m_v3.m_posMatrix = *m_triangle.m_v3.m_posMatrix * Ortho;
+
 	/*m_texture->m_pixels[750 + 600 * m_texture->mui_w].ucm_r = 0;
 	m_texture->m_pixels[750 + 600 * m_texture->mui_w].ucm_g = 0;
 	m_texture->m_pixels[750 + 600 * m_texture->mui_w].ucm_b = 255;*/

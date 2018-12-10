@@ -88,7 +88,7 @@ Mat4 Math::Matrix::Mat4::CreateTransformMatrix(const Vector::Vec3 & rotation, co
 	Mat4 TmpMatScale;
 	Mat4 TmpMatRotate;
 
-	TmpMatTrans = CreateTranslationMatrix(position);
+	//TmpMatTrans = CreateTranslationMatrix(position);
 	TmpMatRotate = CreateRotationMatrix(rotation);
 	TmpMatScale = CreateScaleMatrix(scale);
 
@@ -97,13 +97,13 @@ Mat4 Math::Matrix::Mat4::CreateTransformMatrix(const Vector::Vec3 & rotation, co
 	return FinalMat;
 }
 
-Mat4 Math::Matrix::Mat4::CreateTranslationMatrix(const Vector::Vec3 & p_Translation)
+Mat4* Math::Matrix::Mat4::CreateTranslationMatrix(const Vector::Vec3 & p_Translation)
 {
-	Mat4 TmpMat;
+	Mat4* TmpMat = new Mat4();
 
-	TmpMat.mf_Matrice4[0][3] = p_Translation.mf_x;
-	TmpMat.mf_Matrice4[1][3] = p_Translation.mf_y;
-	TmpMat.mf_Matrice4[2][3] = p_Translation.mf_z;
+	TmpMat->mf_Matrice4[0][3] = p_Translation.mf_x;
+	TmpMat->mf_Matrice4[1][3] = p_Translation.mf_y;
+	TmpMat->mf_Matrice4[2][3] = p_Translation.mf_z;
 
 	return TmpMat;
 }

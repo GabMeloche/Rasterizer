@@ -45,12 +45,14 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 	for (int i = 0; i < p_scene->getEntities().size(); i++)
 	{
 		Triangle pos = p_scene->getEntities()[i]->getMesh()->getTriangles()[0];
-		v1x = pos.m_v1.m_position.mf_x;
-		v1y = pos.m_v1.m_position.mf_y;
-		v2x = pos.m_v2.m_position.mf_x;
-		v2y = pos.m_v2.m_position.mf_y;
-		v3x = pos.m_v3.m_position.mf_x;
-		v3y = pos.m_v3.m_position.mf_y;
+		v1x = pos.m_v1.m_posMatrix->mf_Matrice4[0][0];
+		v1y = pos.m_v1.m_posMatrix->mf_Matrice4[1][1];
+
+		v2x = pos.m_v2.m_posMatrix->mf_Matrice4[0][0];
+		v2y = pos.m_v2.m_posMatrix->mf_Matrice4[1][1];
+
+		v3x = pos.m_v3.m_posMatrix->mf_Matrice4[0][0];
+		v3y = pos.m_v3.m_posMatrix->mf_Matrice4[1][1];
 
 		float invslope1 = (v2x - v1x)
 						/ (v2y - v1y);
@@ -83,7 +85,7 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 			//std::cout << p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_r << '\n';
 			while(true)
 			{
-				ZBuffer(&p_Target, p_scene);
+				//ZBuffer(&p_Target, p_scene);
 
 				p_Target.m_pixels[x0 + y0 * m_width].ucm_r = (int)-sqrt(pow(v1x - x0, 2) + pow(v1y - y0, 2)) / 2;
 				p_Target.m_pixels[x0 + y0 * m_width].ucm_g = (int)-sqrt(pow(v2x - x0, 2) + pow(v2y - y0, 2)) / 2;

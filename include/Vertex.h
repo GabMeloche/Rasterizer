@@ -1,12 +1,18 @@
 #pragma once
 #include <Math/Vector/Vec3.h>
+#include <Math/Matrix/Mat4.h>
 #include <Color.h>
 
 using namespace Math::Vector;
-
+using namespace Math::Matrix;
 struct Vertex
 {
 	Vec3 m_position;
+
+	Mat4* m_posMatrix;
+	Mat4* m_rotation;
+	Mat4* m_scale;
+
 	Color m_color;
 
 	bool operator<(const Vertex& p_other)

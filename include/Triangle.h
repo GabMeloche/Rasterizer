@@ -9,10 +9,8 @@ struct Triangle
 	Vertex m_v2;
 	Vertex m_v3;
 
-	Vertex& operator[](const unsigned int p_index)
+	Vertex& operator[](const int p_index)
 	{
-		assert(p_index < 3);
-
 		switch (p_index)
 		{
 		case 0:
@@ -23,6 +21,14 @@ struct Triangle
 			return m_v3;
 		default:
 			break;
+		}
+		if (p_index > 2)
+		{
+			return m_v1;
+		}
+		else if (p_index < 0)
+		{
+			return m_v3;
 		}
 	}
 };

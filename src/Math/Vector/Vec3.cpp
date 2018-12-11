@@ -41,6 +41,14 @@ float Vec3::DistanceBtwPts(const Vec3& p_v1, const Vec3& p_v2)
 		+ pow(p_v1.mf_z - p_v2.mf_z, 2));
 }
 
+float Vec3::dotProduct(Vec3 & p_v1, Vec3 & p_v2)
+{
+	
+	return (p_v1.mf_x * p_v2.mf_x) + 
+		(p_v1.mf_y * p_v2.mf_y) +
+		(p_v1.mf_z * p_v2.mf_z);
+}
+
 void Vec3::Normalize()
 {
 	mf_x = mf_x / sqrt(pow(mf_x, 2));
@@ -48,25 +56,30 @@ void Vec3::Normalize()
 	mf_z = mf_z / sqrt(pow(mf_z, 2));
 }
 
-Vec3& Vec3::operator*(float pf_scalar)
+Vec3 Vec3::operator*(float pf_scalar)
 {
-	Vec3* p_tmp = new Vec3;
+	float x = mf_x * pf_scalar;
+	float y = mf_y * pf_scalar;
+	float z = mf_z * pf_scalar;
 
-	p_tmp->mf_x = mf_x * pf_scalar;
-	p_tmp->mf_x = mf_y * pf_scalar;
-	p_tmp->mf_x = mf_z * pf_scalar;
-
-	return *p_tmp;
+	return Vec3(x, y, z);
 
 }
 
-Vec3& Vec3::operator+(Vec3& p_other)
+Vec3 Math::Vector::operator+(Vec3& p_1, Vec3& p_2)
 {
-	Vec3* p_tmp = new Vec3;
+	float x = p_1.mf_x + p_2.mf_x;
+	float y = p_1.mf_y + p_2.mf_y;
+	float z = p_1.mf_z + p_2.mf_z;
 
-	p_tmp->mf_x = mf_x + p_other.mf_x;
-	p_tmp->mf_x = mf_y + p_other.mf_y;
-	p_tmp->mf_x = mf_z + p_other.mf_z;
-
-	return *p_tmp;
+	return Vec3(x, y, z);
 }
+Vec3 Math::Vector::operator-(Vec3& p_1, Vec3& p_2)
+{
+	float x = p_1.mf_x - p_2.mf_x;
+	float y = p_1.mf_y - p_2.mf_y;
+	float z = p_1.mf_z - p_2.mf_z;
+
+	return Vec3(x, y, z);
+}
+

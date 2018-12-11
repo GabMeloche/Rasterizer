@@ -82,21 +82,6 @@ Math::Vector::Vec4& Mat4::operator*(const Math::Vector::Vec4& p_Vector)
     return *TmpVec;
 }
 
-Mat4 Math::Matrix::Mat4::CreateTransformMatrix(const Vector::Vec3 & rotation, const Vector::Vec3 & position, const Vector::Vec3 & scale)
-{
-	//Mat4 TmpMatTrans;
-	//Mat4 TmpMatScale;
-	//Mat4 TmpMatRotate;
-
-	////TmpMatTrans = CreateTranslationMatrix(position);
-	//TmpMatRotate = CreateRotationMatrix(rotation);
-	//TmpMatScale = CreateScaleMatrix(scale);
-
-	Mat4 FinalTransformMat;
-
-	return FinalTransformMat;
-}
-
 Mat4* Math::Matrix::Mat4::CreateTranslationMatrix(const Vector::Vec3 & p_Translation)
 {
 	Mat4* TranslateMat = new Mat4();
@@ -108,46 +93,47 @@ Mat4* Math::Matrix::Mat4::CreateTranslationMatrix(const Vector::Vec3 & p_Transla
 	return TranslateMat;
 }
 
-Mat4 Math::Matrix::Mat4::CreateScaleMatrix(const float& p_Scale)
+Mat4* Math::Matrix::Mat4::CreateScaleMatrix(const float& p_Scale)
 {
-	Mat4 ScaleMat;
+	Mat4* ScaleMat = new Mat4();
 
-	ScaleMat.mf_Matrice4[0][0] = p_Scale;
-	ScaleMat.mf_Matrice4[1][1] = p_Scale;
-	ScaleMat.mf_Matrice4[2][2] = p_Scale;
+	ScaleMat->mf_Matrice4[0][0] = p_Scale;
+	ScaleMat->mf_Matrice4[1][1] = p_Scale;
+	ScaleMat->mf_Matrice4[2][2] = p_Scale;
 
 	return ScaleMat;
 }
 
-Mat4 Math::Matrix::Mat4::CreateRotationMatrix(const float& p_Angle, bool& isX, bool& isY, bool& isZ)
+Mat4* Math::Matrix::Mat4::CreateRotationMatrix(const float& p_Angle, bool& isX, bool& isY, bool& isZ)
 {
-	Mat4 RotateMatX;
-	Mat4 RotateMatY;
-	Mat4 RotateMatZ;
+	Mat4* RotateMatX = new Mat4();
+	Mat4* RotateMatY = new Mat4();
+	Mat4* RotateMatZ = new Mat4();
 
 	if (isX)
 	{
-		RotateMatX.mf_Matrice4[1][1] = cos(p_Angle);
-		RotateMatX.mf_Matrice4[1][2] = -sin(p_Angle);
-		RotateMatX.mf_Matrice4[2][1] = cos(p_Angle);
-		RotateMatX.mf_Matrice4[2][2] = sin(p_Angle);
+		RotateMatX->mf_Matrice4[1][1] = cos(p_Angle);
+		RotateMatX->mf_Matrice4[1][2] = -sin(p_Angle);
+		RotateMatX->mf_Matrice4[2][1] = cos(p_Angle);
+		RotateMatX->mf_Matrice4[2][2] = sin(p_Angle);
 	}
 	if (isY)
 	{
-		RotateMatY.mf_Matrice4[0][0] = cos(p_Angle);
-		RotateMatY.mf_Matrice4[0][2] = -sin(p_Angle);
-		RotateMatY.mf_Matrice4[2][0] = cos(p_Angle);
-		RotateMatY.mf_Matrice4[2][2] = sin(p_Angle);
+		RotateMatY->mf_Matrice4[0][0] = cos(p_Angle);
+		RotateMatY->mf_Matrice4[0][2] = -sin(p_Angle);
+		RotateMatY->mf_Matrice4[2][0] = cos(p_Angle);
+		RotateMatY->mf_Matrice4[2][2] = sin(p_Angle);
 	}
 	if (isZ)
 	{
-		RotateMatZ.mf_Matrice4[0][0] = cos(p_Angle);
-		RotateMatZ.mf_Matrice4[0][1] = -sin(p_Angle);
-		RotateMatZ.mf_Matrice4[1][0] = cos(p_Angle);
-		RotateMatZ.mf_Matrice4[1][1] = sin(p_Angle);
+		RotateMatZ->mf_Matrice4[0][0] = cos(p_Angle);
+		RotateMatZ->mf_Matrice4[0][1] = -sin(p_Angle);
+		RotateMatZ->mf_Matrice4[1][0] = cos(p_Angle);
+		RotateMatZ->mf_Matrice4[1][1] = sin(p_Angle);
 	}
 
-	Mat4 FinalRotateMat = RotateMatX * RotateMatY * RotateMatZ;
+	Mat4* FinalRotateMat = new Mat4();
+	FinalRotateMat = *RotateMatX * *RotateMatY * *RotateMatZ;
 
 	return FinalRotateMat;
 }

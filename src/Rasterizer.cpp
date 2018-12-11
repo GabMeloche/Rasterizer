@@ -4,6 +4,10 @@
 #include <Math/Vector/Vec3.h>
 #include <iostream>
 
+
+Mat4 Ortho;
+
+
 Rasterizer::Rasterizer()
 {
 	m_zBuffer = new float*[1024];
@@ -52,13 +56,32 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 			//LOOP FOR EACH LINE OF THE TRIANGLE
 			for (int j = 0; j < 3; ++j)
 			{
+				Mat4 Rotation;
+				Rotation = Mat4::CreateRotationMatrix(10, false, true, false);
+
+				*p_scene->getEntities()[i]->getMesh()->getTriangles()[k][j].m_pos = Rotation * *p_scene->getEntities()[i]->getMesh()->getTriangles()[k][j].m_pos;
+
+				float distance = 2;
+				float finalZ = 1 / (distance - p_scene->getEntities()[i]->getMesh()->getTriangles()[k][j].m_pos->mf_z);
+
+				float OrthoMatrix[4][4] = {
+				{ 1,0,0,0},
+				{ 0,1,0,0},
+				{ 0,0,0,0},
+				{ 0,0,0,1 }
+				};
+
+				Ortho.SetMatrix(OrthoMatrix);
+
+				*p_scene->getEntities()[i]->getMesh()->getTriangles()[k][j].m_pos = Ortho * *p_scene->getEntities()[i]->getMesh()->getTriangles()[k][j].m_pos;
+
 				Triangle pos = p_scene->getEntities()[i]->getMesh()->getTriangles()[k];
-				x1 = pos[j].m_posMatrix->mf_Matrice4[0][0];
-				y1 = pos[j].m_posMatrix->mf_Matrice4[1][1];
+				x1 = pos[j].m_pos->mf_x;
+				y1 = pos[j].m_pos->mf_y;
 
 
-				x2 = pos[j + 1].m_posMatrix->mf_Matrice4[0][0];
-				y2 = pos[j + 1].m_posMatrix->mf_Matrice4[1][1];
+				x2 = pos[j + 1].m_pos->mf_x;
+				y2 = pos[j + 1].m_pos->mf_y;
 
 				const bool steep = (fabs(y2 - y1) > fabs(x2 - x1));
 				if (steep)
@@ -192,6 +215,7 @@ void Rasterizer::ZBuffer(unsigned int p_x, unsigned int p_y, Triangle& p_triangl
 	if (m_zBuffer[p_x][p_y] < Point.mf_z)
 	{
 		m_zBuffer[p_x][p_y] = Point.mf_z;
+
 		p_texture.SetPixelColor(p_x, p_y, { color, 0, 0, 255 });
 		++color;
 		

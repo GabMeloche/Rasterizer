@@ -10,17 +10,18 @@ Mesh* Mesh::CreateCube()
 {
 	Mesh* mesh = new Mesh;
 
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{-0.5f, 0.5f, 0.0f} });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{-0.5f, -0.5f, 0.0f} });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{0.5f, -0.5f, 0.0f} });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{0.5f, 0.5f, 0.0f} });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -0.5f, 0.5f, 1.0f } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -0.5f, -0.5f, 1.0f } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 0.5f, -0.5f, 1.0f } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 0.5f, 0.5f, 1.0f } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 400, 600, 0.0f} });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 400, 400, 0.0f} });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 600, 600, 0.0f} });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 600, 400, 0.0f} });
 
-	mesh->makeTriangles();
-	/*mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[0], 
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 400, 400, 1000 } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 600, 400, 1000 } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 600, 600, 1000 } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 400, 600, 1000 } });
+
+	//mesh->makeTriangles();
+	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[0], 
 											mesh->m_vertices[1], 
 											mesh->m_vertices[2] });
 	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[1],
@@ -61,7 +62,14 @@ Mesh* Mesh::CreateCube()
 	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[2],
 		mesh->m_vertices[7],
 		mesh->m_vertices[6] }); //bottom
-		*/
+		
+	for (int i = 0; i < mesh->m_triangles.size(); ++i)
+	{
+		mesh->m_triangles[i].m_v1.m_pos = new Vec4(mesh->m_triangles[i].m_v1.m_position);
+		mesh->m_triangles[i].m_v2.m_pos = new Vec4(mesh->m_triangles[i].m_v2.m_position);
+		mesh->m_triangles[i].m_v3.m_pos = new Vec4(mesh->m_triangles[i].m_v3.m_position);
+	}
+
 	return mesh;
 }
 
@@ -105,8 +113,7 @@ Mesh * Mesh::CreateTriangle(int x, int y, int z)
 	m_triangle.m_v1.m_position.mf_y = y;
 	m_triangle.m_v1.m_position.mf_z = z;
 
-	m_triangle.m_v1.m_posMatrix = new Mat4(m_triangle.m_v1.m_position);
-	*m_triangle.m_v1.m_posMatrix = *m_triangle.m_v1.m_posMatrix * Ortho;
+	//*m_triangle.m_v1.m_posMatrix = *m_triangle.m_v1.m_posMatrix * Ortho;
 
 	/*m_texture->m_pixels[500 + 200 * m_texture->mui_w].ucm_r = 255;
 	m_texture->m_pixels[500 + 200 * m_texture->mui_w].ucm_g = 0;
@@ -117,8 +124,7 @@ Mesh * Mesh::CreateTriangle(int x, int y, int z)
 	m_triangle.m_v2.m_position.mf_y = y + 400;
 	m_triangle.m_v2.m_position.mf_z = z;
 
-	m_triangle.m_v2.m_posMatrix = new Mat4(m_triangle.m_v2.m_position);
-	*m_triangle.m_v2.m_posMatrix = *m_triangle.m_v2.m_posMatrix * Ortho;
+	//*m_triangle.m_v2.m_posMatrix = *m_triangle.m_v2.m_posMatrix * Ortho;
 
 	/*m_texture->m_pixels[250 + 600 * m_texture->mui_w].ucm_r = 0;
 	m_texture->m_pixels[250 + 600 * m_texture->mui_w].ucm_g = 255;
@@ -129,14 +135,13 @@ Mesh * Mesh::CreateTriangle(int x, int y, int z)
 	m_triangle.m_v3.m_position.mf_y = y + 400;
 	m_triangle.m_v3.m_position.mf_z = z;
 
-	m_triangle.m_v3.m_posMatrix = new Mat4(m_triangle.m_v3.m_position);
-	*m_triangle.m_v3.m_posMatrix = *m_triangle.m_v3.m_posMatrix * Ortho;
+	//*m_triangle.m_v3.m_posMatrix = *m_triangle.m_v3.m_posMatrix * Ortho;
 
 	/*m_texture->m_pixels[750 + 600 * m_texture->mui_w].ucm_r = 0;
 	m_texture->m_pixels[750 + 600 * m_texture->mui_w].ucm_g = 0;
 	m_texture->m_pixels[750 + 600 * m_texture->mui_w].ucm_b = 255;*/
 
-	mesh->m_triangles.push_back(m_triangle);
+	mesh->m_triangles.emplace_back(m_triangle);
 
 	return mesh;
 }

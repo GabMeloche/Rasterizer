@@ -104,7 +104,7 @@ Mat4* Math::Matrix::Mat4::CreateScaleMatrix(const float& p_Scale)
 	return ScaleMat;
 }
 
-Mat4* Math::Matrix::Mat4::CreateRotationMatrix(const float& p_Angle, bool& isX, bool& isY, bool& isZ)
+Mat4 Math::Matrix::Mat4::CreateRotationMatrix(const float& p_Angle, const bool& isX, const bool& isY, const bool& isZ)
 {
 	Mat4 RotateMatX;
 	Mat4 RotateMatY;
@@ -132,8 +132,8 @@ Mat4* Math::Matrix::Mat4::CreateRotationMatrix(const float& p_Angle, bool& isX, 
 		RotateMatZ.mf_Matrice4[1][1] = sin(p_Angle);
 	}
 
-	Mat4* FinalRotateMat = new Mat4();
-	*FinalRotateMat = RotateMatX * RotateMatY * RotateMatZ;
+	Mat4 FinalRotateMat;
+	FinalRotateMat = RotateMatX * RotateMatY * RotateMatZ;
 
 	return FinalRotateMat;
 }

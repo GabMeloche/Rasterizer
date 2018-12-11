@@ -9,7 +9,7 @@ struct Vertex
 {
 	Vec3 m_position;
 
-	Mat4* m_posMatrix;
+	Vec4* m_pos;
 	Mat4* m_rotation;
 	Mat4* m_scale;
 

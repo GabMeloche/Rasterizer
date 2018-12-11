@@ -25,5 +25,7 @@ namespace Math::Matrix
     	static Mat4* CreateTranslationMatrix(const Vector::Vec3& p_Translation);
 		static Mat4 CreateScaleMatrix(const Vector::Vec3& p_Scale);
 		static Mat4 CreateRotationMatrix(const Vector::Vec3& p_Rotation);
+
+		Vector::Vec4 Vec2dOrtho(const Mat4& p_TransformMat, const Vector::Vec4& p_Vec3D);
     };
 }

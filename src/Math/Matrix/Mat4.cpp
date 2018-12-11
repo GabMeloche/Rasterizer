@@ -55,7 +55,7 @@ Mat4& Mat4::operator*(const Mat4 & p_Matrix)
 	return *TmpMat;
 }
 
-Math::Vector::Vec4& Mat4::operator*(const Math::Vector::Vec4& p_Vector)
+Math::Vector::Vec4& Mat4::operator*(const Vector::Vec4& p_Vector)
 {
 	auto* TmpVec = new Vector::Vec4;
 
@@ -92,56 +92,83 @@ Mat4 Math::Matrix::Mat4::CreateTransformMatrix(const Vector::Vec3 & rotation, co
 	TmpMatRotate = CreateRotationMatrix(rotation);
 	TmpMatScale = CreateScaleMatrix(scale);
 
-	Mat4 FinalMat = TmpMatTrans * TmpMatRotate * TmpMatScale;
+	Mat4 FinalTransformMat = TmpMatTrans * TmpMatRotate * TmpMatScale;
 
-	return FinalMat;
+	return FinalTransformMat;
 }
 
 Mat4* Math::Matrix::Mat4::CreateTranslationMatrix(const Vector::Vec3 & p_Translation)
 {
-	Mat4* TmpMat = new Mat4();
+	Mat4* TranslateMat = new Mat4();
 
-	TmpMat->mf_Matrice4[0][3] = p_Translation.mf_x;
-	TmpMat->mf_Matrice4[1][3] = p_Translation.mf_y;
-	TmpMat->mf_Matrice4[2][3] = p_Translation.mf_z;
+	TranslateMat->mf_Matrice4[0][3] = p_Translation.mf_x;
+	TranslateMat->mf_Matrice4[1][3] = p_Translation.mf_y;
+	TranslateMat->mf_Matrice4[2][3] = p_Translation.mf_z;
 
-	return TmpMat;
+	return TranslateMat;
 }
 
 Mat4 Math::Matrix::Mat4::CreateScaleMatrix(const Vector::Vec3 & p_Scale)
 {
-	Mat4 TmpMat;
+	Mat4 ScaleMat;
 
-	TmpMat.mf_Matrice4[0][0] = p_Scale.mf_x;
-	TmpMat.mf_Matrice4[1][1] = p_Scale.mf_y;
-	TmpMat.mf_Matrice4[2][2] = p_Scale.mf_z;
+	ScaleMat.mf_Matrice4[0][0] = p_Scale.mf_x;
+	ScaleMat.mf_Matrice4[1][1] = p_Scale.mf_y;
+	ScaleMat.mf_Matrice4[2][2] = p_Scale.mf_z;
 
-	return TmpMat;
+	return ScaleMat;
 }
 
 Mat4 Math::Matrix::Mat4::CreateRotationMatrix(const Vector::Vec3 & p_Rotation)
 {
-	Mat4 TmpMatX;
-	Mat4 TmpMatY;
-	Mat4 TmpMatZ;
+	Mat4 RotateMatX;
+	Mat4 RotateMatY;
+	Mat4 RotateMatZ;
 
-	TmpMatX.mf_Matrice4[1][1] = cos(p_Rotation.mf_x);
-	TmpMatX.mf_Matrice4[1][2] = -sin(p_Rotation.mf_x);
-	TmpMatX.mf_Matrice4[2][1] = cos(p_Rotation.mf_x);
-	TmpMatX.mf_Matrice4[2][2] = sin(p_Rotation.mf_x);
+	RotateMatX.mf_Matrice4[1][1] = cos(p_Rotation.mf_x);
+	RotateMatX.mf_Matrice4[1][2] = -sin(p_Rotation.mf_x);
+	RotateMatX.mf_Matrice4[2][1] = cos(p_Rotation.mf_x);
+	RotateMatX.mf_Matrice4[2][2] = sin(p_Rotation.mf_x);
     
-	TmpMatY.mf_Matrice4[0][0] = cos(p_Rotation.mf_y);
-	TmpMatY.mf_Matrice4[0][2] = -sin(p_Rotation.mf_y);
-	TmpMatY.mf_Matrice4[2][0] = cos(p_Rotation.mf_y);
-	TmpMatY.mf_Matrice4[2][2] = sin(p_Rotation.mf_y);
+	RotateMatY.mf_Matrice4[0][0] = cos(p_Rotation.mf_y);
+	RotateMatY.mf_Matrice4[0][2] = -sin(p_Rotation.mf_y);
+	RotateMatY.mf_Matrice4[2][0] = cos(p_Rotation.mf_y);
+	RotateMatY.mf_Matrice4[2][2] = sin(p_Rotation.mf_y);
     
-	TmpMatZ.mf_Matrice4[0][0] = cos(p_Rotation.mf_z);
-	TmpMatZ.mf_Matrice4[0][1] = -sin(p_Rotation.mf_z);
-	TmpMatZ.mf_Matrice4[1][0] = cos(p_Rotation.mf_z);
-	TmpMatZ.mf_Matrice4[1][1] = sin(p_Rotation.mf_z);
+	RotateMatZ.mf_Matrice4[0][0] = cos(p_Rotation.mf_z);
+	RotateMatZ.mf_Matrice4[0][1] = -sin(p_Rotation.mf_z);
+	RotateMatZ.mf_Matrice4[1][0] = cos(p_Rotation.mf_z);
+	RotateMatZ.mf_Matrice4[1][1] = sin(p_Rotation.mf_z);
 
-	Mat4 TmpMatTotal = TmpMatX * TmpMatY * TmpMatZ;
+	Mat4 FinalRotateMat = RotateMatX * RotateMatY * RotateMatZ;
 
-	return TmpMatTotal;
+	return FinalRotateMat;
+}
+
+Math::Vector::Vec4 Math::Matrix::Mat4::Vec2dOrtho(const Mat4 & p_TransformMat, const Vector::Vec4 & p_Vec3D)
+{
+	Vector::Vec4 newVec2D;
+
+	newVec2D.mf_x += p_TransformMat.mf_Matrice4[0][0] * p_Vec3D.mf_x;
+	newVec2D.mf_x += p_TransformMat.mf_Matrice4[0][1] * p_Vec3D.mf_y;
+	newVec2D.mf_x += p_TransformMat.mf_Matrice4[0][2] * p_Vec3D.mf_z;
+	newVec2D.mf_x += p_TransformMat.mf_Matrice4[0][3] * p_Vec3D.mf_w;
+
+	newVec2D.mf_y += p_TransformMat.mf_Matrice4[1][0] * p_Vec3D.mf_x;
+	newVec2D.mf_y += p_TransformMat.mf_Matrice4[1][1] * p_Vec3D.mf_y;
+	newVec2D.mf_y += p_TransformMat.mf_Matrice4[1][2] * p_Vec3D.mf_z;
+	newVec2D.mf_y += p_TransformMat.mf_Matrice4[1][3] * p_Vec3D.mf_w;
+
+	newVec2D.mf_z += p_TransformMat.mf_Matrice4[2][0] * p_Vec3D.mf_x;
+	newVec2D.mf_z += p_TransformMat.mf_Matrice4[2][1] * p_Vec3D.mf_y;
+	newVec2D.mf_z += p_TransformMat.mf_Matrice4[2][2] * p_Vec3D.mf_z;
+	newVec2D.mf_z += p_TransformMat.mf_Matrice4[2][3] * p_Vec3D.mf_w;
+
+	newVec2D.mf_w += p_TransformMat.mf_Matrice4[3][0] * p_Vec3D.mf_x;
+	newVec2D.mf_w += p_TransformMat.mf_Matrice4[3][1] * p_Vec3D.mf_y;
+	newVec2D.mf_w += p_TransformMat.mf_Matrice4[3][2] * p_Vec3D.mf_z;
+	newVec2D.mf_w += p_TransformMat.mf_Matrice4[3][3] * p_Vec3D.mf_w;
+
+	return newVec2D;
 }
 

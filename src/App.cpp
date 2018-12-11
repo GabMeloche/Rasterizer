@@ -25,18 +25,14 @@ App::~App()
 
 void App::Startup()
 {
-	Mesh* triangle = new Mesh;
-	triangle = Mesh::CreateTriangle(700, 200, 0);
-	Mesh* triangle2 = new Mesh;
-	triangle2 = Mesh::CreateTriangle(250, 200, 0);
+	Mesh* cube = new Mesh;
+	cube = Mesh::CreateCube();
 
 	Entity* entity = new Entity;
-	entity->setMesh(triangle);
-	Entity* entity2 = new Entity;
-	entity2->setMesh(triangle2);
+	entity->setMesh(cube);
 
 	m_scene->getEntities().emplace_back(entity);
-	m_scene->getEntities().emplace_back(entity2);
+
 	MainLoop();
 }
 

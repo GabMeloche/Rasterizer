@@ -35,95 +35,139 @@ void Rasterizer::Convert2Dto3D(Vertex& m_inPoint)
 
 void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_Renderer)
 {
-	float v1x;
-	float v1y;
-	float v2x;
-	float v2y;
-	float v3x;
-	float v3y;
+	float x1;
+	float y1;
+	float x2;
+	float y2;
 
-	for (int i = 0; i < 1; i++)
+	//FOR EACH MESH
+	for (int i = 0; i < p_scene->getEntities().size(); i++)
 	{
+		//FOR EACH TRIANGLE IN THE MESH
 		for (int k = 0; k < p_scene->getEntities()[i]->getMesh()->getTriangles().size(); ++k)
 		{
-			int scanlineY = 0;
-			Triangle pos = p_scene->getEntities()[i]->getMesh()->getTriangles()[k];
-			v1x = pos.m_v1.m_posMatrix->mf_Matrice4[0][0];
-			v1y = pos.m_v1.m_posMatrix->mf_Matrice4[1][1];
+			int m_width = p_Target.mui_w;
 
-			v2x = pos.m_v2.m_posMatrix->mf_Matrice4[0][0];
-			v2y = pos.m_v2.m_posMatrix->mf_Matrice4[1][1];
-
-			v3x = pos.m_v3.m_posMatrix->mf_Matrice4[0][0];
-			v3y = pos.m_v3.m_posMatrix->mf_Matrice4[1][1];
-
-			float invslope1 = (v2x - v1x)
-				/ (v2y - v1y);
-
-			float invslope2 = (v3x - v1x)
-				/ (v3y - v1y);
-
-
-			float curx1 = v1x;
-			float curx2 = v1x;
-			ZBuffer(&p_Target, p_scene);
-
-			for (scanlineY = v1y; scanlineY <= v2y; scanlineY++)
+			//LOOP FOR EACH LINE OF THE TRIANGLE
+			for (int j = 0; j < 3; ++j)
 			{
-				int m_width = p_Target.mui_w;
+				Triangle pos = p_scene->getEntities()[i]->getMesh()->getTriangles()[k];
+				x1 = pos[j].m_posMatrix->mf_Matrice4[0][0];
+				y1 = pos[j].m_posMatrix->mf_Matrice4[1][1];
 
-				int x0 = (int)curx1;
-				int	y0 = scanlineY;
-				int	x1 = (int)curx2;
-				int	y1 = scanlineY;
 
-				int dx = abs(x1 - x0);
-				int	sx = x0<x1 ? 1 : -1;
+				x2 = pos[j + 1].m_posMatrix->mf_Matrice4[0][0];
+				y2 = pos[j + 1].m_posMatrix->mf_Matrice4[1][1];
 
-				int dy = -abs(y1 - y0);
-				int	sy = y0<y1 ? 1 : -1;
-
-				int err = dx + dy;
-				int e2 = 0;
-
-				//std::cout << p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_r << '\n';
-				while (true)
+				const bool steep = (fabs(y2 - y1) > fabs(x2 - x1));
+				if (steep)
 				{
+					std::swap(x1, y1);
+					std::swap(x2, y2);
+				}
 
-					/*p_Target.m_pixels[x0 + y0 * m_width].ucm_r = (int)-sqrt(pow(v1x - x0, 2) + pow(v1y - y0, 2)) / 2;
-					p_Target.m_pixels[x0 + y0 * m_width].ucm_g = (int)-sqrt(pow(v2x - x0, 2) + pow(v2y - y0, 2)) / 2;
-					p_Target.m_pixels[x0 + y0 * m_width].ucm_b = (int)-sqrt(pow(v3x - x0, 2) + pow(v3y - y0, 2)) / 2;*/
+				if (x1 > x2)
+				{
+					std::swap(x1, x2);
+					std::swap(y1, y2);
+				}
 
-					SDL_SetRenderDrawColor(p_Renderer, p_Target.m_pixels[x0 + y0 * m_width].ucm_r,
-						p_Target.m_pixels[x0 + y0 * m_width].ucm_g,
-						p_Target.m_pixels[x0 + y0 * m_width].ucm_b,
-						p_Target.m_pixels[x0 + y0 * m_width].ucm_a);
-					
-					//SDL_SetRenderDrawColor(p_Renderer, 255, 255, 255, 255);
-					SDL_RenderDrawPoint(p_Renderer, x0, y0);
+				const float dx = x2 - x1;
+				const float dy = fabs(y2 - y1);
 
-					if (x0 == x1 && y0 == y1)
-						break;
+				float error = dx / 2.0f;
+				const int ystep = (y1 < y2) ? 1 : -1;
+				int y = (int)y1;
 
-					e2 = 2 * err;
+				const int maxX = (int)x2;
 
-					if (e2 >= dy)
+				for (int x = (int)x1; x<maxX; x++)
+				{
+					if (steep)
 					{
-						err += dy;
-						x0 += sx;
+						SDL_SetRenderDrawColor(p_Renderer, 255, 255, 255, 255);
+						SDL_RenderDrawPoint(p_Renderer, y, x);
+					}
+					else
+					{
+						SDL_SetRenderDrawColor(p_Renderer, 255, 255, 255, 255);
+						SDL_RenderDrawPoint(p_Renderer, x, y);
 					}
 
-					if (e2 <= dx)
+					error -= dy;
+					if (error < 0)
 					{
-						err += dx;
-						y0 += sy;
+						y += ystep;
+						error += dx;
 					}
 				}
-				curx1 += invslope1;
-				curx2 += invslope2;
+
+				//float invslope1 = (v2x - v1x)
+				//	/ (v2y - v1y);
+
+				//float invslope2 = (v3x - v1x)
+				//	/ (v3y - v1y);
+
+
+				//float curx1 = v1x;
+				//float curx2 = v1x;
+				////ZBuffer(&p_Target, p_scene);
+
+				//for (int scanlineY = v1y; scanlineY <= v2y; scanlineY++)
+				//{
+				//	int m_width = p_Target.mui_w;
+
+				//	int x0 = (int)curx1;
+				//	int	y0 = scanlineY;
+				//	int	x1 = (int)curx2;
+				//	int	y1 = scanlineY;
+
+				//	int dx = abs(x1 - x0);
+				//	int	sx = x0 < x1 ? 1 : -1;
+
+				//	int dy = -abs(y1 - y0);
+				//	int	sy = y0 < y1 ? 1 : -1;
+
+				//	int err = dx + dy;
+				//	int e2;
+
+				//	//std::cout << p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_r << '\n';
+				//	while (true)
+				//	{
+
+				//		p_Target.m_pixels[x0 + y0 * m_width].ucm_r = (int)-sqrt(pow(v1x - x0, 2) + pow(v1y - y0, 2)) / 2;
+				//		p_Target.m_pixels[x0 + y0 * m_width].ucm_g = (int)-sqrt(pow(v2x - x0, 2) + pow(v2y - y0, 2)) / 2;
+				//		p_Target.m_pixels[x0 + y0 * m_width].ucm_b = (int)-sqrt(pow(v3x - x0, 2) + pow(v3y - y0, 2)) / 2;
+
+				//		SDL_SetRenderDrawColor(p_Renderer, p_Target.m_pixels[x0 + y0 * m_width].ucm_r,
+				//			p_Target.m_pixels[x0 + y0 * m_width].ucm_g,
+				//			p_Target.m_pixels[x0 + y0 * m_width].ucm_b,
+				//			p_Target.m_pixels[x0 + y0 * m_width].ucm_a);
+
+				//		SDL_RenderDrawPoint(p_Renderer, x0, y0);
+
+				//		if (x0 == x1 && y0 == y1)
+				//			break;
+
+				//		e2 = 2 * err;
+
+				//		if (e2 >= dy)
+				//		{
+				//			err += dy;
+				//			x0 += sx;
+				//		}
+
+				//		if (e2 <= dx)
+				//		{
+				//			err += dx;
+				//			y0 += sy;
+				//		}
+				//	}
+				//	curx1 += invslope1;
+				//	curx2 += invslope2;
+				//}
 			}
 		}
-		
 	}
 }
 

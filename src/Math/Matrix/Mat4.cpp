@@ -55,9 +55,9 @@ Mat4& Mat4::operator*(const Mat4 & p_Matrix)
 	return *TmpMat;
 }
 
-Math::Vector::Vec4& Mat4::operator*(const Vector::Vec4& p_Vector)
+Math::Vector::Vec4& Mat4::operator*(const Math::Vector::Vec4& p_Vector)
 {
-	auto* TmpVec = new Vector::Vec4;
+	auto* TmpVec = new Vector::Vec4();
 
 	TmpVec->mf_x += this->mf_Matrice4[0][0] * p_Vector.mf_x;
 	TmpVec->mf_x += this->mf_Matrice4[0][1] * p_Vector.mf_y;
@@ -92,9 +92,9 @@ Mat4 Math::Matrix::Mat4::CreateTransformMatrix(const Vector::Vec3 & rotation, co
 	//TmpMatRotate = CreateRotationMatrix(rotation);
 	//TmpMatScale = CreateScaleMatrix(scale);
 
-	//Mat4 FinalTransformMat = TmpMatTrans * TmpMatRotate * TmpMatScale;
+	Mat4 FinalTransformMat;
 
-	//return FinalTransformMat;
+	return FinalTransformMat;
 }
 
 Mat4* Math::Matrix::Mat4::CreateTranslationMatrix(const Vector::Vec3 & p_Translation)

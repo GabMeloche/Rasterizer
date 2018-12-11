@@ -13,6 +13,14 @@ Mat4::Mat4()
 		{0, 0, 0, 1}
 	};
 
+	float f_TmpOrthoMat[4][4] = {
+	{1, 0, 0, 0},
+	{0, 1, 0, 0},
+	{0, 0, 0, 0},
+	{0, 0, 0, 1}
+	};
+
+	memcpy(mf_OrthoMat, &f_TmpOrthoMat, sizeof(mf_OrthoMat));
 	SetMatrix(f_TmpMat);
 }
 
@@ -148,6 +156,9 @@ Mat4 Math::Matrix::Mat4::CreateRotationMatrix(const Vector::Vec3 & p_Rotation)
 Math::Vector::Vec4 Math::Matrix::Mat4::Vec2dOrtho(const Mat4 & p_TransformMat, const Vector::Vec4 & p_Vec3D)
 {
 	Vector::Vec4 newVec2D;
+	Mat4* OrthoMat = new Mat4();
+
+	OrthoMat->mf_Matrice4[2][2] = 0;
 
 	newVec2D.mf_x += p_TransformMat.mf_Matrice4[0][0] * p_Vec3D.mf_x;
 	newVec2D.mf_x += p_TransformMat.mf_Matrice4[0][1] * p_Vec3D.mf_y;
@@ -168,6 +179,8 @@ Math::Vector::Vec4 Math::Matrix::Mat4::Vec2dOrtho(const Mat4 & p_TransformMat, c
 	newVec2D.mf_w += p_TransformMat.mf_Matrice4[3][1] * p_Vec3D.mf_y;
 	newVec2D.mf_w += p_TransformMat.mf_Matrice4[3][2] * p_Vec3D.mf_z;
 	newVec2D.mf_w += p_TransformMat.mf_Matrice4[3][3] * p_Vec3D.mf_w;
+
+	newVec2D = *OrthoMat * newVec2D;
 
 	return newVec2D;
 }

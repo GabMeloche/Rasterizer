@@ -42,82 +42,88 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 	float v3x;
 	float v3y;
 
-	for (int i = 0; i < p_scene->getEntities().size(); i++)
+	for (int i = 0; i < 1; i++)
 	{
-		Triangle pos = p_scene->getEntities()[i]->getMesh()->getTriangles()[0];
-		v1x = pos.m_v1.m_posMatrix->mf_Matrice4[0][0];
-		v1y = pos.m_v1.m_posMatrix->mf_Matrice4[1][1];
-
-		v2x = pos.m_v2.m_posMatrix->mf_Matrice4[0][0];
-		v2y = pos.m_v2.m_posMatrix->mf_Matrice4[1][1];
-
-		v3x = pos.m_v3.m_posMatrix->mf_Matrice4[0][0];
-		v3y = pos.m_v3.m_posMatrix->mf_Matrice4[1][1];
-
-		float invslope1 = (v2x - v1x)
-						/ (v2y - v1y);
-
-		float invslope2 = (v3x - v1x)
-						/ (v3y - v1y);
-
-
-		float curx1 = v1x;
-		float curx2 = v1x;
-		ZBuffer(&p_Target, p_scene);
-
-		for (int scanlineY = v1y; scanlineY <= v2y; scanlineY++)
+		for (int k = 0; k < p_scene->getEntities()[i]->getMesh()->getTriangles().size(); ++k)
 		{
-			int m_width = p_Target.mui_w;
+			int scanlineY = 0;
+			Triangle pos = p_scene->getEntities()[i]->getMesh()->getTriangles()[k];
+			v1x = pos.m_v1.m_posMatrix->mf_Matrice4[0][0];
+			v1y = pos.m_v1.m_posMatrix->mf_Matrice4[1][1];
 
-			int x0 = (int)curx1;
-			int	y0 = scanlineY;
-			int	x1 = (int)curx2;
-			int	y1 = scanlineY;
+			v2x = pos.m_v2.m_posMatrix->mf_Matrice4[0][0];
+			v2y = pos.m_v2.m_posMatrix->mf_Matrice4[1][1];
 
-			int dx = abs(x1 - x0);
-			int	sx = x0<x1 ? 1 : -1;
+			v3x = pos.m_v3.m_posMatrix->mf_Matrice4[0][0];
+			v3y = pos.m_v3.m_posMatrix->mf_Matrice4[1][1];
 
-			int dy = -abs(y1 - y0);
-			int	sy = y0<y1 ? 1 : -1;
+			float invslope1 = (v2x - v1x)
+				/ (v2y - v1y);
 
-			int err = dx + dy;
-			int e2;
+			float invslope2 = (v3x - v1x)
+				/ (v3y - v1y);
 
-			//std::cout << p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_r << '\n';
-			while(true)
+
+			float curx1 = v1x;
+			float curx2 = v1x;
+			ZBuffer(&p_Target, p_scene);
+
+			for (scanlineY = v1y; scanlineY <= v2y; scanlineY++)
 			{
+				int m_width = p_Target.mui_w;
 
-				/*p_Target.m_pixels[x0 + y0 * m_width].ucm_r = (int)-sqrt(pow(v1x - x0, 2) + pow(v1y - y0, 2)) / 2;
-				p_Target.m_pixels[x0 + y0 * m_width].ucm_g = (int)-sqrt(pow(v2x - x0, 2) + pow(v2y - y0, 2)) / 2;
-				p_Target.m_pixels[x0 + y0 * m_width].ucm_b = (int)-sqrt(pow(v3x - x0, 2) + pow(v3y - y0, 2)) / 2;*/
+				int x0 = (int)curx1;
+				int	y0 = scanlineY;
+				int	x1 = (int)curx2;
+				int	y1 = scanlineY;
 
-				SDL_SetRenderDrawColor(p_Renderer, p_Target.m_pixels[x0 + y0 * m_width].ucm_r,
-					p_Target.m_pixels[x0 + y0 * m_width].ucm_g,
-					p_Target.m_pixels[x0 + y0 * m_width].ucm_b,
-					p_Target.m_pixels[x0 + y0 * m_width].ucm_a);
+				int dx = abs(x1 - x0);
+				int	sx = x0<x1 ? 1 : -1;
 
-				SDL_RenderDrawPoint(p_Renderer, x0, y0);
+				int dy = -abs(y1 - y0);
+				int	sy = y0<y1 ? 1 : -1;
 
-				if (x0 == x1 && y0 == y1)
-					break;
+				int err = dx + dy;
+				int e2 = 0;
 
-				e2 = 2 * err;
-
-				if (e2 >= dy)
+				//std::cout << p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_r << '\n';
+				while (true)
 				{
-					err += dy;
-					x0 += sx;
-				}
 
-				if (e2 <= dx)
-				{
-					err += dx;
-					y0 += sy;
+					/*p_Target.m_pixels[x0 + y0 * m_width].ucm_r = (int)-sqrt(pow(v1x - x0, 2) + pow(v1y - y0, 2)) / 2;
+					p_Target.m_pixels[x0 + y0 * m_width].ucm_g = (int)-sqrt(pow(v2x - x0, 2) + pow(v2y - y0, 2)) / 2;
+					p_Target.m_pixels[x0 + y0 * m_width].ucm_b = (int)-sqrt(pow(v3x - x0, 2) + pow(v3y - y0, 2)) / 2;*/
+
+					SDL_SetRenderDrawColor(p_Renderer, p_Target.m_pixels[x0 + y0 * m_width].ucm_r,
+						p_Target.m_pixels[x0 + y0 * m_width].ucm_g,
+						p_Target.m_pixels[x0 + y0 * m_width].ucm_b,
+						p_Target.m_pixels[x0 + y0 * m_width].ucm_a);
+					
+					//SDL_SetRenderDrawColor(p_Renderer, 255, 255, 255, 255);
+					SDL_RenderDrawPoint(p_Renderer, x0, y0);
+
+					if (x0 == x1 && y0 == y1)
+						break;
+
+					e2 = 2 * err;
+
+					if (e2 >= dy)
+					{
+						err += dy;
+						x0 += sx;
+					}
+
+					if (e2 <= dx)
+					{
+						err += dx;
+						y0 += sy;
+					}
 				}
+				curx1 += invslope1;
+				curx2 += invslope2;
 			}
-			curx1 += invslope1;
-			curx2 += invslope2;
 		}
+		
 	}
 }
 

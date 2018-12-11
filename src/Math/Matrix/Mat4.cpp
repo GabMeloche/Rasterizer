@@ -106,34 +106,34 @@ Mat4* Math::Matrix::Mat4::CreateScaleMatrix(const float& p_Scale)
 
 Mat4* Math::Matrix::Mat4::CreateRotationMatrix(const float& p_Angle, bool& isX, bool& isY, bool& isZ)
 {
-	Mat4* RotateMatX = new Mat4();
-	Mat4* RotateMatY = new Mat4();
-	Mat4* RotateMatZ = new Mat4();
+	Mat4 RotateMatX;
+	Mat4 RotateMatY;
+	Mat4 RotateMatZ;
 
 	if (isX)
 	{
-		RotateMatX->mf_Matrice4[1][1] = cos(p_Angle);
-		RotateMatX->mf_Matrice4[1][2] = -sin(p_Angle);
-		RotateMatX->mf_Matrice4[2][1] = cos(p_Angle);
-		RotateMatX->mf_Matrice4[2][2] = sin(p_Angle);
+		RotateMatX.mf_Matrice4[1][1] = cos(p_Angle);
+		RotateMatX.mf_Matrice4[1][2] = -sin(p_Angle);
+		RotateMatX.mf_Matrice4[2][1] = cos(p_Angle);
+		RotateMatX.mf_Matrice4[2][2] = sin(p_Angle);
 	}
 	if (isY)
 	{
-		RotateMatY->mf_Matrice4[0][0] = cos(p_Angle);
-		RotateMatY->mf_Matrice4[0][2] = -sin(p_Angle);
-		RotateMatY->mf_Matrice4[2][0] = cos(p_Angle);
-		RotateMatY->mf_Matrice4[2][2] = sin(p_Angle);
+		RotateMatY.mf_Matrice4[0][0] = cos(p_Angle);
+		RotateMatY.mf_Matrice4[0][2] = -sin(p_Angle);
+		RotateMatY.mf_Matrice4[2][0] = cos(p_Angle);
+		RotateMatY.mf_Matrice4[2][2] = sin(p_Angle);
 	}
 	if (isZ)
 	{
-		RotateMatZ->mf_Matrice4[0][0] = cos(p_Angle);
-		RotateMatZ->mf_Matrice4[0][1] = -sin(p_Angle);
-		RotateMatZ->mf_Matrice4[1][0] = cos(p_Angle);
-		RotateMatZ->mf_Matrice4[1][1] = sin(p_Angle);
+		RotateMatZ.mf_Matrice4[0][0] = cos(p_Angle);
+		RotateMatZ.mf_Matrice4[0][1] = -sin(p_Angle);
+		RotateMatZ.mf_Matrice4[1][0] = cos(p_Angle);
+		RotateMatZ.mf_Matrice4[1][1] = sin(p_Angle);
 	}
 
 	Mat4* FinalRotateMat = new Mat4();
-	FinalRotateMat = *RotateMatX * *RotateMatY * *RotateMatZ;
+	*FinalRotateMat = RotateMatX * RotateMatY * RotateMatZ;
 
 	return FinalRotateMat;
 }

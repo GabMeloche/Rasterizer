@@ -70,6 +70,7 @@ Mesh* Mesh::CreateCube()
 		mesh->m_triangles[i].m_v3.m_pos = new Vec4(mesh->m_triangles[i].m_v3.m_position);
 	}
 
+	mesh->Normalize();
 	return mesh;
 }
 
@@ -86,11 +87,11 @@ Mesh * Mesh::CreateSphere(int pi_latitudeCount, int pi_longitudeCount)
 			float y = sin(M_PI * j / pi_longitudeCount) * sin(2 * M_PI * i / pi_latitudeCount);
 			float z = cos(M_PI * j / pi_longitudeCount);
 			v.m_position = { x, y, z };
-			std::cout << "x: " << x << "; y: " << y << "; z: " << z << std::endl;
 			mesh->m_vertices.emplace_back(v);
 		}
 	}
 	mesh->makeTriangles();
+	mesh->Normalize();
 	return mesh;
 }
 
@@ -142,8 +143,36 @@ Mesh * Mesh::CreateTriangle(int x, int y, int z)
 	m_texture->m_pixels[750 + 600 * m_texture->mui_w].ucm_b = 255;*/
 
 	mesh->m_triangles.emplace_back(m_triangle);
+	mesh->Normalize();
 
 	return mesh;
+}
+
+void Mesh::Normalize()
+{
+	for (int i = 0; i < m_vertices.size(); ++i)
+	{
+		m_vertices[i].m_normal = Vec3();
+	}
+
+	for (int i = 0; i < m_triangles.size(); ++i)
+	{
+		Vec3 e1 = m_triangles[i][0].m_position - m_triangles[i][1].m_position;
+		Vec3 e2 = m_triangles[i][2].m_position - m_triangles[i][1].m_position;
+		Vec3 no = Vec3::crossProduct(e1, e2);
+
+		m_triangles[i][0].m_normal += no;
+		m_triangles[i][0].m_normal.Normalize();
+		m_triangles[i][1].m_normal += no;
+		m_triangles[i][1].m_normal.Normalize();
+		m_triangles[i][2].m_normal += no;
+		m_triangles[i][2].m_normal.Normalize();
+	}
+
+	/*for (int i = 0; i < m_vertices.size(); ++i)
+	{
+		m_vertices[i].m_normal.Normalize();
+	}*/
 }
 
 std::vector<Triangle> Mesh::getTriangles()

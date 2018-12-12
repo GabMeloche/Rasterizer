@@ -8,7 +8,7 @@ using namespace Math::Matrix;
 struct Vertex
 {
 	Vec3 m_position;
-
+	Vec3 m_normal;
 	Vec4* m_pos;
 	Mat4* m_rotation;
 	Mat4* m_scale;

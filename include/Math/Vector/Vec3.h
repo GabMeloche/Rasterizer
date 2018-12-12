@@ -1,4 +1,5 @@
 #pragma once
+#include <cassert>
 
 namespace Math::Vector
 {
@@ -19,9 +20,12 @@ namespace Math::Vector
 		float GetMagnitude() const;
 		static float DistanceBtwPts(const Vec3& p_v1, const Vec3& p_v2);
 		static float dotProduct(Vec3& p_v1, Vec3& p_v2);
+		static Vec3 crossProduct(Vec3& p_v1, Vec3& p_v2);
 		void Normalize();
 
 		Vec3 operator*(float pf_scalar);
+		Vec3 operator+=(Vec3& p_v);
+		float operator[](int p_index);
 	};
 
 	Vec3 operator+(Vec3& p_1, Vec3& p_2);

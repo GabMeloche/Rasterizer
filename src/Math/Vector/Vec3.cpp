@@ -49,6 +49,17 @@ float Vec3::dotProduct(Vec3 & p_v1, Vec3 & p_v2)
 		(p_v1.mf_z * p_v2.mf_z);
 }
 
+Vec3 Vec3::crossProduct(Vec3 & p_v1, Vec3 & p_v2)
+{
+	Vec3 newVec;
+
+	newVec.mf_x = (p_v1.mf_y * p_v2.mf_z) - (p_v1.mf_z * p_v1.mf_y);
+	newVec.mf_y = (p_v1.mf_z * p_v2.mf_x) - (p_v1.mf_x * p_v1.mf_z);
+	newVec.mf_z = (p_v1.mf_x * p_v2.mf_y) - (p_v1.mf_y * p_v1.mf_x);
+
+	return newVec;
+}
+
 void Vec3::Normalize()
 {
 	mf_x = mf_x / sqrt(pow(mf_x, 2));
@@ -66,11 +77,37 @@ Vec3 Vec3::operator*(float pf_scalar)
 
 }
 
+float Vec3::operator[](int p_index)
+{
+	assert(p_index < 3);
+
+	switch (p_index)
+	{
+	default:
+		break;
+	case 0:
+		return mf_x;
+	case 1:
+		return mf_y;
+	case 2:
+		return mf_z;
+	}
+	return 0.0f;
+}
+
 Vec3 Math::Vector::operator+(Vec3& p_1, Vec3& p_2)
 {
 	float x = p_1.mf_x + p_2.mf_x;
 	float y = p_1.mf_y + p_2.mf_y;
 	float z = p_1.mf_z + p_2.mf_z;
+
+	return Vec3(x, y, z);
+}
+Vec3 Vec3::operator+=(Vec3 & p_v)
+{
+	float x = mf_x + p_v.mf_x;
+	float y = mf_y + p_v.mf_y;
+	float z = mf_z + p_v.mf_z;
 
 	return Vec3(x, y, z);
 }

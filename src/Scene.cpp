@@ -19,3 +19,8 @@ std::vector<Entity*>& Scene::getEntities()
 {
 	return m_entities;
 }
+
+std::vector<Light>& Scene::getLights()
+{
+	return m_lights;
+}

@@ -1,6 +1,7 @@
 #include <Math/Matrix/Mat4.h>
 #include <string.h>
 #include <iostream>
+#include <math.h>
 
 #define M_PI 3.141592
 
@@ -106,13 +107,11 @@ Mat4* Math::Matrix::Mat4::CreateScaleMatrix(const float& p_Scale)
 	return ScaleMat;
 }
 
-Mat4 Math::Matrix::Mat4::CreateRotationMatrix(const float& p_Angle, const bool& isX, const bool& isY, const bool& isZ)
+Mat4 Math::Matrix::Mat4::CreateRotationMatrix(const float& p_Angle, const Math::Vector::Vec4& p_Pos, const bool& isX, const bool& isY, const bool& isZ)
 {
 	Mat4 RotateMatX;
 	Mat4 RotateMatY;
 	Mat4 RotateMatZ;
-
-
 
 	if (isX)
 	{

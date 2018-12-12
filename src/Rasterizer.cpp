@@ -6,10 +6,11 @@
 
 
 Mat4 Ortho;
-
+float p = 0;
 
 Rasterizer::Rasterizer()
 {
+
 	m_zBuffer = new float*[1024];
 
 	for (size_t i = 0; i < 1024; ++i)
@@ -40,11 +41,12 @@ void Rasterizer::Convert2Dto3D(Vertex& m_inPoint)
 
 void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_Renderer)
 {
+	p += 3;
 	float x1;
 	float y1;
 	float x2;
 	float y2;
-
+	float finalZ = 0;
 	//FOR EACH MESH
 	for (int i = 0; i < p_scene->getEntities().size(); i++)
 	{
@@ -56,32 +58,44 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 			//LOOP FOR EACH LINE OF THE TRIANGLE
 			for (int j = 0; j < 3; ++j)
 			{
-				Mat4 Rotation;
-				Rotation = Mat4::CreateRotationMatrix(10, false, true, false);
-
-				*p_scene->getEntities()[i]->getMesh()->getTriangles()[k][j].m_pos = Rotation * *p_scene->getEntities()[i]->getMesh()->getTriangles()[k][j].m_pos;
 
 				float distance = 2;
-				float finalZ = 1 / (distance - p_scene->getEntities()[i]->getMesh()->getTriangles()[k][j].m_pos->mf_z);
+				finalZ = 1 / (distance - p_scene->getEntities()[i]->getMesh()->getTriangles()[k][j].m_pos->mf_z);
 
 				float OrthoMatrix[4][4] = {
-				{ 1,0,0,0},
-				{ 0,1,0,0},
+				{ finalZ,0,0,0},
+				{ 0,finalZ,0,0},
 				{ 0,0,0,0},
-				{ 0,0,0,1 }
+				{ 0,0,0,1}
 				};
 
+				float ScaleMatrix[4][4] = {
+				{ 1,0,0 },
+				{ 0,1,0,0 },
+				{ 0,0, 1,0 },
+				{ 0,0,0, 1 }
+				};
+
+				Mat4 Scale;
+				Scale.SetMatrix(ScaleMatrix);
+
+				Mat4 Rotation;
+				Rotation = Mat4::CreateRotationMatrix(p, false, true, false);
 				Ortho.SetMatrix(OrthoMatrix);
 
-				*p_scene->getEntities()[i]->getMesh()->getTriangles()[k][j].m_pos = Ortho * *p_scene->getEntities()[i]->getMesh()->getTriangles()[k][j].m_pos;
+				Vec4 tmpPos1 = *p_scene->getEntities()[i]->getMesh()->getTriangles()[k][j].m_pos;
+				tmpPos1 = Rotation * Scale * Ortho * tmpPos1;
 
-				Triangle pos = p_scene->getEntities()[i]->getMesh()->getTriangles()[k];
-				x1 = pos[j].m_pos->mf_x;
-				y1 = pos[j].m_pos->mf_y;
+				Vec4 tmpPos2 = *p_scene->getEntities()[i]->getMesh()->getTriangles()[k][j + 1].m_pos;
+				tmpPos2 = Rotation * Scale * Ortho * tmpPos2;
+
+				
+				x1 = tmpPos1.mf_x;
+				y1 = tmpPos1.mf_y;
 
 
-				x2 = pos[j + 1].m_pos->mf_x;
-				y2 = pos[j + 1].m_pos->mf_y;
+				x2 = tmpPos2.mf_x;
+				y2 = tmpPos2.mf_y;
 
 				const bool steep = (fabs(y2 - y1) > fabs(x2 - x1));
 				if (steep)
@@ -109,12 +123,12 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 				{
 					if (steep)
 					{
-						SDL_SetRenderDrawColor(p_Renderer, 255, 255, 255, 255);
+						SDL_SetRenderDrawColor(p_Renderer, 255, 0, 255, 255);
 						SDL_RenderDrawPoint(p_Renderer, y, x);
 					}
 					else
 					{
-						SDL_SetRenderDrawColor(p_Renderer, 255, 255, 255, 255);
+						SDL_SetRenderDrawColor(p_Renderer, 0, 255, 255, 255);
 						SDL_RenderDrawPoint(p_Renderer, x, y);
 					}
 
@@ -125,71 +139,6 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 						error += dx;
 					}
 				}
-
-				//float invslope1 = (v2x - v1x)
-				//	/ (v2y - v1y);
-
-				//float invslope2 = (v3x - v1x)
-				//	/ (v3y - v1y);
-
-
-				//float curx1 = v1x;
-				//float curx2 = v1x;
-				////ZBuffer(&p_Target, p_scene);
-
-				//for (int scanlineY = v1y; scanlineY <= v2y; scanlineY++)
-				//{
-				//	int m_width = p_Target.mui_w;
-
-				//	int x0 = (int)curx1;
-				//	int	y0 = scanlineY;
-				//	int	x1 = (int)curx2;
-				//	int	y1 = scanlineY;
-
-				//	int dx = abs(x1 - x0);
-				//	int	sx = x0 < x1 ? 1 : -1;
-
-				//	int dy = -abs(y1 - y0);
-				//	int	sy = y0 < y1 ? 1 : -1;
-
-				//	int err = dx + dy;
-				//	int e2;
-
-				//	//std::cout << p_Target.m_pixels[x0 + y0 * p_Target.mui_w].ucm_r << '\n';
-				//	while (true)
-				//	{
-
-				//		p_Target.m_pixels[x0 + y0 * m_width].ucm_r = (int)-sqrt(pow(v1x - x0, 2) + pow(v1y - y0, 2)) / 2;
-				//		p_Target.m_pixels[x0 + y0 * m_width].ucm_g = (int)-sqrt(pow(v2x - x0, 2) + pow(v2y - y0, 2)) / 2;
-				//		p_Target.m_pixels[x0 + y0 * m_width].ucm_b = (int)-sqrt(pow(v3x - x0, 2) + pow(v3y - y0, 2)) / 2;
-
-				//		SDL_SetRenderDrawColor(p_Renderer, p_Target.m_pixels[x0 + y0 * m_width].ucm_r,
-				//			p_Target.m_pixels[x0 + y0 * m_width].ucm_g,
-				//			p_Target.m_pixels[x0 + y0 * m_width].ucm_b,
-				//			p_Target.m_pixels[x0 + y0 * m_width].ucm_a);
-
-				//		SDL_RenderDrawPoint(p_Renderer, x0, y0);
-
-				//		if (x0 == x1 && y0 == y1)
-				//			break;
-
-				//		e2 = 2 * err;
-
-				//		if (e2 >= dy)
-				//		{
-				//			err += dy;
-				//			x0 += sx;
-				//		}
-
-				//		if (e2 <= dx)
-				//		{
-				//			err += dx;
-				//			y0 += sy;
-				//		}
-				//	}
-				//	curx1 += invslope1;
-				//	curx2 += invslope2;
-				//}
 			}
 		}
 	}

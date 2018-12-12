@@ -10,58 +10,58 @@ Mesh* Mesh::CreateCube()
 {
 	Mesh* mesh = new Mesh;
 
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 400, 600, 0.0f} });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 400, 400, 0.0f} });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 600, 600, 0.0f} });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 600, 400, 0.0f} });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 200, 300, 10} });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 300, 300, 10} });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 300, 200, 10} });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 200, 200, 10} });
 
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 400, 400, 1000 } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 600, 400, 1000 } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 600, 600, 1000 } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 400, 600, 1000 } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 200, 300, 20 } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 300, 300, 20 } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 300, 200, 20} });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 200, 200, 20 } });
 
 	//mesh->makeTriangles();
 	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[0], 
 											mesh->m_vertices[1], 
 											mesh->m_vertices[2] });
-	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[1],
-											mesh->m_vertices[2],
-											mesh->m_vertices[3] }); //front 
-
 	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[0],
-		mesh->m_vertices[1],
-		mesh->m_vertices[4] });
-	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[1],
-		mesh->m_vertices[4],
-		mesh->m_vertices[5] }); //top
+											mesh->m_vertices[3],
+											mesh->m_vertices[2] }); //front 
+
+	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[5],
+											mesh->m_vertices[4],
+											mesh->m_vertices[0] });
+	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[5],
+											mesh->m_vertices[1],
+											mesh->m_vertices[0] }); //top
 
 	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[0], 
-		mesh->m_vertices[2],
-		mesh->m_vertices[4] });
-	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[2],
-		mesh->m_vertices[4],
-		mesh->m_vertices[6] }); //left
+											mesh->m_vertices[3],
+											mesh->m_vertices[7] });
+	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[0],
+											mesh->m_vertices[4],
+											mesh->m_vertices[7] }); //left
 
 	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[5],
-		mesh->m_vertices[4],
-		mesh->m_vertices[6] });
+											mesh->m_vertices[4],
+											mesh->m_vertices[7] });
 	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[5],
-		mesh->m_vertices[6],
-		mesh->m_vertices[7] }); //back
+											mesh->m_vertices[6],
+											mesh->m_vertices[7] }); //back
 
-	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[5],
-		mesh->m_vertices[1],
-		mesh->m_vertices[7] });
 	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[1],
-		mesh->m_vertices[7],
-		mesh->m_vertices[3] }); //right
+											mesh->m_vertices[5],
+											mesh->m_vertices[6] });
+	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[1],
+											mesh->m_vertices[2],
+											mesh->m_vertices[6] }); //right
 
 	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[3],
-		mesh->m_vertices[2],
-		mesh->m_vertices[7] });
-	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[2],
-		mesh->m_vertices[7],
-		mesh->m_vertices[6] }); //bottom
+											mesh->m_vertices[7],
+											mesh->m_vertices[6] });
+	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[3],
+											mesh->m_vertices[2],
+											mesh->m_vertices[6] }); //bottom
 		
 	for (int i = 0; i < mesh->m_triangles.size(); ++i)
 	{
@@ -86,7 +86,6 @@ Mesh * Mesh::CreateSphere(int pi_latitudeCount, int pi_longitudeCount)
 			float y = sin(M_PI * j / pi_longitudeCount) * sin(2 * M_PI * i / pi_latitudeCount);
 			float z = cos(M_PI * j / pi_longitudeCount);
 			v.m_position = { x, y, z };
-			std::cout << "x: " << x << "; y: " << y << "; z: " << z << std::endl;
 			mesh->m_vertices.emplace_back(v);
 		}
 	}

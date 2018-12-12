@@ -1,5 +1,5 @@
-#include <Math\Vector\Vec4.h>
-#include <Math\Vector\Vec3.h>
+#include <Math/Vector/Vec4.h>
+#include <Math/Vector/Vec3.h>
 #include <cmath>
 
 using namespace Math::Vector;

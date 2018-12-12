@@ -1,5 +1,6 @@
 #pragma once
 #include <Math/Vector/Vec3.h>
+#include <Math/Matrix/Mat4.h>
 
 namespace Math::Vector
 {
@@ -14,6 +15,8 @@ namespace Math::Vector
 		Vec4(const Vec3& p_vec3 = Vec3(), float pf_w = 1.0f);
 		~Vec4() = default;
 		Vec4(const Vec4& p_other);
+
+		Vec4& operator*=(const Math::Matrix::Mat4& p_Matrix);
 
 		void Homogenize();
 		float GetMagnitude() const;

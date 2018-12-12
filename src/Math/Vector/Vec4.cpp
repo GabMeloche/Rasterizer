@@ -1,5 +1,5 @@
-#include <Math\Vector\Vec4.h>
-#include <Math\Vector\Vec3.h>
+#include <Math/Vector/Vec4.h>
+#include <Math/Vector/Vec3.h>
 #include <cmath>
 
 using namespace Math::Vector;
@@ -18,33 +18,6 @@ Vec4::Vec4(const Vec4& p_other)
 	mf_y = p_other.mf_y;
 	mf_z = p_other.mf_z;
 	mf_w = p_other.mf_w;
-}
-
-Vec4 & Math::Vector::Vec4::operator*=(const Math::Matrix::Mat4 & p_Matrix)
-{
-	auto* TmpVec = new Vector::Vec4();
-
-	TmpVec->mf_x += p_Matrix.mf_Matrice4[0][0] * this->mf_x;
-	TmpVec->mf_x += p_Matrix.mf_Matrice4[0][1] * this->mf_y;
-	TmpVec->mf_x += p_Matrix.mf_Matrice4[0][2] * this->mf_z;
-	TmpVec->mf_x += p_Matrix.mf_Matrice4[0][3] * this->mf_w;
-
-	TmpVec->mf_y += p_Matrix.mf_Matrice4[1][0] * this->mf_x;
-	TmpVec->mf_y += p_Matrix.mf_Matrice4[1][1] * this->mf_y;
-	TmpVec->mf_y += p_Matrix.mf_Matrice4[1][2] * this->mf_z;
-	TmpVec->mf_y += p_Matrix.mf_Matrice4[1][3] * this->mf_w;
-
-	TmpVec->mf_z += p_Matrix.mf_Matrice4[2][0] * this->mf_x;
-	TmpVec->mf_z += p_Matrix.mf_Matrice4[2][1] * this->mf_y;
-	TmpVec->mf_z += p_Matrix.mf_Matrice4[2][2] * this->mf_z;
-	TmpVec->mf_z += p_Matrix.mf_Matrice4[2][3] * this->mf_w;
-
-	TmpVec->mf_w += p_Matrix.mf_Matrice4[3][0] * this->mf_x;
-	TmpVec->mf_w += p_Matrix.mf_Matrice4[3][1] * this->mf_y;
-	TmpVec->mf_w += p_Matrix.mf_Matrice4[3][2] * this->mf_z;
-	TmpVec->mf_w += p_Matrix.mf_Matrice4[3][3] * this->mf_w;
-
-	return *TmpVec;
 }
 
 void Vec4::Homogenize()

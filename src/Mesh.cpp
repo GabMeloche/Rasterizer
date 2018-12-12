@@ -10,15 +10,15 @@ Mesh* Mesh::CreateCube()
 {
 	Mesh* mesh = new Mesh;
 
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 200, 300, 10} });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 300, 300, 10} });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 300, 200, 10} });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 200, 200, 10} });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 100, 200, 100} });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 200, 200, 100} });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 200, 100, 100} });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 100, 100, 100} });
 
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 200, 300, 20 } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 300, 300, 20 } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 300, 200, 20} });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 200, 200, 20 } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 100, 200, 10 } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 200, 200, 10 } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 200, 100, 10 } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 100, 100, 10 } });
 
 	//mesh->makeTriangles();
 	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[0], 

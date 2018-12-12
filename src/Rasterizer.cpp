@@ -58,36 +58,20 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 			//LOOP FOR EACH LINE OF THE TRIANGLE
 			for (int j = 0; j < 3; ++j)
 			{
-
-				float distance = 2;
-				finalZ = 1 / (distance - p_scene->getEntities()[i]->getMesh()->getTriangles()[k][j].m_pos->mf_z);
-
-				float OrthoMatrix[4][4] = {
-				{ finalZ,0,0,0},
-				{ 0,finalZ,0,0},
-				{ 0,0,0,0},
-				{ 0,0,0,1}
-				};
-
-				float ScaleMatrix[4][4] = {
-				{ 1,0,0 },
-				{ 0,1,0,0 },
-				{ 0,0, 1,0 },
-				{ 0,0,0, 1 }
-				};
-
 				Mat4 Scale;
-				Scale.SetMatrix(ScaleMatrix);
+				Scale = Mat4::CreateScaleMatrix(1);
+
+				Mat4 Ortho;
+				Ortho = Mat4::Vec2dOrtho(*p_scene->getEntities()[i]->getMesh()->getTriangles()[k][j].m_pos);
 
 				Mat4 Rotation;
-				Rotation = Mat4::CreateRotationMatrix(p, false, true, false);
-				Ortho.SetMatrix(OrthoMatrix);
+				Rotation = Mat4::CreateRotationMatrix(p, 1, 1, 1);
 
 				Vec4 tmpPos1 = *p_scene->getEntities()[i]->getMesh()->getTriangles()[k][j].m_pos;
-				tmpPos1 = Rotation * Scale * Ortho * tmpPos1;
+				tmpPos1 = Ortho * Rotation * Scale * tmpPos1;
 
 				Vec4 tmpPos2 = *p_scene->getEntities()[i]->getMesh()->getTriangles()[k][j + 1].m_pos;
-				tmpPos2 = Rotation * Scale * Ortho * tmpPos2;
+				tmpPos2 = Ortho * Rotation * Scale * tmpPos2;
 
 				
 				x1 = tmpPos1.mf_x;

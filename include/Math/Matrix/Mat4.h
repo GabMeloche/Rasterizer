@@ -20,10 +20,10 @@ namespace Math::Matrix
 		Mat4& operator*(const Mat4& p_Matrix);
 		Vector::Vec4& operator*(const Math::Vector::Vec4& p_Vector);
 
-    	static Mat4* CreateTranslationMatrix(const Vector::Vec3& p_Translation);
-		static Mat4* CreateScaleMatrix(const float& p_Scale);
+    	static Mat4 CreateTranslationMatrix(const Vector::Vec3& p_Translation);
+		static Mat4 CreateScaleMatrix(const float& p_Scale);
 		static Mat4 CreateRotationMatrix(const float& p_Angle, const bool& isX, const bool& isY, const bool& isZ);
 
-		Vector::Vec4 Vec2dOrtho(const Mat4& p_TransformMat, const Vector::Vec4& p_Vec3D);
+		static Mat4 Vec2dOrtho(const Vector::Vec4 & p_Vec3D);
     };
 }

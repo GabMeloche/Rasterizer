@@ -14,5 +14,4 @@ public:
 
 	void setMesh(Mesh* mesh);
 	Mesh* getMesh();
-	float * CheckTriangleZone();
 };

@@ -53,20 +53,18 @@ void Vec4::Normalize()
 	mf_z /= magn;
 }
 
-Vec4& Vec4::operator+(const Vec4& p_v)
+Vec4 Vec4::operator+(const Vec4& p_v)
 {
-	Vec4* p_tmp = new Vec4(Vec3(p_v.mf_x + mf_x,
+	return (Vec3(p_v.mf_x + mf_x,
 		p_v.mf_y + mf_y,
 		p_v.mf_z + mf_z));
-	return *p_tmp;
 }
 
-Vec4& Vec4::operator*(const float pf_mult)
+Vec4 Vec4::operator*(const float pf_mult)
 {
 	float x = mf_x * pf_mult;
 	float y = mf_y * pf_mult;
 	float z = mf_z * pf_mult;
 	float w = mf_w * pf_mult;
-	Vec4* p_tmp = new Vec4(Vec3(x, y, z), w);
-	return *p_tmp;
+	return Vec4(Vec3(x, y, z), w);
 }

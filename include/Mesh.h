@@ -14,7 +14,6 @@ public:
 	static Mesh* CreateCube();
 	static Mesh* CreateSphere(int pi_latitudeCount, int pi_longitudeCount);
 	static Mesh * CreateTriangle(int x, int y, int z);
-	static Mesh* CreateTriangle();
 	void Normalize();
 	std::vector<Triangle> getTriangles();
 	std::vector<Vertex> getVertices();

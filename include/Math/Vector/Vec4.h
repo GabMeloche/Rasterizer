@@ -18,8 +18,7 @@ namespace Math::Vector
 		void Homogenize();
 		float GetMagnitude() const;
 		void Normalize();
-		Vec4& operator+(const Vec4& p_v1);
-		//void operator*(const float pf_mult);
-		Vec4& operator*(const float pf_mult);
+		Vec4 operator+(const Vec4& p_v1);
+		Vec4 operator*(const float pf_mult);
 	};
 }

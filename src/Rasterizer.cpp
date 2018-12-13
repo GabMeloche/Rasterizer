@@ -59,7 +59,6 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 			//LOOP FOR EACH LINE OF THE TRIANGLE
 			for (int j = 0; j < 3; ++j)
 			{
-
 				float distance = 10.0f ;
 				finalZ = 1.0f / (distance - p_scene->getEntities()[i]->getMesh()->getTriangles()[k][j].m_pos->mf_z);
 

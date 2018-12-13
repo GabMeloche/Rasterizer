@@ -10,15 +10,25 @@ Mesh* Mesh::CreateCube()
 {
 	Mesh* mesh = new Mesh;
 
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 200, 300, 10} });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 300, 300, 10} });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 300, 200, 10} });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 200, 200, 10} });
+	//mesh->m_vertices.emplace_back(Vertex{ Vec3{ 200, 300, 10} });
+	//mesh->m_vertices.emplace_back(Vertex{ Vec3{ 300, 300, 10} });
+	//mesh->m_vertices.emplace_back(Vertex{ Vec3{ 300, 200, 10} });
+	//mesh->m_vertices.emplace_back(Vertex{ Vec3{ 200, 200, 10} });
 
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 200, 300, 20 } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 300, 300, 20 } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 300, 200, 20} });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 200, 200, 20 } });
+	//mesh->m_vertices.emplace_back(Vertex{ Vec3{ 200, 300, 200 } });
+	//mesh->m_vertices.emplace_back(Vertex{ Vec3{ 300, 300, 200 } });
+	//mesh->m_vertices.emplace_back(Vertex{ Vec3{ 300, 200, 200} });
+	//mesh->m_vertices.emplace_back(Vertex{ Vec3{ 200, 200, 200 } });
+
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -1.0f, 1.0f, -1.0f } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 1.0f, 1.0f, -1.0f } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 1.0f, -1.0f, -1.0f } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -1.0f, -1.0f, -1.0f } });
+
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -1.0f, 1.0f, 1.0f } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 1.0f, 1.0f, 1.0f } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 1.0f, -1.0f, 1.0f } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -1.0f, -1.0f, 1.0f } });
 
 	//mesh->makeTriangles();
 	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[0], 

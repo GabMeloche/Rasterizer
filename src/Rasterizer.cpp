@@ -41,12 +41,13 @@ void Rasterizer::Convert2Dto3D(Vertex& m_inPoint)
 
 void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_Renderer)
 {
-	p += 3;
+	p += 1;
+
 	float x1;
 	float y1;
 	float x2;
 	float y2;
-	float finalZ = 0;
+	float finalZ = 0.0f;
 	//FOR EACH MESH
 	for (int i = 0; i < p_scene->getEntities().size(); i++)
 	{
@@ -59,43 +60,48 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 			for (int j = 0; j < 3; ++j)
 			{
 
-				float distance = 2;
-				finalZ = 1 / (distance - p_scene->getEntities()[i]->getMesh()->getTriangles()[k][j].m_pos->mf_z);
+				float distance = 10.0f ;
+				finalZ = 1.0f / (distance - p_scene->getEntities()[i]->getMesh()->getTriangles()[k][j].m_pos->mf_z);
 
 				float OrthoMatrix[4][4] = {
-				{ finalZ,0,0,0},
-				{ 0,finalZ,0,0},
-				{ 0,0,0,0},
-				{ 0,0,0,1}
+				{ finalZ,0.0f,0.0f,0.0f },
+				{ 0.0f,finalZ,0.0f,0.0f },
+				{ 0.0f,0.0f,0.0f,0.0f },
+				{ 0.0f,0.0f,0.0f,1.0f}
 				};
-
-				float ScaleMatrix[4][4] = {
-				{ 1,0,0 },
-				{ 0,1,0,0 },
-				{ 0,0, 1,0 },
-				{ 0,0,0, 1 }
-				};
-
-				Mat4 Scale;
-				Scale.SetMatrix(ScaleMatrix);
-
-				Mat4 Rotation;
-				Rotation = Mat4::CreateRotationMatrix(p, false, true, false);
 				Ortho.SetMatrix(OrthoMatrix);
 
+				//Transformation Matrix
+				Mat4 Translation;
+				Translation = Mat4::CreateTranslationMatrix({0.0f, 0.0f, 0.0f});
+
+				Mat4 Rotation;
+				Rotation = Mat4::CreateRotationMatrix(p, 0, 1, 0);
+				
+				Mat4 Scale;
+				Scale = Mat4::CreateScaleMatrix(4.0f);
+				
+				Mat4 TransformMat;
+				TransformMat = Translation * Rotation * Scale;
+
+
 				Vec4 tmpPos1 = *p_scene->getEntities()[i]->getMesh()->getTriangles()[k][j].m_pos;
-				tmpPos1 = Rotation * Scale * Ortho * tmpPos1;
+				tmpPos1 = TransformMat * tmpPos1;
+				tmpPos1 = Ortho * tmpPos1;
 
 				Vec4 tmpPos2 = *p_scene->getEntities()[i]->getMesh()->getTriangles()[k][j + 1].m_pos;
-				tmpPos2 = Rotation * Scale * Ortho * tmpPos2;
+				tmpPos2 = TransformMat * tmpPos2;
+				tmpPos2 = Ortho * tmpPos2;
 
+				Vec3 newVecPos1 = GetPixelPos(tmpPos1);
+				Vec3 newVecPos2 = GetPixelPos(tmpPos2);
 				
-				x1 = tmpPos1.mf_x;
-				y1 = tmpPos1.mf_y;
+				x1 = newVecPos1.mf_x;
+				y1 = newVecPos1.mf_y;
 
 
-				x2 = tmpPos2.mf_x;
-				y2 = tmpPos2.mf_y;
+				x2 = newVecPos2.mf_x;
+				y2 = newVecPos2.mf_y;
 
 				const bool steep = (fabs(y2 - y1) > fabs(x2 - x1));
 				if (steep)
@@ -115,11 +121,11 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 
 				float error = dx / 2.0f;
 				const int ystep = (y1 < y2) ? 1 : -1;
-				int y = (int)y1;
+				int y = static_cast<int>(y1);
 
-				const int maxX = (int)x2;
+				const int maxX = static_cast<int>(x2);
 
-				for (int x = (int)x1; x < maxX; x++)
+				for (int x = static_cast<int>(x1); x < maxX; x++)
 				{
 					if (steep)
 					{
@@ -143,8 +149,6 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 		}
 	}
 }
-
-//TODO: ZBuffer must take a single pixel as parameter, and must be called to draw every pixel (not the whole screen at once)
 
 void Rasterizer::ZBuffer(unsigned int p_x, unsigned int p_y, Triangle& p_triangle, Texture& p_texture)
 {
@@ -172,56 +176,18 @@ void Rasterizer::ZBuffer(unsigned int p_x, unsigned int p_y, Triangle& p_triangl
 			color = 0;
 	}
 }
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/*std::vector<Entity*>& allEntities = p_scene->getEntities();
-	size_t eSize = allEntities.size();
-	
-	for (size_t i = 0; i < eSize; ++i)
-	{
-		const std::vector<Triangle>& triangles = allEntities[i]->getMesh()->getTriangles();
 
-		for (size_t j = 0; j < triangles.size(); ++j)
-		{
-			for (unsigned int k = 0; k < 3; ++k)
-			{
-				//'[]' operator overloaded on triangles to return 1 of 3 vertices of triangle
-				if (triangles[j][k].m_position.mf_z > m_zBuffer[p_x][p_y])
-				{
-					m_zBuffer[p_x][p_y] = triangles[j][k].m_position.mf_z;
-				}
->>>>>>> 8a76519fdb5ec9a6c7589411bce1b06afe177389
-			}
+Vec3 Rasterizer::GetPixelPos(Vec4& p_v)
+{
+	float offsetX = (1024.0f / 2.0f);
+	float offsetY = (768.0f / 2.0f);
 
-		}
-	}
+	float scaleX = (1.0f / (offsetX / 2.0f));
+	float scaleY = (1.0f / (offsetY / 2.0f));
 
-	/*for (size_t i = 0; i < size; ++i)
-	{
-		float currDepth = allEntities[i]->getMesh()->getTriangles()[0].m_v1.m_position.mf_z;
-		float* triangleZone = allEntities[i]->CheckTriangleZone();
+	float x = (p_v.mf_x / scaleX) + offsetX;
+	float y = (p_v.mf_y / scaleY) + offsetY;
+	float z = p_v.mf_z;
 
-		for (size_t j = triangleZone[0]; j < triangleZone[1]; ++j)
-		{
-			for (size_t k = triangleZone[2]; k < triangleZone[3]; ++k)
-			{
-
-				if (currDepth > m_zBuffer[j][k])
-				{
-					m_zBuffer[j][k] = currDepth;
-
-					if (i == 0)
-						p_texture->SetPixelColor(j, k, { 0, 0, 255, 255 });
-					else
-						p_texture->SetPixelColor(j, k, { 255, 0, 0, 255 });
-				}
-			}
-		}
-	}*/
+	return Vec3(x, y, z);
+}

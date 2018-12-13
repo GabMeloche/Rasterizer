@@ -10,10 +10,10 @@ using namespace Math::Matrix;
 Mat4::Mat4()
 {
    	float f_TmpMat[4][4] = {
-		{1, 0, 0, 0},
-		{0, 1, 0, 0},
-		{0, 0, 1, 0},
-		{0, 0, 0, 1}
+		{1.0f, 0.0f, 0.0f, 0.0f },
+		{0.0f, 1.0f, 0.0f, 0.0f },
+		{0.0f, 0.0f, 1.0f, 0.0f },
+		{0.0f, 0.0f, 0.0f, 1.0f }
 	};
 
 	SetMatrix(f_TmpMat);
@@ -28,10 +28,10 @@ Mat4::Mat4(Mat4& p_Matrix)
 Mat4::Mat4(Math::Vector::Vec3& p_vec)
 {
 	float f_TmpMat[4][4] = {
-	{p_vec.mf_x, 0, 0, 0},
-	{0, p_vec.mf_y, 0, 0},
-	{0, 0, p_vec.mf_z, 0},
-	{0, 0, 0, 1}
+	{p_vec.mf_x, 0.0f, 0.0f, 0.0f },
+	{0.0f, p_vec.mf_y, 0.0f, 0.0f },
+	{0.0f, 0.0f, p_vec.mf_z, 0.0f },
+	{0.0f, 0.0f, 0.0f, 1.0f }
 	};
 
 	SetMatrix(f_TmpMat);
@@ -85,24 +85,34 @@ Math::Vector::Vec4& Mat4::operator*(const Math::Vector::Vec4& p_Vector)
     return *TmpVec;
 }
 
-Mat4* Math::Matrix::Mat4::CreateTranslationMatrix(const Vector::Vec3 & p_Translation)
+Mat4 Math::Matrix::Mat4::CreateTranslationMatrix(const Vector::Vec3 & p_Translation)
 {
-	Mat4* TranslateMat = new Mat4();
+	Mat4 TranslateMat;
 
-	TranslateMat->mf_Matrice4[0][3] = p_Translation.mf_x;
-	TranslateMat->mf_Matrice4[1][3] = p_Translation.mf_y;
-	TranslateMat->mf_Matrice4[2][3] = p_Translation.mf_z;
+	float X[4][4]{
+		{ 1.0f, 0.0f, 0.0f, p_Translation.mf_x },
+		{ 0.0f, 1.0f, 0.0f, p_Translation.mf_y },
+		{ 0.0f, 0.0f, 1.0f, p_Translation.mf_z },
+		{ 0.0f, 0.0f, 0.0f, 1.0f }
+	};
+
+	TranslateMat.SetMatrix(X);
 
 	return TranslateMat;
 }
 
-Mat4* Math::Matrix::Mat4::CreateScaleMatrix(const float& p_Scale)
+Mat4 Math::Matrix::Mat4::CreateScaleMatrix(const float& p_Scale)
 {
-	Mat4* ScaleMat = new Mat4();
+	Mat4 ScaleMat;
 
-	ScaleMat->mf_Matrice4[0][0] = p_Scale;
-	ScaleMat->mf_Matrice4[1][1] = p_Scale;
-	ScaleMat->mf_Matrice4[2][2] = p_Scale;
+	float X[4][4]{
+		{ p_Scale, 0.0f, 0.0f, 0.0f },
+		{ 0.0f, p_Scale, 0.0f, 0.0f },
+		{ 0.0f, 0.0f, p_Scale, 0.0f },
+		{ 0.0f, 0.0f, 0.0f, 1.0f }
+	};
+
+	ScaleMat.SetMatrix(X);
 
 	return ScaleMat;
 }
@@ -116,10 +126,10 @@ Mat4 Math::Matrix::Mat4::CreateRotationMatrix(const float& p_Angle, const bool& 
 	if (isX)
 	{
 		float X[4][4]{
-		{ 1, 0, 0, 0 },
-		{ 0, cos(p_Angle* M_PI / 180), -sin(p_Angle* M_PI / 180), 0},
-		{ 0, sin(p_Angle* M_PI / 180), cos(p_Angle* M_PI / 180), 0},
-		{ 0, 0, 0, 1 }
+		{ 1.0f, 0.0f, 0.0f, 0.0f },
+		{ 0.0f, cos(p_Angle* M_PI / 180.0f), -sin(p_Angle* M_PI / 180.0f), 0.0f },
+		{ 0.0f, sin(p_Angle* M_PI / 180.0f), cos(p_Angle* M_PI / 180.0f), 0.0f },
+		{ 0.0f, 0.0f, 0.0f, 1.0f }
 		};
 		RotateMatX.SetMatrix(X);
 	}
@@ -127,10 +137,10 @@ Mat4 Math::Matrix::Mat4::CreateRotationMatrix(const float& p_Angle, const bool& 
 	if (isY)
 	{
 		float Y[4][4]{
-		{ cos(p_Angle* M_PI / 180), 0, sin(p_Angle* M_PI / 180), 0 },
-		{ 0, 1, 0, 0 },
-		{ -sin(p_Angle* M_PI / 180), 0, cos(p_Angle* M_PI / 180), 0 },
-		{ 0, 0, 0, 1 }
+		{ cos(p_Angle* M_PI / 180.0f), 0.0f, sin(p_Angle* M_PI / 180.0f), 0.0f },
+		{ 0.0f, 1.0f, 0.0f, 0.0f },
+		{ -sin(p_Angle* M_PI / 180.0f), 0.0f, cos(p_Angle* M_PI / 180.0f), 0.0f },
+		{ 0.0f, 0.0f, 0.0f, 1.0f }
 		};
 		RotateMatY.SetMatrix(Y);
 
@@ -139,10 +149,10 @@ Mat4 Math::Matrix::Mat4::CreateRotationMatrix(const float& p_Angle, const bool& 
 	if (isZ)
 	{
 		float Z[4][4]{
-		{ cos(p_Angle* M_PI / 180),-sin(p_Angle* M_PI / 180), 0, 0 },
-		{ sin(p_Angle* M_PI / 180), cos(p_Angle* M_PI / 180), 0, 0 },
-		{ 0, 0, 1, 0 },
-		{ 0, 0, 0, 1 }
+		{ cos(p_Angle* M_PI / 180.0f),-sin(p_Angle* M_PI / 180.0f), 0.0f, 0.0f },
+		{ sin(p_Angle* M_PI / 180.0f), cos(p_Angle* M_PI / 180.0f), 0.0f, 0.0f },
+		{ 0.0f, 0.0f, 1.0f, 0.0f },
+		{ 0.0f, 0.0f, 0.0f, 1.0f }
 		};
 		RotateMatZ.SetMatrix(Z);
 

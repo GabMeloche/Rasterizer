@@ -128,12 +128,20 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 				{
 					if (steep)
 					{
-						SDL_SetRenderDrawColor(p_Renderer, 255, 0, 255, 255);
+						p_Target.m_pixels[y + x * p_Target.mui_w].ucm_r = 0;
+						p_Target.m_pixels[y + x * p_Target.mui_w].ucm_g = 255;
+						p_Target.m_pixels[y + x * p_Target.mui_w].ucm_b = 255;
+
+						SDL_SetRenderDrawColor(p_Renderer, p_Target.m_pixels[y + x * p_Target.mui_w].ucm_r, p_Target.m_pixels[y + x * p_Target.mui_w].ucm_g, p_Target.m_pixels[y + x * p_Target.mui_w].ucm_b, 255);
 						SDL_RenderDrawPoint(p_Renderer, y, x);
 					}
 					else
 					{
-						SDL_SetRenderDrawColor(p_Renderer, 0, 255, 255, 255);
+						p_Target.m_pixels[x + y * p_Target.mui_w].ucm_r = 255;
+						p_Target.m_pixels[x + y * p_Target.mui_w].ucm_g = 0;
+						p_Target.m_pixels[x + y * p_Target.mui_w].ucm_b = 255;
+
+						SDL_SetRenderDrawColor(p_Renderer, p_Target.m_pixels[x + y * p_Target.mui_w].ucm_r, p_Target.m_pixels[x + y * p_Target.mui_w].ucm_g, p_Target.m_pixels[x + y * p_Target.mui_w].ucm_b, 255);
 						SDL_RenderDrawPoint(p_Renderer, x, y);
 					}
 

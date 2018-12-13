@@ -59,13 +59,13 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 			//LOOP FOR EACH LINE OF THE TRIANGLE
 			for (int j = 0; j < 3; ++j)
 			{
-				float distance = 10.0f ;
+				float distance = 10 ;
 				finalZ = 1.0f / (distance - p_scene->getEntities()[i]->getMesh()->getTriangles()[k][j].m_pos->mf_z);
 
 				float OrthoMatrix[4][4] = {
-				{ finalZ,0.0f,0.0f,0.0f },
-				{ 0.0f,finalZ,0.0f,0.0f },
-				{ 0.0f,0.0f,0.0f,0.0f },
+				{ 1,0.0f,0.0f,0.0f },
+				{ 0.0f,1,0.0f,0.0f },
+				{ 0.0f,0.0f,finalZ,0.0f },
 				{ 0.0f,0.0f,0.0f,1.0f}
 				};
 				Ortho.SetMatrix(OrthoMatrix);
@@ -75,10 +75,10 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 				Translation = Mat4::CreateTranslationMatrix({0.0f, 0.0f, 0.0f});
 
 				Mat4 Rotation;
-				Rotation = Mat4::CreateRotationMatrix(p, 0, 1, 0);
+				Rotation = Mat4::CreateRotationMatrix(p, 1, 1, 1);
 				
 				Mat4 Scale;
-				Scale = Mat4::CreateScaleMatrix(4.0f);
+				Scale = Mat4::CreateScaleMatrix(0.1f);
 				
 				Mat4 TransformMat;
 				TransformMat = Translation * Rotation * Scale;

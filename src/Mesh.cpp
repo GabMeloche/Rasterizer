@@ -25,10 +25,10 @@ Mesh* Mesh::CreateCube()
 	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 1.0f, -1.0f, -1.0f } });
 	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -1.0f, -1.0f, -1.0f } });
 
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -1.0f, 1.0f, 1.0f } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 1.0f, 1.0f, 1.0f } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 1.0f, -1.0f, 1.0f } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -1.0f, -1.0f, 1.0f } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -1.0f, 1.0f, 4.0f } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 1.0f, 1.0f, 4.0f } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 1.0f, -1.0f, 4.0f } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -1.0f, -1.0f, 4.0f } });
 
 	//mesh->makeTriangles();
 	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[0], 

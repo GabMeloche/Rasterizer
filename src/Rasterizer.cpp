@@ -41,7 +41,7 @@ void Rasterizer::Convert2Dto3D(Vertex& m_inPoint)
 
 void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_Renderer)
 {
-	p += 1;
+	p += 2;
 
 	float x1;
 	float y1;
@@ -55,6 +55,20 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 		for (int k = 0; k < p_scene->getEntities()[i]->getMesh()->getTriangles().size(); ++k)
 		{
 			int m_width = p_Target.mui_w;
+
+			//Transformation Matrix
+			Mat4 Translation;
+			Translation = Mat4::CreateTranslationMatrix({ 0.0f, 0.0f, 0.0f });
+
+			Mat4 Rotation;
+			Rotation = Mat4::CreateRotationMatrix(p, 1, 1, 1);
+
+			Mat4 Scale;
+			Scale = Mat4::CreateScaleMatrix(0.6f);
+
+			Mat4 TransformMat;
+			TransformMat = Translation * Rotation * Scale;
+
 
 			//LOOP FOR EACH LINE OF THE TRIANGLE
 			for (int j = 0; j < 3; ++j)
@@ -70,18 +84,6 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 				};
 				Ortho.SetMatrix(OrthoMatrix);
 
-				//Transformation Matrix
-				Mat4 Translation;
-				Translation = Mat4::CreateTranslationMatrix({0.0f, 0.0f, 0.0f});
-
-				Mat4 Rotation;
-				Rotation = Mat4::CreateRotationMatrix(p, 1, 1, 1);
-				
-				Mat4 Scale;
-				Scale = Mat4::CreateScaleMatrix(0.1f);
-				
-				Mat4 TransformMat;
-				TransformMat = Translation * Rotation * Scale;
 
 
 				Vec4 tmpPos1 = *p_scene->getEntities()[i]->getMesh()->getTriangles()[k][j].m_pos;
@@ -128,17 +130,17 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 				{
 					if (steep)
 					{
-						p_Target.m_pixels[y + x * p_Target.mui_w].ucm_r = 0;
-						p_Target.m_pixels[y + x * p_Target.mui_w].ucm_g = 255;
-						p_Target.m_pixels[y + x * p_Target.mui_w].ucm_b = 255;
+						p_Target.m_pixels[y + x * p_Target.mui_w].ucm_r = 255;
+						p_Target.m_pixels[y + x * p_Target.mui_w].ucm_g = 100;
+						p_Target.m_pixels[y + x * p_Target.mui_w].ucm_b = 0;
 
 						SDL_SetRenderDrawColor(p_Renderer, p_Target.m_pixels[y + x * p_Target.mui_w].ucm_r, p_Target.m_pixels[y + x * p_Target.mui_w].ucm_g, p_Target.m_pixels[y + x * p_Target.mui_w].ucm_b, 255);
 						SDL_RenderDrawPoint(p_Renderer, y, x);
 					}
 					else
 					{
-						p_Target.m_pixels[x + y * p_Target.mui_w].ucm_r = 255;
-						p_Target.m_pixels[x + y * p_Target.mui_w].ucm_g = 0;
+						p_Target.m_pixels[x + y * p_Target.mui_w].ucm_r = 0;
+						p_Target.m_pixels[x + y * p_Target.mui_w].ucm_g = 255;
 						p_Target.m_pixels[x + y * p_Target.mui_w].ucm_b = 255;
 
 						SDL_SetRenderDrawColor(p_Renderer, p_Target.m_pixels[x + y * p_Target.mui_w].ucm_r, p_Target.m_pixels[x + y * p_Target.mui_w].ucm_g, p_Target.m_pixels[x + y * p_Target.mui_w].ucm_b, 255);

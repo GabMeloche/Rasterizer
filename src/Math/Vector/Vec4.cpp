@@ -78,3 +78,19 @@ Vec4 Vec4::operator*(const float pf_mult)
 	float w = mf_w * pf_mult;
 	return Vec4(Vec3(x, y, z), w);
 }
+
+float Math::Vector::Vec4::max(float p_f1, float p_f2)
+{
+	if (p_f1 > p_f2)
+		return p_f1;
+	else
+		return p_f2;
+}
+
+float Math::Vector::Vec4::min(float p_f1, float p_f2)
+{
+	if (p_f1 < p_f2)
+		return p_f1;
+	else
+		return p_f2;
+}

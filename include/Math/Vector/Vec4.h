@@ -22,5 +22,8 @@ namespace Math::Vector
 
 		Vec4 operator+(const Vec4& p_v1);
 		Vec4 operator*(const float pf_mult);
+
+		float max(float p_f1, float p_f2);
+		float min(float p_f1, float p_f2);
 	};
 }

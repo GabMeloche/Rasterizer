@@ -11,7 +11,7 @@ private:
 	std::vector<Triangle> m_triangles;
 
 public:
-	static Mesh* CreateCube();
+	static Mesh* CreateCube(const float p_Size);
 	static Mesh* CreateSphere(int pi_latitudeCount, int pi_longitudeCount);
 	static Mesh * CreateTriangle(int x, int y, int z);
 	void Normalize();

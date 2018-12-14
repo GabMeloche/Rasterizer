@@ -6,29 +6,21 @@
 #include <iostream>
 #include <cassert>
 
-Mesh* Mesh::CreateCube()
+Mesh* Mesh::CreateCube(const float p_Size)
 {
 	Mesh* mesh = new Mesh;
 
-	//mesh->m_vertices.emplace_back(Vertex{ Vec3{ 200, 300, 10} });
-	//mesh->m_vertices.emplace_back(Vertex{ Vec3{ 300, 300, 10} });
-	//mesh->m_vertices.emplace_back(Vertex{ Vec3{ 300, 200, 10} });
-	//mesh->m_vertices.emplace_back(Vertex{ Vec3{ 200, 200, 10} });
+	float fPointPos = p_Size / 2.0f;
 
-	//mesh->m_vertices.emplace_back(Vertex{ Vec3{ 200, 300, 200 } });
-	//mesh->m_vertices.emplace_back(Vertex{ Vec3{ 300, 300, 200 } });
-	//mesh->m_vertices.emplace_back(Vertex{ Vec3{ 300, 200, 200} });
-	//mesh->m_vertices.emplace_back(Vertex{ Vec3{ 200, 200, 200 } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -fPointPos, fPointPos, -fPointPos } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ fPointPos, fPointPos, -fPointPos } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ fPointPos, -fPointPos, -fPointPos } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -fPointPos, -fPointPos, -fPointPos } });
 
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -1.0f, 1.0f, -1.0f } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 1.0f, 1.0f, -1.0f } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 1.0f, -1.0f, -1.0f } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -1.0f, -1.0f, -1.0f } });
-
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -1.0f, 1.0f, 1.0f } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 1.0f, 1.0f, 1.0f } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 1.0f, -1.0f, 1.0f } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -1.0f, -1.0f, 1.0f } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -fPointPos, fPointPos, fPointPos } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ fPointPos, fPointPos, fPointPos } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ fPointPos, -fPointPos, fPointPos } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -fPointPos, -fPointPos, fPointPos } });
 
 	//mesh->makeTriangles();
 	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[0], 

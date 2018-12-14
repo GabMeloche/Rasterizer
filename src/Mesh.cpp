@@ -75,9 +75,12 @@ Mesh* Mesh::CreateCube()
 		
 	for (int i = 0; i < mesh->m_triangles.size(); ++i)
 	{
-		mesh->m_triangles[i].m_v1.m_pos = new Vec4(mesh->m_triangles[i].m_v1.m_position);
-		mesh->m_triangles[i].m_v2.m_pos = new Vec4(mesh->m_triangles[i].m_v2.m_position);
-		mesh->m_triangles[i].m_v3.m_pos = new Vec4(mesh->m_triangles[i].m_v3.m_position);
+		for (int j = 0; j < 3; ++j)
+		{
+			mesh->m_triangles[i][j].m_pos = new Vec4(mesh->m_triangles[i][j].m_position);
+			mesh->m_triangles[i][j].m_color = {255, 0, 0, 255};
+
+		}
 	}
 
 	mesh->Normalize();

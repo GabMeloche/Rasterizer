@@ -15,5 +15,6 @@ public:
 	void RenderScene(Scene* m_scene, Texture& m_Target, SDL_Renderer* p_Renderer);
 	void ZBuffer(unsigned int p_x, unsigned int p_y, Triangle & p_triangle, Texture& p_texture);
 	Vec3 GetPixelPos(Vec4 & p_v);
+	void ClearZBuffer();
 };
 

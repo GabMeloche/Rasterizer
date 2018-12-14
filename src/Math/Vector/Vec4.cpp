@@ -53,6 +53,16 @@ void Vec4::Normalize()
 	mf_z /= magn;
 }
 
+Vec4 Math::Vector::Vec4::CrossProduct(const Vec4 & p_v1, const Vec4 & p_v2)
+{
+	float x = (p_v1.mf_y * p_v2.mf_z) - (p_v1.mf_z * p_v2.mf_y);
+	float y = -((p_v1.mf_x * p_v2.mf_z) - (p_v1.mf_z * p_v2.mf_x));
+	float z = (p_v1.mf_x * p_v2.mf_y) - (p_v1.mf_y * p_v2.mf_x);
+	float w = 1.0f;
+
+	return Vec4(Vec3(x, y, z), w);
+}
+
 Vec4 Vec4::operator+(const Vec4& p_v)
 {
 	return (Vec3(p_v.mf_x + mf_x,

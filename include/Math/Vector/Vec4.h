@@ -18,6 +18,8 @@ namespace Math::Vector
 		void Homogenize();
 		float GetMagnitude() const;
 		void Normalize();
+		static Vec4 CrossProduct(const Vec4& p_v1, const Vec4& p_v2);
+
 		Vec4 operator+(const Vec4& p_v1);
 		Vec4 operator*(const float pf_mult);
 	};

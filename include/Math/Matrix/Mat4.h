@@ -17,7 +17,7 @@ namespace Math::Matrix
 
 		void SetMatrix(float p_Matrix[][4]);
 
-		Mat4& operator*(const Mat4& p_Matrix);
+		Mat4 operator*(const Mat4& p_Matrix);
 		Vector::Vec4& operator*(const Math::Vector::Vec4& p_Vector);
 
     	static Mat4 CreateTranslationMatrix(const Vector::Vec3& p_Translation);

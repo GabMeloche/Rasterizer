@@ -120,7 +120,7 @@ Vec3 Math::Vector::operator-(Vec3& p_1, Vec3& p_2)
 	return Vec3(x, y, z);
 }
 
-void Math::Vector::SortVertices(Vec3 & p_vec1, Vec3 & p_vec2, Vec3 & p_vec3)
+void Vec3::SortVertices(Vec3 & p_vec1, Vec3 & p_vec2, Vec3 & p_vec3)
 {
 	Vec3 tmpVec;
 

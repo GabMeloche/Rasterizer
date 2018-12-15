@@ -39,14 +39,17 @@ void Rasterizer::Convert2Dto3D(Vertex& m_inPoint)
 	std::cout << m_inPoint.m_position.mf_x << '\n';
 }
 
-void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_Renderer)
+void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 {
-	p += 2;
+	p += 0.5f;
 
 	float x1;
 	float y1;
 	float x2;
 	float y2;
+	float x3;
+	float y3;
+
 	float finalZ = 0.0f;
 	//FOR EACH MESH
 	for (int i = 0; i < p_scene->getEntities().size(); i++)
@@ -64,7 +67,7 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 			Rotation = Mat4::CreateRotationMatrix(p, 1, 1, 1);
 
 			Mat4 Scale;
-			Scale = Mat4::CreateScaleMatrix(0.6f);
+			Scale = Mat4::CreateScaleMatrix(0.8f);
 
 			Mat4 TransformMat;
 			TransformMat = Translation * Rotation * Scale;
@@ -94,15 +97,28 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 				tmpPos2 = TransformMat * tmpPos2;
 				tmpPos2 = Ortho * tmpPos2;
 
+				Vec4 tmpPos3 = *p_scene->getEntities()[i]->getMesh()->getTriangles()[k][j + 2].m_pos;
+				tmpPos3 = TransformMat * tmpPos3;
+				tmpPos3 = Ortho * tmpPos3;
+
 				Vec3 newVecPos1 = GetPixelPos(tmpPos1);
 				Vec3 newVecPos2 = GetPixelPos(tmpPos2);
-				
+				Vec3 newVecPos3 = GetPixelPos(tmpPos3);
+
 				x1 = newVecPos1.mf_x;
 				y1 = newVecPos1.mf_y;
 
 
 				x2 = newVecPos2.mf_x;
 				y2 = newVecPos2.mf_y;
+
+				x3 = newVecPos3.mf_x;
+				y3 = newVecPos3.mf_y;
+
+				Vec3 v1 = newVecPos1;
+				Vec3 v2 = newVecPos2;
+				Vec3 v3 = newVecPos3;
+				//Vec3::SortVertices(v1, v2, v3);
 
 				const bool steep = (fabs(y2 - y1) > fabs(x2 - x1));
 				if (steep)
@@ -131,11 +147,11 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 					if (steep)
 					{
 						p_Target.m_pixels[y + x * p_Target.mui_w].ucm_r = 255;
-						p_Target.m_pixels[y + x * p_Target.mui_w].ucm_g = 100;
-						p_Target.m_pixels[y + x * p_Target.mui_w].ucm_b = 0;
+						p_Target.m_pixels[y + x * p_Target.mui_w].ucm_g = 0;
+						p_Target.m_pixels[y + x * p_Target.mui_w].ucm_b = 255;
 
-						SDL_SetRenderDrawColor(p_Renderer, p_Target.m_pixels[y + x * p_Target.mui_w].ucm_r, p_Target.m_pixels[y + x * p_Target.mui_w].ucm_g, p_Target.m_pixels[y + x * p_Target.mui_w].ucm_b, 255);
-						SDL_RenderDrawPoint(p_Renderer, y, x);
+						SDL_SetRenderDrawColor(p_renderer, p_Target.m_pixels[y + x * p_Target.mui_w].ucm_r, p_Target.m_pixels[y + x * p_Target.mui_w].ucm_g, p_Target.m_pixels[y + x * p_Target.mui_w].ucm_b, 255);
+						SDL_RenderDrawPoint(p_renderer, y, x);
 					}
 					else
 					{
@@ -143,8 +159,8 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target, SDL_Renderer* p_
 						p_Target.m_pixels[x + y * p_Target.mui_w].ucm_g = 255;
 						p_Target.m_pixels[x + y * p_Target.mui_w].ucm_b = 255;
 
-						SDL_SetRenderDrawColor(p_Renderer, p_Target.m_pixels[x + y * p_Target.mui_w].ucm_r, p_Target.m_pixels[x + y * p_Target.mui_w].ucm_g, p_Target.m_pixels[x + y * p_Target.mui_w].ucm_b, 255);
-						SDL_RenderDrawPoint(p_Renderer, x, y);
+						SDL_SetRenderDrawColor(p_renderer, p_Target.m_pixels[x + y * p_Target.mui_w].ucm_r, p_Target.m_pixels[x + y * p_Target.mui_w].ucm_g, p_Target.m_pixels[x + y * p_Target.mui_w].ucm_b, 255);
+						SDL_RenderDrawPoint(p_renderer, x, y);
 					}
 
 					error -= dy;
@@ -199,4 +215,9 @@ Vec3 Rasterizer::GetPixelPos(Vec4& p_v)
 	float z = p_v.mf_z;
 
 	return Vec3(x, y, z);
+}
+
+void Rasterizer::FillTriangles(Vec3 & v1, Vec3 & v2, Vec3 & v3, int top)
+{
+
 }

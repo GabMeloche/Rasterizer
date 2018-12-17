@@ -70,7 +70,7 @@ Mesh* Mesh::CreateCube(const float p_Size)
 		for (int j = 0; j < 3; ++j)
 		{
 			mesh->m_triangles[i][j].m_pos = new Vec4(mesh->m_triangles[i][j].m_position);
-			mesh->m_triangles[i][j].m_color = {255, 0, 0, 255};
+			mesh->m_triangles[i][j].m_color = { static_cast<unsigned int>(rand() % 255), static_cast<unsigned int>(rand() % 255), static_cast<unsigned int>(rand() % 255), 255 };
 
 		}
 	}
@@ -202,7 +202,7 @@ Mesh * Mesh::CreateSphere(int pi_latitudeCount, int pi_longitudeCount)
 		for (int j = 0; j < 3; ++j)
 		{
 			mesh->m_triangles[i][j].m_pos = new Vec4(mesh->m_triangles[i][j].m_position);
-			mesh->m_triangles[i][j].m_color = { 255, 0, 0, 255 };
+			mesh->m_triangles[i][j].m_color = { static_cast<unsigned int>(rand() % 255), static_cast<unsigned int>(rand() % 255), static_cast<unsigned int>(rand() % 255), 255 };
 
 		}
 	}

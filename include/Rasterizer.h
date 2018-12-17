@@ -7,14 +7,17 @@ class Rasterizer
 {
 private:
 	float** m_zBuffer;
+	Texture* m_texture;
 public:
 	Rasterizer();
 	~Rasterizer();
+
+	void setTexture(Texture * p_texture);
 	
 	SDL_Renderer* p_renderer;
 	void Convert2Dto3D(Vertex& m_inPoint);
 	void RenderScene(Scene* m_scene, Texture& m_Target);
-	void ZBuffer(unsigned int p_x, unsigned int p_y, Triangle & p_triangle, Texture& p_texture);
+	void ZBuffer(unsigned int p_x, unsigned int p_y, Triangle & p_triangle, Texture* p_texture);
 	Vec3 GetPixelPos(Vec4 & p_v);
 	void ClearZBuffer();
 	void FillTriangles(Vec3& v1, Vec3& v2, Vec3& v3);

@@ -31,6 +31,10 @@ Rasterizer::~Rasterizer()
 	delete m_zBuffer;
 }
 
+void Rasterizer::setTexture(Texture* p_texture)
+{
+	m_texture = p_texture;
+}
 
 void Rasterizer::Convert2Dto3D(Vertex& m_inPoint)
 {
@@ -53,10 +57,12 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 	std::vector<Entity*>& allEntities = p_scene->getEntities();
 	size_t eSize = allEntities.size();
 	float finalZ = 0.0f;
+	
+	ClearZBuffer();
 	//FOR EACH MESH
 	for (size_t i = 0; i < eSize; i++)
 	{
-		size_t tSize = p_scene->getEntities()[i]->getMesh()->getTriangles().size();
+		size_t tSize = allEntities[i]->getMesh()->getTriangles().size();
 		//FOR EACH TRIANGLE IN THE MESH
 		for (size_t k = 0; k < tSize; ++k)
 		{
@@ -67,7 +73,7 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 			Translation = Mat4::CreateTranslationMatrix({ 0.0f, 0.0f, 0.0f });
 
 			Mat4 Rotation;
-			Rotation = Mat4::CreateRotationMatrix(p, 1, 1, 1);
+			Rotation = Mat4::CreateRotationMatrix(p, 0, 1, 1);
 
 			Mat4 Scale;
 			Scale = Mat4::CreateScaleMatrix(0.8f);
@@ -102,10 +108,10 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 				tmpPos3 = TransformMat * tmpPos3;
 				tmpPos3 = Ortho * tmpPos3;
 
+
 				Vec3 newVecPos1 = GetPixelPos(tmpPos1);
 				Vec3 newVecPos2 = GetPixelPos(tmpPos2);
 				Vec3 newVecPos3 = GetPixelPos(tmpPos3);
-
 				x1 = newVecPos1.mf_x;
 				y1 = newVecPos1.mf_y;
 
@@ -120,7 +126,7 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 				Vec3 v3 = newVecPos3;
 
 				FillTriangles(v1, v2, v3);
-				const bool steep = (fabs(y2 - y1) > fabs(x2 - x1));
+				/*const bool steep = (fabs(y2 - y1) > fabs(x2 - x1));
 				if (steep)
 				{
 					std::swap(x1, y1);
@@ -141,22 +147,12 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 				int y = static_cast<int>(y1);
 
 				const int maxX = static_cast<int>(x2);
-				ClearZBuffer();
 
 				for (int x = static_cast<int>(x1); x < maxX; x++)
 				{
-					if (steep)
-					{
-						ZBuffer(y, x, currTriangle, p_Target);
-						SDL_SetRenderDrawColor(p_renderer, p_Target.m_pixels[y + x * p_Target.mui_w].ucm_r, p_Target.m_pixels[y + x * p_Target.mui_w].ucm_g, p_Target.m_pixels[y + x * p_Target.mui_w].ucm_b, 255);
-						SDL_RenderDrawPoint(p_renderer, y, x);
-					}
-					else
-					{
 						ZBuffer(x, y, currTriangle, p_Target);
 						SDL_SetRenderDrawColor(p_renderer, p_Target.m_pixels[x + y * p_Target.mui_w].ucm_r, p_Target.m_pixels[x + y * p_Target.mui_w].ucm_g, p_Target.m_pixels[x + y * p_Target.mui_w].ucm_b, 255);
 						SDL_RenderDrawPoint(p_renderer, x, y);
-					}
 
 					error -= dy;
 					if (error < 0)
@@ -164,13 +160,13 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 						y += ystep;
 						error += dx;
 					}
-				}
+				}*/
 			}
 		}
 	}
 }
 
-void Rasterizer::ZBuffer(unsigned int p_x, unsigned int p_y, Triangle& p_triangle, Texture& p_texture)
+void Rasterizer::ZBuffer(unsigned int p_x, unsigned int p_y, Triangle& p_triangle, Texture* p_texture)
 {
 	Vec3 v0 = { p_triangle.m_v2.m_position - p_triangle.m_v1.m_position };
 	Vec3 v1 = { p_triangle.m_v3.m_position - p_triangle.m_v1.m_position };
@@ -181,14 +177,27 @@ void Rasterizer::ZBuffer(unsigned int p_x, unsigned int p_y, Triangle& p_triangl
 	Vec3 vMult0 = v0 * u;
 	Vec3 vMult1 = v1 * v;
 
-	Vec3 Point = p_triangle.m_v1.m_position;
-	Point = Point + vMult1;
+	Vec3 Point1 = p_triangle.m_v1.m_position;
+	Vec3 Point2 = p_triangle.m_v2.m_position;
+	Vec3 Point3 = p_triangle.m_v3.m_position;
+	Point1 = Point1 + vMult1;
+	Point2 = Point2 + vMult1;
+	Point3 = Point3 + vMult1;
 
-	if (m_zBuffer[p_x][p_y] < Point.mf_z)
+	if (m_zBuffer[p_x][p_y] < Point1.mf_z)
 	{
-		m_zBuffer[p_x][p_y] = Point.mf_z;
-
-		p_texture.SetPixelColor(p_x, p_y, p_triangle.m_v1.m_color);
+		m_zBuffer[p_x][p_y] = Point1.mf_z;
+		p_texture->SetPixelColor(p_x, p_y, p_triangle.m_v1.m_color);
+	}
+	else if (m_zBuffer[p_x][p_y] < Point2.mf_z)
+	{
+		m_zBuffer[p_x][p_y] = Point2.mf_z;
+		p_texture->SetPixelColor(p_x, p_y, p_triangle.m_v2.m_color);
+	}
+	else if (m_zBuffer[p_x][p_y] < Point3.mf_z)
+	{
+		m_zBuffer[p_x][p_y] = Point3.mf_z;
+		p_texture->SetPixelColor(p_x, p_y, p_triangle.m_v3.m_color);
 	}
 }
 
@@ -218,19 +227,35 @@ Vec3 Rasterizer::GetPixelPos(Vec4& p_v)
 	return Vec3(x, y, z);
 }
 
+//TODO: integrate zBuffer into FilltRIANGLES
 void Rasterizer::FillTriangles(Vec3 & v1, Vec3 & v2, Vec3 & v3)
 {
 	Vec3 vm0;
 	Vec3 vm1;
 	Vec3 vm2;
 	Vec3 point;
+	Triangle tmpTriangle;
+
+	tmpTriangle.m_v1.m_position.mf_x = v1.mf_x;
+	tmpTriangle.m_v1.m_position.mf_y = v1.mf_y;
+	tmpTriangle.m_v1.m_position.mf_z = v1.mf_z;
+	tmpTriangle.m_v1.m_color = { 0, 255, 0, 255 };
+	
+	tmpTriangle.m_v2.m_position.mf_x = v2.mf_x;
+	tmpTriangle.m_v2.m_position.mf_y = v2.mf_y;
+	tmpTriangle.m_v2.m_position.mf_z = v2.mf_z;
+	tmpTriangle.m_v3.m_color = { 0, 0, 255, 255 };
+	
+	tmpTriangle.m_v3.m_position.mf_x = v3.mf_x;
+	tmpTriangle.m_v3.m_position.mf_y = v3.mf_y;
+	tmpTriangle.m_v3.m_position.mf_z = v3.mf_z;
+	tmpTriangle.m_v3.m_color = { 255, 0, 0, 255 };
 
 	int maxY;
 	int minX;
 	int maxX;
 
 	point.mf_y = std::min(v1.mf_y, std::min(v2.mf_y, v3.mf_y));
-
 	minX = std::min(v1.mf_x, std::min(v2.mf_x, v3.mf_x));
 	maxX = std::max(v1.mf_x, std::max(v2.mf_x, v3.mf_x));
 	maxY = std::max(v1.mf_y, std::max(v2.mf_y, v3.mf_y));
@@ -269,6 +294,8 @@ void Rasterizer::FillTriangles(Vec3 & v1, Vec3 & v2, Vec3 & v3)
 
 			if (u >= 0 && v >= 0 && u + v < 1)
 			{
+				ZBuffer(x, y, tmpTriangle, m_texture);
+				SDL_SetRenderDrawColor(p_renderer, tmpTriangle.m_v1.m_color.ucm_r, tmpTriangle.m_v1.m_color.ucm_g, tmpTriangle.m_v1.m_color.ucm_b, tmpTriangle.m_v1.m_color.ucm_a);
 				SDL_RenderDrawPoint(p_renderer, x, y);
 			}
 		}

@@ -26,4 +26,5 @@ namespace Math::Vector
 		static float max(float p_f1, float p_f2);
 		static float min(float p_f1, float p_f2);
 	};
+
 }

@@ -3,6 +3,7 @@
 #include <Triangle.h>
 #include <Math/Vector/Vec3.h>
 #include <iostream>
+#include <algorithm>
 
 
 Mat4 Ortho;
@@ -41,7 +42,7 @@ void Rasterizer::Convert2Dto3D(Vertex& m_inPoint)
 
 void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 {
-	p += 0.5f;
+	p += 2;
 
 	float x1;
 	float y1;
@@ -87,8 +88,6 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 				};
 				Ortho.SetMatrix(OrthoMatrix);
 
-
-
 				Vec4 tmpPos1 = *p_scene->getEntities()[i]->getMesh()->getTriangles()[k][j].m_pos;
 				tmpPos1 = TransformMat * tmpPos1;
 				tmpPos1 = Ortho * tmpPos1;
@@ -108,7 +107,6 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 				x1 = newVecPos1.mf_x;
 				y1 = newVecPos1.mf_y;
 
-
 				x2 = newVecPos2.mf_x;
 				y2 = newVecPos2.mf_y;
 
@@ -118,8 +116,8 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 				Vec3 v1 = newVecPos1;
 				Vec3 v2 = newVecPos2;
 				Vec3 v3 = newVecPos3;
-				//Vec3::SortVertices(v1, v2, v3);
 
+				FillTriangles(v1, v2, v3);
 				const bool steep = (fabs(y2 - y1) > fabs(x2 - x1));
 				if (steep)
 				{
@@ -210,14 +208,68 @@ Vec3 Rasterizer::GetPixelPos(Vec4& p_v)
 	float scaleX = (1.0f / (offsetX / 2.0f));
 	float scaleY = (1.0f / (offsetY / 2.0f));
 
-	float x = (p_v.mf_x / scaleX) + offsetX;
+	float x = (p_v.mf_x / scaleY) + offsetX;
 	float y = (p_v.mf_y / scaleY) + offsetY;
 	float z = p_v.mf_z;
 
 	return Vec3(x, y, z);
 }
 
-void Rasterizer::FillTriangles(Vec3 & v1, Vec3 & v2, Vec3 & v3, int top)
+void Rasterizer::FillTriangles(Vec3 & v1, Vec3 & v2, Vec3 & v3)
 {
+	Vec3 vm0;
+	Vec3 vm1;
+	Vec3 vm2;
+	Vec3 point;
+
+	int maxY;
+	int minX;
+	int maxX;
+
+	point.mf_y = std::min(v1.mf_y, std::min(v2.mf_y, v3.mf_y));
+
+	minX = std::min(v1.mf_x, std::min(v2.mf_x, v3.mf_x));
+	maxX = std::max(v1.mf_x, std::max(v2.mf_x, v3.mf_x));
+	maxY = std::max(v1.mf_y, std::max(v2.mf_y, v3.mf_y));
+
+	if (point.mf_y == v1.mf_y)
+		point.mf_x = v1.mf_x;
+	if (point.mf_y == v2.mf_y)
+		point.mf_x = v2.mf_x;
+	if (point.mf_y == v3.mf_y)
+		point.mf_x = v3.mf_x;
+
+	vm0.mf_x = v3.mf_x - v1.mf_x;
+	vm0.mf_y = v3.mf_y - v1.mf_y;
+
+	vm1.mf_x = v2.mf_x - v1.mf_x;
+	vm1.mf_y = v2.mf_y - v1.mf_y;
+
+	for (int y = point.mf_y; y < maxY; ++y)
+	{
+		for (int x = minX; x < maxX; ++x)
+		{
+			point.mf_x = x;
+			point.mf_y = y;
+			vm2.mf_x = point.mf_x - v1.mf_x;
+			vm2.mf_y = point.mf_y - v1.mf_y;
+
+			float dot00 = Vec3::dotProduct(vm0, vm0);
+			float dot01 = Vec3::dotProduct(vm0, vm1);
+			float dot02 = Vec3::dotProduct(vm0, vm2);
+			float dot11 = Vec3::dotProduct(vm1, vm1);
+			float dot12 = Vec3::dotProduct(vm1, vm2);
+
+			float invDenom = 1 / (dot00 * dot11 - dot01 * dot01);
+			float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
+			float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
+
+			if (u >= 0 && v >= 0 && u + v < 1)
+			{
+				SDL_RenderDrawPoint(p_renderer, x, y);
+			}
+		}
+	}
+
 
 }

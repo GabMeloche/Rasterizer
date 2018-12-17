@@ -49,16 +49,18 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 	float y2;
 	float x3;
 	float y3;
-
+	std::vector<Entity*>& allEntities = p_scene->getEntities();
+	size_t eSize = allEntities.size();
 	float finalZ = 0.0f;
 	//FOR EACH MESH
-	for (int i = 0; i < p_scene->getEntities().size(); i++)
+	for (size_t i = 0; i < eSize; i++)
 	{
+		size_t tSize = p_scene->getEntities()[i]->getMesh()->getTriangles().size();
 		//FOR EACH TRIANGLE IN THE MESH
-		for (int k = 0; k < p_scene->getEntities()[i]->getMesh()->getTriangles().size(); ++k)
+		for (size_t k = 0; k < tSize; ++k)
 		{
 			int m_width = p_Target.mui_w;
-
+			Triangle& currTriangle = p_scene->getEntities()[i]->getMesh()->getTriangles()[k];
 			//Transformation Matrix
 			Mat4 Translation;
 			Translation = Mat4::CreateTranslationMatrix({ 0.0f, 0.0f, 0.0f });
@@ -77,7 +79,7 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 			for (int j = 0; j < 3; ++j)
 			{
 				float distance = 10 ;
-				finalZ = 1.0f / (distance - p_scene->getEntities()[i]->getMesh()->getTriangles()[k][j].m_pos->mf_z);
+				finalZ = 1.0f / (distance - currTriangle[j].m_pos->mf_z);
 
 				float OrthoMatrix[4][4] = {
 				{ 1,0.0f,0.0f,0.0f },
@@ -88,16 +90,15 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 				Ortho.SetMatrix(OrthoMatrix);
 
 
-
-				Vec4 tmpPos1 = *p_scene->getEntities()[i]->getMesh()->getTriangles()[k][j].m_pos;
+				Vec4 tmpPos1 = *currTriangle[j].m_pos;
 				tmpPos1 = TransformMat * tmpPos1;
 				tmpPos1 = Ortho * tmpPos1;
 
-				Vec4 tmpPos2 = *p_scene->getEntities()[i]->getMesh()->getTriangles()[k][j + 1].m_pos;
+				Vec4 tmpPos2 = *currTriangle[j + 1].m_pos;
 				tmpPos2 = TransformMat * tmpPos2;
 				tmpPos2 = Ortho * tmpPos2;
 
-				Vec4 tmpPos3 = *p_scene->getEntities()[i]->getMesh()->getTriangles()[k][j + 2].m_pos;
+				Vec4 tmpPos3 = *currTriangle[j + 2].m_pos;
 				tmpPos3 = TransformMat * tmpPos3;
 				tmpPos3 = Ortho * tmpPos3;
 
@@ -141,24 +142,19 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 				int y = static_cast<int>(y1);
 
 				const int maxX = static_cast<int>(x2);
+				ClearZBuffer();
 
 				for (int x = static_cast<int>(x1); x < maxX; x++)
 				{
 					if (steep)
 					{
-						p_Target.m_pixels[y + x * p_Target.mui_w].ucm_r = 255;
-						p_Target.m_pixels[y + x * p_Target.mui_w].ucm_g = 0;
-						p_Target.m_pixels[y + x * p_Target.mui_w].ucm_b = 255;
-
+						ZBuffer(y, x, currTriangle, p_Target);
 						SDL_SetRenderDrawColor(p_renderer, p_Target.m_pixels[y + x * p_Target.mui_w].ucm_r, p_Target.m_pixels[y + x * p_Target.mui_w].ucm_g, p_Target.m_pixels[y + x * p_Target.mui_w].ucm_b, 255);
 						SDL_RenderDrawPoint(p_renderer, y, x);
 					}
 					else
 					{
-						p_Target.m_pixels[x + y * p_Target.mui_w].ucm_r = 0;
-						p_Target.m_pixels[x + y * p_Target.mui_w].ucm_g = 255;
-						p_Target.m_pixels[x + y * p_Target.mui_w].ucm_b = 255;
-
+						ZBuffer(x, y, currTriangle, p_Target);
 						SDL_SetRenderDrawColor(p_renderer, p_Target.m_pixels[x + y * p_Target.mui_w].ucm_r, p_Target.m_pixels[x + y * p_Target.mui_w].ucm_g, p_Target.m_pixels[x + y * p_Target.mui_w].ucm_b, 255);
 						SDL_RenderDrawPoint(p_renderer, x, y);
 					}
@@ -177,7 +173,6 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 
 void Rasterizer::ZBuffer(unsigned int p_x, unsigned int p_y, Triangle& p_triangle, Texture& p_texture)
 {
-	static unsigned int color = 0;
 	Vec3 v0 = { p_triangle.m_v2.m_position - p_triangle.m_v1.m_position };
 	Vec3 v1 = { p_triangle.m_v3.m_position - p_triangle.m_v1.m_position };
 
@@ -194,11 +189,18 @@ void Rasterizer::ZBuffer(unsigned int p_x, unsigned int p_y, Triangle& p_triangl
 	{
 		m_zBuffer[p_x][p_y] = Point.mf_z;
 
-		p_texture.SetPixelColor(p_x, p_y, { color, 0, 0, 255 });
-		++color;
-		
-		if (color == 255)
-			color = 0;
+		p_texture.SetPixelColor(p_x, p_y, p_triangle.m_v1.m_color);
+	}
+}
+
+void Rasterizer::ClearZBuffer() 
+{
+	for (int i = 0; i < 1024; ++i)
+	{
+		for (int j = 0; j < 768; ++j)
+		{
+			m_zBuffer[i][j] = INT_MIN;
+		}
 	}
 }
 

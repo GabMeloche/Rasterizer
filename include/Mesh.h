@@ -15,8 +15,8 @@ public:
 	static Mesh* CreateSphere(int pi_latitudeCount, int pi_longitudeCount);
 	static Mesh * CreateTriangle(int x, int y, int z);
 	void Normalize();
-	std::vector<Triangle> getTriangles();
-	std::vector<Vertex> getVertices();
+	std::vector<Triangle>& getTriangles();
+	std::vector<Vertex>& getVertices();
 	void makeTriangles();
 	void sort();
 };

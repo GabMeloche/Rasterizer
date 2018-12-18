@@ -83,7 +83,8 @@ Mesh * Mesh::CreateSphere(int pi_latitudeCount, int pi_longitudeCount)
 {
 	Mesh* mesh = new Mesh;
 
-	const float t = (1.0f + std::sqrt(5.0f)) / 2.0f;
+	float t = (1.0f + std::sqrt(5.0f)) / 2.0f;
+	t -= t * 0.1f;
 
 	// Vertices
 	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -1.0, t, 0.0 } });
@@ -198,10 +199,35 @@ Mesh * Mesh::CreateSphere(int pi_latitudeCount, int pi_longitudeCount)
 			Vertex b = GetMiddlePoint(tri.m_v2, tri.m_v3);
 			Vertex c = GetMiddlePoint(tri.m_v3, tri.m_v1);
 
+			tri.m_v1.m_position.mf_x -= tri.m_v1.m_position.mf_x * 0.1f;
+			tri.m_v1.m_position.mf_y -= tri.m_v1.m_position.mf_y * 0.1f;
+			tri.m_v1.m_position.mf_z -= tri.m_v1.m_position.mf_z * 0.1f;
+
+			tri.m_v2.m_position.mf_x -= tri.m_v2.m_position.mf_x * 0.1f;
+			tri.m_v2.m_position.mf_y -= tri.m_v2.m_position.mf_y * 0.1f;
+			tri.m_v2.m_position.mf_z -= tri.m_v2.m_position.mf_z * 0.1f;
+			
+			tri.m_v3.m_position.mf_x -= tri.m_v3.m_position.mf_x * 0.1f;
+			tri.m_v3.m_position.mf_y -= tri.m_v3.m_position.mf_y * 0.1f;
+			tri.m_v3.m_position.mf_z -= tri.m_v3.m_position.mf_z * 0.1f;
+
+			a.m_position.mf_x += a.m_position.mf_x * 0.1f;
+			a.m_position.mf_y += a.m_position.mf_y * 0.1f;
+			a.m_position.mf_z += a.m_position.mf_z * 0.1f;
+
+			b.m_position.mf_x += b.m_position.mf_x * 0.1f;
+			b.m_position.mf_y += b.m_position.mf_y * 0.1f;
+			b.m_position.mf_z += b.m_position.mf_z * 0.1f;
+
+			c.m_position.mf_x += c.m_position.mf_x * 0.1f;
+			c.m_position.mf_y += c.m_position.mf_y * 0.1f;
+			c.m_position.mf_z += c.m_position.mf_z * 0.1f;
+
 			mesh2->m_triangles.emplace_back(Triangle{ tri.m_v1, a, c});
 			mesh2->m_triangles.emplace_back(Triangle{ tri.m_v2, b, a});
 			mesh2->m_triangles.emplace_back(Triangle{ tri.m_v3, c, b});
 			mesh2->m_triangles.emplace_back(Triangle{ a, b, c});
+		
 		}
 
 		mesh = mesh2;
@@ -227,10 +253,12 @@ Mesh * Mesh::CreateSphere(int pi_latitudeCount, int pi_longitudeCount)
 Vertex Mesh::GetMiddlePoint(Vertex& v1, Vertex& v2)
 {
 	Vertex middle;
+	Vertex a = v1;
+	Vertex b = v2;
 
-	middle.m_position.mf_x = (v1.m_position.mf_x + v2.m_position.mf_x) / 2.0f;
-	middle.m_position.mf_y = (v1.m_position.mf_y + v2.m_position.mf_y) / 2.0f;
-	middle.m_position.mf_z = (v1.m_position.mf_z + v2.m_position.mf_z) / 2.0f;
+	middle.m_position.mf_x = (a.m_position.mf_x + b.m_position.mf_x) / 2.0f;
+	middle.m_position.mf_y = (a.m_position.mf_y + b.m_position.mf_y) / 2.0f;
+	middle.m_position.mf_z = (a.m_position.mf_z + b.m_position.mf_z) / 2.0f;
 
 	return middle;
 }

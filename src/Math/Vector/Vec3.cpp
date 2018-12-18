@@ -62,9 +62,11 @@ Vec3 Vec3::crossProduct(Vec3 & p_v1, Vec3 & p_v2)
 
 void Vec3::Normalize()
 {
-	mf_x = mf_x / sqrt(pow(mf_x, 2));
-	mf_y = mf_y / sqrt(pow(mf_y, 2));
-	mf_z = mf_z / sqrt(pow(mf_z, 2));
+	float length = sqrt(pow(mf_x, 2) + pow(mf_x, 2) + pow(mf_z, 2));
+
+	mf_x = mf_x / length;
+	mf_y = mf_y / length;
+	mf_z = mf_z / length;
 }
 
 Vec3 Vec3::operator*(float pf_scalar)

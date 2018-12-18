@@ -70,6 +70,11 @@ void Vec3::Normalize()
 	mf_y = mf_y / sqrt(pow(mf_y, 2));
 	if (mf_z != 0)
 	mf_z = mf_z / sqrt(pow(mf_z, 2));
+	float length = sqrt(pow(mf_x, 2) + pow(mf_x, 2) + pow(mf_z, 2));
+
+	mf_x = mf_x / length;
+	mf_y = mf_y / length;
+	mf_z = mf_z / length;
 }
 
 Vec3 Vec3::operator*(float pf_scalar)

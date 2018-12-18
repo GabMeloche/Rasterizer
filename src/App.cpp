@@ -16,6 +16,7 @@ App::App()
 	m_rasterizer = new Rasterizer;
 	m_rasterizer->p_renderer = m_renderer;
 	m_texture = new Texture(1024, 768);
+	m_rasterizer->setTexture(m_texture);
 	m_scene = new Scene;
 }
 

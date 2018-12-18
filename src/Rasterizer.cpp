@@ -294,7 +294,7 @@ void Rasterizer::FillTriangles(Vec3 & v1, Vec3 & v2, Vec3 & v3)
 
 			if (u >= 0 && v >= 0 && u + v < 1)
 			{
-				ZBuffer(x, y, tmpTriangle, m_texture);
+				//ZBuffer(x, y, tmpTriangle, m_texture);
 				SDL_SetRenderDrawColor(p_renderer, tmpTriangle.m_v1.m_color.ucm_r, tmpTriangle.m_v1.m_color.ucm_g, tmpTriangle.m_v1.m_color.ucm_b, tmpTriangle.m_v1.m_color.ucm_a);
 				SDL_RenderDrawPoint(p_renderer, x, y);
 			}

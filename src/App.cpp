@@ -14,6 +14,7 @@ App::App()
 
 	m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_PRESENTVSYNC);
 	m_rasterizer = new Rasterizer;
+	m_rasterizer->p_renderer = m_renderer;
 	m_texture = new Texture(1024, 768);
 	m_scene = new Scene;
 }
@@ -26,7 +27,7 @@ App::~App()
 void App::Startup()
 {
 	Mesh* cube = new Mesh;
-	cube = Mesh::CreateCube();
+	cube = Mesh::CreateCube(1);
 
 	Entity* entity = new Entity;
 	entity->setMesh(cube);
@@ -50,8 +51,7 @@ void App::MainLoop()
 			SDL_Quit();
 			is_over = true;
 		}
-
-		m_rasterizer->RenderScene(m_scene, *m_texture, m_renderer);
+		m_rasterizer->RenderScene(m_scene, *m_texture);
 		Render();
 	}
 }

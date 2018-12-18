@@ -14,10 +14,11 @@ App::App()
 
 	m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_PRESENTVSYNC);
 	m_rasterizer = new Rasterizer;
-	m_rasterizer->p_renderer = m_renderer;
 	m_texture = new Texture(1024, 768);
-	m_rasterizer->setTexture(m_texture);
 	m_scene = new Scene;
+	m_rasterizer->p_renderer = m_renderer;
+	m_rasterizer->setTexture(m_texture);
+	m_rasterizer->setScene(m_scene);
 }
 
 
@@ -28,12 +29,20 @@ App::~App()
 void App::Startup()
 {
 	Mesh* cube = new Mesh;
+	Mesh* cube2 = new Mesh;
 	cube = Mesh::CreateCube(1);
+	//cube2 = Mesh::CreateCube(1);
+
+	Light light = Light();
 
 	Entity* entity = new Entity;
+	//Entity* entity2 = new Entity;
 	entity->setMesh(cube);
+	//entity2->setMesh(cube2);
 
+	m_scene->getLights().emplace_back(light);
 	m_scene->getEntities().emplace_back(entity);
+	//m_scene->getEntities().emplace_back(entity2);
 
 	MainLoop();
 }

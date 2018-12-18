@@ -1,6 +1,14 @@
 #include <Light.h>
 #include <Math/Vector/Vec3.h>
 
+Light::Light()
+{
+	m_ambient = 0.3f;
+	m_diffuse = 0.4f;
+	m_specular = 0.4f;
+	m_position = { 0.0f, 0.0f, 2.0f };
+}
+
 Light::Light(const Light & p_other)
 {
 	m_position = p_other.m_position;

@@ -1,5 +1,7 @@
 #include <Math/Vector/Vec3.h>
+#include <Math/Vector/Vec4.h>
 #include <math.h>
+#include <Color.h>
 
 
 using namespace Math::Vector;
@@ -62,8 +64,11 @@ Vec3 Vec3::crossProduct(Vec3 & p_v1, Vec3 & p_v2)
 
 void Vec3::Normalize()
 {
-	mf_x = mf_x / sqrt(pow(mf_x, 2));
+	if(mf_x != 0)
+		mf_x = mf_x / sqrt(pow(mf_x, 2));
+	if (mf_y != 0)
 	mf_y = mf_y / sqrt(pow(mf_y, 2));
+	if (mf_z != 0)
 	mf_z = mf_z / sqrt(pow(mf_z, 2));
 }
 
@@ -76,6 +81,14 @@ Vec3 Vec3::operator*(float pf_scalar)
 	return Vec3(x, y, z);
 
 }
+
+Vec3 Math::Vector::Vec3::operator*(Vec3 & p_other)
+{
+	return Vec3(mf_x * p_other.mf_x,
+		mf_y * p_other.mf_y,
+		mf_z * p_other.mf_z);
+}
+
 
 float Vec3::operator[](int p_index)
 {
@@ -149,4 +162,3 @@ void Vec3::SortVertices(Vec3 & p_vec1, Vec3 & p_vec2, Vec3 & p_vec3)
 		p_vec3 = tmpVec;
 	}
 }
-

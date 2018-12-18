@@ -20,7 +20,7 @@ Rasterizer::Rasterizer()
 
 		for (size_t j = 0; j < 768; ++j)
 		{
-			m_zBuffer[i][j] = 0.0f;
+			m_zBuffer[i][j] = INT_MIN;
 		}
 	}
 }
@@ -34,6 +34,11 @@ Rasterizer::~Rasterizer()
 void Rasterizer::setTexture(Texture* p_texture)
 {
 	m_texture = p_texture;
+}
+
+void Rasterizer::setScene(Scene * p_scene)
+{
+	m_scene = p_scene;
 }
 
 void Rasterizer::Convert2Dto3D(Vertex& m_inPoint)
@@ -70,7 +75,7 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 			Triangle& currTriangle = p_scene->getEntities()[i]->getMesh()->getTriangles()[k];
 			//Transformation Matrix
 			Mat4 Translation;
-			Translation = Mat4::CreateTranslationMatrix({ 0.0f, 0.0f, 0.0f });
+			Translation = Mat4::CreateTranslationMatrix({ static_cast<float>(i), 0.0f, static_cast<float>(i) });
 
 			Mat4 Rotation;
 			Rotation = Mat4::CreateRotationMatrix(p, 0, 1, 1);
@@ -83,7 +88,7 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 
 
 			//LOOP FOR EACH LINE OF THE TRIANGLE
-				float distance = 10 ;
+				float distance = 10;
 				finalZ = 1.0f / (distance - currTriangle[0].m_pos->mf_z);
 
 				float OrthoMatrix[4][4] = {
@@ -97,16 +102,21 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 				Vec4 tmpPos1 = *currTriangle[0].m_pos;
 				tmpPos1 = TransformMat * tmpPos1;
 				tmpPos1 = Ortho * tmpPos1;
+				//Vec3 tmpPosVec3{ tmpPos1.mf_x, tmpPos1.mf_y, tmpPos1.mf_z };
+				//currTriangle[0].m_normal = currTriangle[0].m_normal * tmpPosVec3;
 
 				Vec4 tmpPos2 = *currTriangle[1].m_pos;
 				tmpPos2 = TransformMat * tmpPos2;
 				tmpPos2 = Ortho * tmpPos2;
+				//tmpPosVec3 = { tmpPos2.mf_x, tmpPos2.mf_y, tmpPos2.mf_z };
+				//currTriangle[1].m_normal = currTriangle[1].m_normal * tmpPosVec3;
 
 				Vec4 tmpPos3 = *currTriangle[2].m_pos;
-				//float tmpZ = std::min(tmpPos1.mf_z, std::min(tmpPos2.mf_z, tmpPos3.mf_z));
-					float tmpZ = tmpPos1.mf_z;
+				float tmpZ = tmpPos1.mf_z;
 				tmpPos3 = TransformMat * tmpPos3;
 				tmpPos3 = Ortho * tmpPos3;
+				//tmpPosVec3 = { tmpPos3.mf_x, tmpPos3.mf_y, tmpPos3.mf_z };
+				//currTriangle[2].m_normal = currTriangle[2].m_normal * tmpPosVec3;
 
 
 				Vec3 newVecPos1 = GetPixelPos(tmpPos1);
@@ -125,47 +135,20 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 				Vec3 v2 = newVecPos2;
 				Vec3 v3 = newVecPos3;
 
-				FillTriangles(v1, v2, v3, tmpZ, currTriangle.m_color);
+				FillTriangles(v1, v2, v3, tmpZ, currTriangle.m_color, currTriangle);
 		}
 	}
 }
 
 bool Rasterizer::ZBuffer(unsigned int p_x, unsigned int p_y, float p_z)
 {
-	/*Vec3 v0 = { p_triangle.m_v2.m_position - p_triangle.m_v1.m_position };
-	Vec3 v1 = { p_triangle.m_v3.m_position - p_triangle.m_v1.m_position };
-
-	float u = v0.GetMagnitude();
-	float v = v1.GetMagnitude();
-
-	Vec3 vMult0 = v0 * u;
-	Vec3 vMult1 = v1 * v;
-
-	Vec3 Point1 = p_triangle.m_v1.m_position;
-	Vec3 Point2 = p_triangle.m_v2.m_position;
-	Vec3 Point3 = p_triangle.m_v3.m_position;
-	Point1 = Point1 + vMult1;
-	Point2 = Point2 + vMult1;
-	Point3 = Point3 + vMult1;*/
-
 	if (m_zBuffer[p_x][p_y] < p_z)
 	{
 		m_zBuffer[p_x][p_y] = p_z;
 		return true;
-		//m_texture->SetPixelColor(p_x, p_y, {static_cast<unsigned int>(rand() % 255), 0, 0, 255});
 	}
 	else
 		return false;
-	/*else if (m_zBuffer[p_x][p_y] < Point2.mf_z)
-	{
-		m_zBuffer[p_x][p_y] = Point2.mf_z;
-		m_texture->SetPixelColor(p_x, p_y, p_triangle.m_v2.m_color);
-	}
-	else if (m_zBuffer[p_x][p_y] < Point3.mf_z)
-	{
-		m_zBuffer[p_x][p_y] = Point3.mf_z;
-		m_texture->SetPixelColor(p_x, p_y, p_triangle.m_v3.m_color);
-	}*/
 }
 
 void Rasterizer::ClearZBuffer() 
@@ -194,8 +177,7 @@ Vec3 Rasterizer::GetPixelPos(Vec4& p_v)
 	return Vec3(x, y, z);
 }
 
-//TODO: integrate zBuffer into FilltRIANGLES
-void Rasterizer::FillTriangles(Vec3 & v1, Vec3 & v2, Vec3 & v3, float p_z, Color& p_color)
+void Rasterizer::FillTriangles(Vec3 & v1, Vec3 & v2, Vec3 & v3, float p_z, Color& p_color, Triangle& p_triangle)
 {
 	Vec3 vm0;
 	Vec3 vm1;
@@ -247,13 +229,38 @@ void Rasterizer::FillTriangles(Vec3 & v1, Vec3 & v2, Vec3 & v3, float p_z, Color
 			{
 				if (ZBuffer(x, y, p_z))
 				{
-					m_texture->SetPixelColor(x, y, p_color);
-					SDL_SetRenderDrawColor(p_renderer, m_texture->GetPixelColor(x, y).ucm_r, m_texture->GetPixelColor(x, y).ucm_g, m_texture->GetPixelColor(x, y).ucm_b, m_texture->GetPixelColor(x, y).ucm_a);
+					CalculateLight(x, y, m_scene->getLights()[0], p_triangle);
+					//m_texture->SetPixelColor(x, y, p_color);
+					Color* tmpColor = &m_texture->GetPixelColor(x, y);
+					SDL_SetRenderDrawColor(p_renderer, 
+						tmpColor->ucm_r, 
+						tmpColor->ucm_g, 
+						tmpColor->ucm_b, 
+						tmpColor->ucm_a);
 					SDL_RenderDrawPoint(p_renderer, x, y);
 				}
 			}
 		}
 	}
+}
 
+//TODO: migrate CalculateLight from Rasterizer to Light.cpp; calculations should be done based upon m_texture
+void Rasterizer::CalculateLight(unsigned int p_x, unsigned int p_y, Light& p_light, Triangle& p_triangle)
+{
+	//AMBIENT
+	Vec3 ambient = p_light.getAmbient(); //light is white
+	float x = ambient.mf_x * p_triangle.m_color.ucm_r;
+	float y = ambient.mf_y * p_triangle.m_color.ucm_g;
+	float z = ambient.mf_z * p_triangle.m_color.ucm_b;
+	Vec3 result = {x, y, z};
 
+	//DIFFUSE
+	Vec3 lightDir = p_light.getPosition() - p_triangle.m_v1.m_position;
+	//lightDir.Normalize();
+	float diff = std::max(Vec3::dotProduct(lightDir, p_triangle.m_v2.m_normal), 0.0f);
+	Vec3 diffuse = Vec3{ 255, 255, 255 } * diff;
+	result = (ambient + diffuse) * result;
+
+	Color resultColor = { result.mf_x, result.mf_y, result.mf_z, 255 };
+	m_texture->SetPixelColor(p_x, p_y, resultColor);
 }

@@ -67,7 +67,7 @@ Mesh* Mesh::CreateCube(const float p_Size)
 		
 	for (int i = 0; i < mesh->m_triangles.size(); ++i)
 	{
-		mesh->m_triangles[i].m_color = { static_cast<unsigned int>(rand() % 255), static_cast<unsigned int>(rand() % 255), static_cast<unsigned int>(rand() % 255), 255 };
+		mesh->m_triangles[i].m_color = { 255, 0, 0, 255 };
 		
 		for (int j = 0; j < 3; ++j)
 		{
@@ -237,23 +237,19 @@ Vertex Mesh::GetMiddlePoint(Vertex& v1, Vertex& v2)
 
 void Mesh::Normalize()
 {
-	for (int i = 0; i < m_vertices.size(); ++i)
-	{
-		m_vertices[i].m_normal = Vec3();
-	}
 
 	for (int i = 0; i < m_triangles.size(); ++i)
 	{
 		Vec3 e1 = m_triangles[i][0].m_position - m_triangles[i][1].m_position;
 		Vec3 e2 = m_triangles[i][2].m_position - m_triangles[i][1].m_position;
-		Vec3 no = Vec3::crossProduct(e1, e2);
 
-		m_triangles[i][0].m_normal += no;
-		m_triangles[i][0].m_normal.Normalize();
-		m_triangles[i][1].m_normal += no;
-		m_triangles[i][1].m_normal.Normalize();
-		m_triangles[i][2].m_normal += no;
-		m_triangles[i][2].m_normal.Normalize();
+		for (int j = 0; j < 3; ++j)
+		{
+			m_triangles[i][j].m_normal = Vec3::crossProduct(e1, e2);
+			m_triangles[i][j].m_normal.Normalize();
+		}
+		//m_triangles[i][1].m_normal.Normalize();
+		//m_triangles[i][2].m_normal.Normalize();
 	}
 }
 

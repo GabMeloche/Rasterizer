@@ -24,6 +24,7 @@ namespace Math::Vector
 		void Normalize();
 
 		Vec3 operator*(float pf_scalar);
+		Vec3 operator*(Vec3& p_other);
 		Vec3 operator+=(Vec3& p_v);
 		float operator[](int p_index);
 		static void SortVertices(Vec3& p_vec1, Vec3& p_vec2, Vec3& p_vec3);

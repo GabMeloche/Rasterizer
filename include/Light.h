@@ -11,7 +11,7 @@ private:
 	float m_diffuse;
 	float m_specular;
 public:
-	Light() = default;
+	Light();
 	~Light() = default;
 	Light(const Light& p_other);
 

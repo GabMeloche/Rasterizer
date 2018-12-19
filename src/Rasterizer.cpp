@@ -120,8 +120,12 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 
 
 				Vec3 newVecPos1 = GetPixelPos(tmpPos1);
+				newVecPos1.mf_z = tmpPos1.mf_z;
 				Vec3 newVecPos2 = GetPixelPos(tmpPos2);
+				newVecPos2.mf_z = tmpPos2.mf_z;
 				Vec3 newVecPos3 = GetPixelPos(tmpPos3);
+				newVecPos3.mf_z = tmpPos3.mf_z;
+
 				x1 = newVecPos1.mf_x;
 				y1 = newVecPos1.mf_y;
 
@@ -229,8 +233,8 @@ void Rasterizer::FillTriangles(Vec3 & v1, Vec3 & v2, Vec3 & v3, float p_z, Color
 			{
 				if (ZBuffer(x, y, p_z))
 				{
-					CalculateLight(x, y, m_scene->getLights()[0], p_triangle);
-					//m_texture->SetPixelColor(x, y, p_color);
+					//CalculateLight(x, y, m_scene->getLights()[0], p_triangle);
+					m_texture->SetPixelColor(x, y, p_color);
 					Color* tmpColor = &m_texture->GetPixelColor(x, y);
 					SDL_SetRenderDrawColor(p_renderer, 
 						tmpColor->ucm_r, 

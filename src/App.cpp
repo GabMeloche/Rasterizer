@@ -31,18 +31,18 @@ void App::Startup()
 	Mesh* cube = new Mesh;
 	Mesh* cube2 = new Mesh;
 	cube = Mesh::CreateCube(1);
-	//cube2 = Mesh::CreateCube(1);
+	cube2 = Mesh::CreateCube(1);
 
 	Light light = Light();
 
 	Entity* entity = new Entity;
-	//Entity* entity2 = new Entity;
+	Entity* entity2 = new Entity;
 	entity->setMesh(cube);
-	//entity2->setMesh(cube2);
+	entity2->setMesh(cube2);
 
 	m_scene->getLights().emplace_back(light);
 	m_scene->getEntities().emplace_back(entity);
-	//m_scene->getEntities().emplace_back(entity2);
+	m_scene->getEntities().emplace_back(entity2);
 
 	MainLoop();
 }

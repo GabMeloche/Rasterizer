@@ -146,6 +146,7 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 
 bool Rasterizer::ZBuffer(unsigned int p_x, unsigned int p_y, float p_z)
 {
+
 	if (m_zBuffer[p_x][p_y] < p_z)
 	{
 		m_zBuffer[p_x][p_y] = p_z;

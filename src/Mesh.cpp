@@ -83,8 +83,8 @@ Mesh * Mesh::CreateSphere(int pi_latitudeCount, int pi_longitudeCount)
 {
 	Mesh* mesh = new Mesh;
 
-	float t = (1.0f + std::sqrt(5.0f)) / 2.0f;
-	t -= t * 0.1f;
+	float t = 1.61803399f;//(1.0f + std::sqrt(5.0f)) / 2.0f;
+
 
 	// Vertices
 	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -1.0, t, 0.0 } });
@@ -101,6 +101,8 @@ Mesh * Mesh::CreateSphere(int pi_latitudeCount, int pi_longitudeCount)
 	mesh->m_vertices.emplace_back(Vertex{ Vec3{ t, 0.0, 1.0 } });
 	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -t, 0.0, -1.0 } });
 	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -t, 0.0, 1.0 } });
+
+
 
 	// Faces
 	//mesh->m_triangles.emplace_back(0, 11, 5);
@@ -186,7 +188,8 @@ Mesh * Mesh::CreateSphere(int pi_latitudeCount, int pi_longitudeCount)
 											mesh->m_vertices[1] });
 
 	//number of subTriangle in sphere
-	int recursionLevel = 1;
+	int recursionLevel = 2;
+	float radius = 1.0f;
 
 	// refine triangle (add more triangle for more spheric apparence)
 	for (int i = 0; i < recursionLevel; i++)
@@ -199,33 +202,26 @@ Mesh * Mesh::CreateSphere(int pi_latitudeCount, int pi_longitudeCount)
 			Vertex b = GetMiddlePoint(tri.m_v2, tri.m_v3);
 			Vertex c = GetMiddlePoint(tri.m_v3, tri.m_v1);
 
-			tri.m_v1.m_position.mf_x -= tri.m_v1.m_position.mf_x * 0.1f;
-			tri.m_v1.m_position.mf_y -= tri.m_v1.m_position.mf_y * 0.1f;
-			tri.m_v1.m_position.mf_z -= tri.m_v1.m_position.mf_z * 0.1f;
+			////get magnitude
+			float magnA = sqrt(pow(a.m_position.mf_x, 2) + pow(a.m_position.mf_y, 2) + pow(a.m_position.mf_z, 2));
+			float magnB = sqrt(pow(b.m_position.mf_x, 2) + pow(b.m_position.mf_y, 2) + pow(b.m_position.mf_z, 2));
+			float magnC = sqrt(pow(c.m_position.mf_x, 2) + pow(c.m_position.mf_y, 2) + pow(c.m_position.mf_z, 2));
 
-			tri.m_v2.m_position.mf_x -= tri.m_v2.m_position.mf_x * 0.1f;
-			tri.m_v2.m_position.mf_y -= tri.m_v2.m_position.mf_y * 0.1f;
-			tri.m_v2.m_position.mf_z -= tri.m_v2.m_position.mf_z * 0.1f;
-			
-			tri.m_v3.m_position.mf_x -= tri.m_v3.m_position.mf_x * 0.1f;
-			tri.m_v3.m_position.mf_y -= tri.m_v3.m_position.mf_y * 0.1f;
-			tri.m_v3.m_position.mf_z -= tri.m_v3.m_position.mf_z * 0.1f;
+			a.m_position.mf_x *= (radius / magnA);
+			a.m_position.mf_y *= (radius / magnA);
+			a.m_position.mf_z *= (radius / magnA);
 
-			a.m_position.mf_x += a.m_position.mf_x * 0.1f;
-			a.m_position.mf_y += a.m_position.mf_y * 0.1f;
-			a.m_position.mf_z += a.m_position.mf_z * 0.1f;
+			b.m_position.mf_x *= (radius / magnB);
+			b.m_position.mf_y *= (radius / magnB);
+			b.m_position.mf_z *= (radius / magnB);
 
-			b.m_position.mf_x += b.m_position.mf_x * 0.1f;
-			b.m_position.mf_y += b.m_position.mf_y * 0.1f;
-			b.m_position.mf_z += b.m_position.mf_z * 0.1f;
-
-			c.m_position.mf_x += c.m_position.mf_x * 0.1f;
-			c.m_position.mf_y += c.m_position.mf_y * 0.1f;
-			c.m_position.mf_z += c.m_position.mf_z * 0.1f;
+			c.m_position.mf_x *= (radius / magnC);
+			c.m_position.mf_y *= (radius / magnC);
+			c.m_position.mf_z *= (radius / magnC);
 
 			mesh2->m_triangles.emplace_back(Triangle{ tri.m_v1, a, c});
-			mesh2->m_triangles.emplace_back(Triangle{ tri.m_v2, b, a});
-			mesh2->m_triangles.emplace_back(Triangle{ tri.m_v3, c, b});
+			mesh2->m_triangles.emplace_back(Triangle{ b, tri.m_v2, a});
+			mesh2->m_triangles.emplace_back(Triangle{ c, b, tri.m_v3});
 			mesh2->m_triangles.emplace_back(Triangle{ a, b, c});
 		
 		}

@@ -234,8 +234,11 @@ void Rasterizer::FillTriangles(Vec3 & v1, Vec3 & v2, Vec3 & v3, float p_z, Color
 			{
 				if (ZBuffer(x, y, p_z))
 				{
-					//CalculateLight(x, y, m_scene->getLights()[0], p_triangle);
 					m_texture->SetPixelColor(x, y, p_color);
+					for (auto& light : m_scene->getLights())
+					{
+						light.CalculateLight(x, y, m_texture, p_triangle);
+					}
 					Color* tmpColor = &m_texture->GetPixelColor(x, y);
 					SDL_SetRenderDrawColor(p_renderer, 
 						tmpColor->ucm_r, 
@@ -250,7 +253,7 @@ void Rasterizer::FillTriangles(Vec3 & v1, Vec3 & v2, Vec3 & v3, float p_z, Color
 }
 
 //TODO: migrate CalculateLight from Rasterizer to Light.cpp; calculations should be done based upon m_texture
-void Rasterizer::CalculateLight(unsigned int p_x, unsigned int p_y, Light& p_light, Triangle& p_triangle)
+/*void Rasterizer::CalculateLight(unsigned int p_x, unsigned int p_y, Light& p_light, Triangle& p_triangle)
 {
 	//AMBIENT
 	Vec3 ambient = p_light.getAmbient(); //light is white
@@ -268,4 +271,4 @@ void Rasterizer::CalculateLight(unsigned int p_x, unsigned int p_y, Light& p_lig
 
 	Color resultColor = { result.mf_x, result.mf_y, result.mf_z, 255 };
 	m_texture->SetPixelColor(p_x, p_y, resultColor);
-}
+}*/

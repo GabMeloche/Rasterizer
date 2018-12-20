@@ -12,7 +12,7 @@ private:
 
 public:
 	static Mesh* CreateCube(const float p_Size);
-	static Mesh* CreateSphere(int pi_latitudeCount, int pi_longitudeCount);
+	static Mesh* CreateSphere(const float p_Size);
 
 	static Vertex GetMiddlePoint(Vertex& v1, Vertex& v2);
 	void Normalize();

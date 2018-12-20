@@ -82,117 +82,15 @@ Mesh* Mesh::CreateCube(const float p_Size)
 	return mesh;
 }
 
-Mesh * Mesh::CreateSphere(int pi_latitudeCount, int pi_longitudeCount)
+Mesh * Mesh::CreateSphere(const float p_Size)
 {
 	Mesh* mesh = new Mesh;
 
-	float t = 1.61803399f;//(1.0f + std::sqrt(5.0f)) / 2.0f;
-
-
-	// Vertices
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -1.0, t, 0.0 } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 1.0, t, 0.0 } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -1.0, -t, 0.0 } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 1.0, -t, 0.0 } });
-	
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 0.0, -1.0, t } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 0.0, 1.0, t } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 0.0, -1.0, -t } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ 0.0, 1.0, -t } });
-	
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ t, 0.0, -1.0 } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ t, 0.0, 1.0 } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -t, 0.0, -1.0 } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -t, 0.0, 1.0 } });
-
-
-
-	// Faces
-	//mesh->m_triangles.emplace_back(0, 11, 5);
-	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[0],
-											mesh->m_vertices[11],
-											mesh->m_vertices[5] });
-	//mesh.addTriangle(0, 5, 1);
-	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[0],
-											mesh->m_vertices[5],
-											mesh->m_vertices[1] });
-	//mesh.addTriangle(0, 1, 7);
-	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[0],
-											mesh->m_vertices[1],
-											mesh->m_vertices[7] });
-
-	//mesh.addTriangle(0, 7, 10);
-	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[0],
-											mesh->m_vertices[7],
-											mesh->m_vertices[10] });
-	//mesh.addTriangle(0, 10, 11);
-	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[0],
-											mesh->m_vertices[10],
-											mesh->m_vertices[11] });
-	//mesh.addTriangle(1, 5, 9);
-	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[1],
-											mesh->m_vertices[5],
-											mesh->m_vertices[9] });
-	//mesh.addTriangle(5, 11, 4);
-	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[5],
-											mesh->m_vertices[11],
-											mesh->m_vertices[4] });
-	//mesh.addTriangle(11, 10, 2);
-	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[11],
-											mesh->m_vertices[10],
-											mesh->m_vertices[2] });
-	//mesh.addTriangle(10, 7, 6);
-	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[10],
-											mesh->m_vertices[7],
-											mesh->m_vertices[6] });
-	//mesh.addTriangle(7, 1, 8);
-	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[7],
-											mesh->m_vertices[1],
-											mesh->m_vertices[8] });
-	//mesh.addTriangle(3, 9, 4);
-	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[3],
-											mesh->m_vertices[9],
-											mesh->m_vertices[4] });
-	//mesh.addTriangle(3, 4, 2);
-	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[3],
-											mesh->m_vertices[4],
-											mesh->m_vertices[2] });
-	//mesh.addTriangle(3, 2, 6);
-	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[3],
-											mesh->m_vertices[2],
-											mesh->m_vertices[6] });
-	//mesh.addTriangle(3, 6, 8);
-	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[3],
-											mesh->m_vertices[6],
-											mesh->m_vertices[8] });
-	//mesh.addTriangle(3, 8, 9);
-	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[3],
-											mesh->m_vertices[8],
-											mesh->m_vertices[9] });
-	//mesh.addTriangle(4, 9, 5);
-	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[4],
-											mesh->m_vertices[9],
-											mesh->m_vertices[5] });
-	//mesh.addTriangle(2, 4, 11);
-	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[2],
-											mesh->m_vertices[4],
-											mesh->m_vertices[11] });
-	//mesh.addTriangle(6, 2, 10);
-	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[6],
-											mesh->m_vertices[2],
-											mesh->m_vertices[10] });
-	//mesh.addTriangle(8, 6, 7);
-	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[8],
-											mesh->m_vertices[6],
-											mesh->m_vertices[7] });
-	//mesh.addTriangle(9, 8, 1);
-	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[9],
-											mesh->m_vertices[8],
-											mesh->m_vertices[1] });
+	mesh = CreateCube(p_Size);
 
 	//number of subTriangle in sphere
-	int recursionLevel = 2;
-	float radius = 1.0f;
+	int recursionLevel = 3;
+	float radius = p_Size / 1.16279069767f;
 
 	// refine triangle (add more triangle for more spheric apparence)
 	for (int i = 0; i < recursionLevel; i++)

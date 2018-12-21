@@ -79,14 +79,14 @@ Mesh* Mesh::CreateCube(const float p_Size)
 	return mesh;
 }
 
-Mesh * Mesh::CreateSphere(const float p_Size)
+Mesh * Mesh::CreateSphere(const float p_Size, const int precision)
 {
 	Mesh* mesh = new Mesh;
 
 	mesh = CreateCube(p_Size);
 
 	//number of subTriangle in sphere
-	int recursionLevel = 3;
+	int recursionLevel = precision;
 	float radius = p_Size / 1.16279069767f;
 
 	// refine triangle (add more triangle for more spheric apparence)
@@ -128,9 +128,11 @@ Mesh * Mesh::CreateSphere(const float p_Size)
 
 	}
 
+	std::cout << "number of triangle : " << mesh->m_triangles.size() << '\n';
+
 	for (int i = 0; i < mesh->m_triangles.size(); ++i)
 	{
-		mesh->m_triangles[i].m_color = {255, 0, 0, 255 };
+		mesh->m_triangles[i].m_color = {static_cast<unsigned int>(rand() % 255), static_cast<unsigned int>(rand() % 255), static_cast<unsigned int>(rand() % 255), 255 };
 		for (int j = 0; j < 3; ++j)
 		{
 			mesh->m_triangles[i][j].m_pos = new Vec4(mesh->m_triangles[i][j].m_position);

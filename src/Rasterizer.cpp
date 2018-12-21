@@ -51,7 +51,12 @@ void Rasterizer::Convert2Dto3D(Vertex& m_inPoint)
 
 void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 {
-	p += 2;
+	if (p < 360.0f)
+		p += 2;
+	else
+		p = 2;
+
+	std::cout << "p : " << p << '\n';
 
 	float x1;
 	float y1;
@@ -235,10 +240,10 @@ void Rasterizer::FillTriangles(Vec3 & v1, Vec3 & v2, Vec3 & v3, float p_z, Color
 				if (ZBuffer(x, y, p_z))
 				{
 					m_texture->SetPixelColor(x, y, p_color);
-					for (auto& light : m_scene->getLights())
-					{
-						light.CalculateLight(x, y, m_texture, p_triangle);
-					}
+					//for (auto& light : m_scene->getLights())
+					//{
+					//	light.CalculateLight(x, y, m_texture, p_triangle);
+					//}
 					Color* tmpColor = &m_texture->GetPixelColor(x, y);
 					SDL_SetRenderDrawColor(p_renderer, 
 						tmpColor->ucm_r, 

@@ -116,13 +116,6 @@ Mat4 Math::Matrix::Mat4::CreateScaleMatrix(const float& p_Scale)
 
 	ScaleMat.SetMatrix(X);
 
-	float ScaleMatrix[4][4] = {
-	{ p_Scale,0,0,0 },
-	{ 0,p_Scale,0,0 },
-	{ 0,0,p_Scale,0 },
-	{ 0,0,0,1 }
-	};
-	ScaleMat.SetMatrix(ScaleMatrix);
 	return ScaleMat;
 }
 

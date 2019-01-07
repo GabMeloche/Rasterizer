@@ -56,8 +56,6 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 	else
 		p = 2;
 
-	std::cout << "p : " << p << '\n';
-
 	float x1;
 	float y1;
 	float x2;
@@ -144,7 +142,7 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 				Vec3 v2 = newVecPos2;
 				Vec3 v3 = newVecPos3;
 
-				FillTriangles(v1, v2, v3, tmpZ, currTriangle.m_color, currTriangle);
+				FillTriangles(v1, v2, v3, currTriangle.m_color, currTriangle);
 		}
 	}
 }
@@ -187,7 +185,7 @@ Vec3 Rasterizer::GetPixelPos(Vec4& p_v)
 	return Vec3(x, y, z);
 }
 
-void Rasterizer::FillTriangles(Vec3 & v1, Vec3 & v2, Vec3 & v3, float p_z, Color& p_color, Triangle& p_triangle)
+void Rasterizer::FillTriangles(Vec3 & v1, Vec3 & v2, Vec3 & v3, Color& p_color, Triangle& p_triangle)
 {
 	Vec3 vm0;
 	Vec3 vm1;
@@ -237,7 +235,7 @@ void Rasterizer::FillTriangles(Vec3 & v1, Vec3 & v2, Vec3 & v3, float p_z, Color
 
 			if (u >= 0 && v >= 0 && u + v < 1)
 			{
-				if (ZBuffer(x, y, p_z))
+				if (ZBuffer(x, y, 0))
 				{
 					m_texture->SetPixelColor(x, y, p_color);
 					//for (auto& light : m_scene->getLights())

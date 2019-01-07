@@ -22,7 +22,7 @@ public:
 	bool ZBuffer(unsigned int p_x, unsigned int p_y, float p_z);
 	Vec3 GetPixelPos(Vec4 & p_v);
 	void ClearZBuffer();
-	void FillTriangles(Vec3& v1, Vec3& v2, Vec3& v3, float p_z, Color& p_color, Triangle& p_triangle);
+	void FillTriangles(Vec3 & v1, Vec3 & v2, Vec3 & v3, Color& p_color, Triangle& p_triangle);
 	void CalculateLight(unsigned int p_x, unsigned int p_y, Light & p_light, Triangle & p_triangle);
 };
 

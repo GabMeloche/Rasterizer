@@ -67,7 +67,7 @@ Mesh* Mesh::CreateCube(const float p_Size)
 		
 	for (int i = 0; i < mesh->m_triangles.size(); ++i)
 	{
-		mesh->m_triangles[i].m_color = { 255, 0, 0, 255};
+		mesh->m_triangles[i].m_color = { static_cast<unsigned int>(rand() % 255), static_cast<unsigned int>(rand() % 255), static_cast<unsigned int>(rand() % 255), 255 };
 		
 		for (int j = 0; j < 3; ++j)
 		{

@@ -149,6 +149,8 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 
 bool Rasterizer::ZBuffer(unsigned int p_x, unsigned int p_y, float p_z)
 {
+	if (p_x >= m_texture->mui_w || p_y >= m_texture->mui_h || p_x <= 0 || p_y <= 0)
+		return false;
 
 	if (m_zBuffer[p_x][p_y] < p_z)
 	{
@@ -233,7 +235,7 @@ void Rasterizer::FillTriangles(Vec3 & v1, Vec3 & v2, Vec3 & v3, Color& p_color, 
 			float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
 			float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
 
-			if (u >= 0 && v >= 0 && u + v < 1)
+			if (u >= 0 && v >= 0 && u + v < 1 )//&& x < m_texture->mui_w && y < m_texture->mui_h)
 			{
 				if (ZBuffer(x, y, 0))
 				{

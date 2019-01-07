@@ -7,8 +7,8 @@
 
 Light::Light()
 {
-	m_ambient = 0.3f;
-	m_diffuse = 0.4f;
+	m_ambient = 0.2f;
+	m_diffuse = 0.6f;
 	m_specular = 0.4f;
 	m_position = { 1.0f, 0.0f, 1.0f };
 }
@@ -61,7 +61,8 @@ float Light::getSpecular()
 	return m_specular;
 }
 
-void Light::CalculateLight(const unsigned int p_x, const unsigned int p_y, Texture* p_texture, Triangle& p_triangle)
+//NaN problem is with p_triangle normals (-NaN(ind))
+void Light::CalculateLight(const unsigned int p_x, const unsigned int p_y, Texture* p_texture, Triangle& p_triangle, float p_z)
 {
 	Color& pixelColor = p_texture->GetPixelColor(p_x, p_y);
 	Vec3 lightColor = { 255.0f, 255.0f, 255.0f };
@@ -69,9 +70,9 @@ void Light::CalculateLight(const unsigned int p_x, const unsigned int p_y, Textu
 		static_cast<float>(p_texture->GetPixelColor(p_x, p_y).ucm_g),
 		static_cast<float>(p_texture->GetPixelColor(p_x, p_y).ucm_b) };*/
 
-	float pointX = (static_cast<float>(p_x) - (p_texture->mui_w / 2)) / (p_texture->mui_w / 2);
-	float pointY = (static_cast<float>(p_y) - (p_texture->mui_h / 2)) / (p_texture->mui_h / 2);
-	Vec3 Point = { pointX, pointY, p_triangle.m_v1.m_position.mf_z };
+	float pointX = (static_cast<float>(p_x) - (p_texture->mui_w)) / (p_texture->mui_w);
+	float pointY = (static_cast<float>(p_y) - (p_texture->mui_h )) / (p_texture->mui_h);
+	Vec3 Point = { pointX, pointY, p_z };
 
 	//AMBIENT
 	Vec3 ambient = this->getAmbient(); //light is white now; if not white, then multiply ambient by light's color
@@ -83,11 +84,12 @@ void Light::CalculateLight(const unsigned int p_x, const unsigned int p_y, Textu
 	//DIFFUSE
 	Vec3 lightDir = this->getPosition() - Point;
 	lightDir.Normalize();
-	float diff = std::max(Vec3::dotProduct(lightDir, p_triangle.m_v1.m_normal), 0.0f);
+	float diff = std::abs(Vec3::dotProduct(lightDir, p_triangle.m_v2.m_normal));
 	Vec3 diffuse = lightColor * diff;
 
 	Vec3 test = { pixelColor.ucm_r / 255.0f, pixelColor.ucm_g / 255.0f, pixelColor.ucm_b / 255.0f };
-	result = (ambient + diffuse) * test;
+	Vec3 temp = result + diffuse;
+	Vec3 resultBis = temp * test;
 
 	//SPECULAR
 	/*Vec3 camera = { 0.0f, 0.0f, 1.0f };
@@ -105,6 +107,10 @@ void Light::CalculateLight(const unsigned int p_x, const unsigned int p_y, Textu
 	result = result + specular;*/
 
 	//std::cout << "color specular: " << result.mf_x << ", " << result.mf_y << std::endl;
-	Color resultColor = { result.mf_x, result.mf_y, result.mf_z, 255.0f };
+	Color resultColor = { static_cast<unsigned char>(resultBis.mf_x), static_cast<unsigned char>(resultBis.mf_y), static_cast<unsigned char>(resultBis.mf_z), 255 };
+	/*if (resultColor.ucm_r <= 10.0f)
+	{
+		std::cout << "ble";
+	}*/
 	p_texture->SetPixelColor(p_x, p_y, resultColor);
 }

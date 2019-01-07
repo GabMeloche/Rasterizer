@@ -72,7 +72,7 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 			Triangle& currTriangle = p_scene->getEntities()[i]->getMesh()->getTriangles()[k];
 			//Transformation Matrix
 			Mat4 Translation;
-			Translation = Mat4::CreateTranslationMatrix({ static_cast<float>(i), 0.0f, static_cast<float>(0) });
+			Translation = Mat4::CreateTranslationMatrix({ static_cast<float>(i), 0.0f, static_cast<float>(i) });
 
 			Mat4 Rotation;
 			Rotation = Mat4::CreateRotationMatrix(p, 0, 1, 1);
@@ -214,16 +214,16 @@ void Rasterizer::FillTriangles(Vec3 & v1, Vec3 & v2, Vec3 & v3, Color& p_color, 
 			float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
 			float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
 
-			if (u >= 0 && v >= 0 && u + v < 1 )//&& x < m_texture->mui_w && y < m_texture->mui_h)
+			if (u >= 0 && v >= 0 && u + v < 1 )
 			{
 				float tmpZ = v2.mf_z * v + v3.mf_z * u + (v1.mf_z * ((1 - v) + (1 - u)));
 				if (ZBuffer(x, y, tmpZ))
 				{
 					m_texture->SetPixelColor(x, y, p_color);
-					//for (auto& light : m_scene->getLights())
-					//{
-					//	light.CalculateLight(x, y, m_texture, p_triangle);
-					//}
+					for (auto& light : m_scene->getLights())
+					{
+						light.CalculateLight(x, y, m_texture, p_triangle, tmpZ);
+					}
 					Color* tmpColor = &m_texture->GetPixelColor(x, y);
 					SDL_SetRenderDrawColor(p_renderer, 
 						tmpColor->ucm_r, 
@@ -236,24 +236,3 @@ void Rasterizer::FillTriangles(Vec3 & v1, Vec3 & v2, Vec3 & v3, Color& p_color, 
 		}
 	}
 }
-
-//TODO: migrate CalculateLight from Rasterizer to Light.cpp; calculations should be done based upon m_texture
-/*void Rasterizer::CalculateLight(unsigned int p_x, unsigned int p_y, Light& p_light, Triangle& p_triangle)
-{
-	//AMBIENT
-	Vec3 ambient = p_light.getAmbient(); //light is white
-	float x = ambient.mf_x * p_triangle.m_color.ucm_r;
-	float y = ambient.mf_y * p_triangle.m_color.ucm_g;
-	float z = ambient.mf_z * p_triangle.m_color.ucm_b;
-	Vec3 result = {x, y, z};
-
-	//DIFFUSE
-	Vec3 lightDir = p_light.getPosition() - p_triangle.m_v1.m_position;
-	//lightDir.Normalize();
-	float diff = std::max(Vec3::dotProduct(lightDir, p_triangle.m_v2.m_normal), 0.0f);
-	Vec3 diffuse = Vec3{ 255, 255, 255 } * diff;
-	result = (ambient + diffuse) * result;
-
-	Color resultColor = { result.mf_x, result.mf_y, result.mf_z, 255 };
-	m_texture->SetPixelColor(p_x, p_y, resultColor);
-}*/

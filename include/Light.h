@@ -26,5 +26,5 @@ public:
 	float getAmbient();
 	float getDiffuse();
 	float getSpecular();
-	void CalculateLight(const unsigned int p_x, const unsigned int p_y, Texture* p_texture, Triangle& p_triangle);
+	void CalculateLight(const unsigned int p_x, const unsigned int p_y, Texture* p_texture, Triangle& p_triangle, float p_z);
 };

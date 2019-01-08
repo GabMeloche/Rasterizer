@@ -7,7 +7,7 @@
 
 
 Mat4 Ortho;
-float p = 0;
+float pAngle = 0;
 
 Rasterizer::Rasterizer()
 {
@@ -51,77 +51,64 @@ void Rasterizer::Convert2Dto3D(Vertex& m_inPoint)
 
 void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 {
-	if (p < 360.0f)
-		p += 2;
+	//calculate rotation angle
+	if (pAngle < 360.0f)
+		pAngle += 2;
 	else
-		p = 2;
+		pAngle = 2;
 
 	std::vector<Entity*>& allEntities = p_scene->getEntities();
 	size_t eSize = allEntities.size();
-	float finalZ = 0.0f;
 	
 	ClearZBuffer();
 	//FOR EACH MESH
 	for (size_t i = 0; i < eSize; i++)
 	{
+		//Calculate Transformation Matrix
+		Mat4 Translation;
+		Translation = Mat4::CreateTranslationMatrix({ 0.0f, 0.0f, -1.0f });
+
+		Mat4 Rotation;
+		Rotation = Mat4::CreateRotationMatrix(pAngle, 0, 1, 1);
+
+		Mat4 Scale;
+		Scale = Mat4::CreateScaleMatrix(0.8f);
+
+		Mat4 TransformMat;
+		TransformMat = Translation * Rotation * Scale;
+
+		//find projection matrix using the first triangle
+		Mat4 Proj;
+		Proj = Mat4::Vec2dOrtho(*p_scene->getEntities()[i]->getMesh()->getTriangles()[0][0].m_pos, 2);
+
 		size_t tSize = allEntities[i]->getMesh()->getTriangles().size();
 		//FOR EACH TRIANGLE IN THE MESH
 		for (size_t k = 0; k < tSize; ++k)
 		{
+			//Get Current triangle
 			int m_width = p_Target.mui_w;
 			Triangle& currTriangle = p_scene->getEntities()[i]->getMesh()->getTriangles()[k];
-			//Transformation Matrix
-			Mat4 Translation;
-			Translation = Mat4::CreateTranslationMatrix({ static_cast<float>(i), 0.0f, static_cast<float>(i) });
-
-			Mat4 Rotation;
-			Rotation = Mat4::CreateRotationMatrix(p, 0, 1, 1);
-
-			Mat4 Scale;
-			Scale = Mat4::CreateScaleMatrix(0.8f);
-
-			Mat4 TransformMat;
-			TransformMat = Translation * Rotation * Scale;
 
 
 			//LOOP FOR EACH LINE OF THE TRIANGLE
-				float distance = 10;
-				finalZ = 1.0f / (distance - currTriangle[0].m_pos->mf_z);
+			Vec4 tmpPos1 = *currTriangle[0].m_pos;
+			tmpPos1 = TransformMat * tmpPos1;
+			tmpPos1 = Proj * tmpPos1;
 
-				float OrthoMatrix[4][4] = {
-				{ 1,0.0f,0.0f,0.0f },
-				{ 0.0f,1,0.0f,0.0f },
-				{ 0.0f,0.0f,finalZ,0.0f },
-				{ 0.0f,0.0f,0.0f,1.0f}
-				};
-				Ortho.SetMatrix(OrthoMatrix);
+			Vec4 tmpPos2 = *currTriangle[1].m_pos;
+			tmpPos2 = TransformMat * tmpPos2;
+			tmpPos2 = Proj * tmpPos2;
 
-				Vec4 tmpPos1 = *currTriangle[0].m_pos;
-				tmpPos1 = TransformMat * tmpPos1;
-				tmpPos1 = Ortho * tmpPos1;
-
-				Vec4 tmpPos2 = *currTriangle[1].m_pos;
-				tmpPos2 = TransformMat * tmpPos2;
-				tmpPos2 = Ortho * tmpPos2;
-
-				Vec4 tmpPos3 = *currTriangle[2].m_pos;
-				float tmpZ = tmpPos1.mf_z;
-				tmpPos3 = TransformMat * tmpPos3;
-				tmpPos3 = Ortho * tmpPos3;
+			Vec4 tmpPos3 = *currTriangle[2].m_pos;
+			tmpPos3 = TransformMat * tmpPos3;
+			tmpPos3 = Proj * tmpPos3;
 
 
-				Vec3 newVecPos1 = GetPixelPos(tmpPos1);
-				newVecPos1.mf_z = tmpPos1.mf_z;
-				Vec3 newVecPos2 = GetPixelPos(tmpPos2);
-				newVecPos2.mf_z = tmpPos2.mf_z;
-				Vec3 newVecPos3 = GetPixelPos(tmpPos3);
-				newVecPos3.mf_z = tmpPos3.mf_z;
+			Vec3 v1 = PixelPosRatio(tmpPos1);
+			Vec3 v2 = PixelPosRatio(tmpPos2);
+			Vec3 v3 = PixelPosRatio(tmpPos3);
 
-				Vec3 v1 = newVecPos1;
-				Vec3 v2 = newVecPos2;
-				Vec3 v3 = newVecPos3;
-
-				FillTriangles(v1, v2, v3, currTriangle.m_color, currTriangle);
+			FillTriangles(v1, v2, v3, currTriangle.m_color, currTriangle);
 		}
 	}
 }
@@ -151,7 +138,7 @@ void Rasterizer::ClearZBuffer()
 	}
 }
 
-Vec3 Rasterizer::GetPixelPos(Vec4& p_v)
+Vec3 Rasterizer::PixelPosRatio(Vec4& p_v)
 {
 	float offsetX = (1024.0f / 2.0f);
 	float offsetY = (768.0f / 2.0f);

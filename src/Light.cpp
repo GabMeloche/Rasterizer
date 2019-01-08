@@ -10,7 +10,7 @@ Light::Light()
 	m_ambient = 0.2f;
 	m_diffuse = 0.6f;
 	m_specular = 0.4f;
-	m_position = { 1.0f, 0.0f, 1.0f };
+	m_position = { 2.0f, 0.0f, 1.0f };
 }
 
 Light::Light(const Light & p_other)
@@ -71,8 +71,11 @@ void Light::CalculateLight(const unsigned int p_x, const unsigned int p_y, Textu
 		static_cast<float>(p_texture->GetPixelColor(p_x, p_y).ucm_b) };*/
 
 	float pointX = (static_cast<float>(p_x) - (p_texture->mui_w)) / (p_texture->mui_w);
-	float pointY = (static_cast<float>(p_y) - (p_texture->mui_h )) / (p_texture->mui_h);
-	Vec3 Point = { pointX, pointY, p_z };
+	float pointY = (static_cast<float>(p_y) - (p_texture->mui_h)) / (p_texture->mui_h);
+
+	Vec3 Point = { pointX, pointY, 0.0f };
+	Point.Normalize();
+	Point.mf_z = p_z;
 
 	//AMBIENT
 	Vec3 ambient = this->getAmbient(); //light is white now; if not white, then multiply ambient by light's color
@@ -84,7 +87,7 @@ void Light::CalculateLight(const unsigned int p_x, const unsigned int p_y, Textu
 	//DIFFUSE
 	Vec3 lightDir = this->getPosition() - Point;
 	lightDir.Normalize();
-	float diff = std::abs(Vec3::dotProduct(lightDir, p_triangle.m_v2.m_normal));
+	float diff = std::max(Vec3::dotProduct(lightDir, p_triangle.m_v1.m_normal), 0.0f);
 	Vec3 diffuse = lightColor * diff;
 
 	Vec3 test = { pixelColor.ucm_r / 255.0f, pixelColor.ucm_g / 255.0f, pixelColor.ucm_b / 255.0f };

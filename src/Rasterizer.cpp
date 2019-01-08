@@ -217,6 +217,7 @@ void Rasterizer::FillTriangles(Vec3 & v1, Vec3 & v2, Vec3 & v3, Color& p_color, 
 			if (u >= 0 && v >= 0 && u + v < 1 )
 			{
 				float tmpZ = v2.mf_z * v + v3.mf_z * u + (v1.mf_z * ((1 - v) + (1 - u)));
+
 				if (ZBuffer(x, y, tmpZ))
 				{
 					m_texture->SetPixelColor(x, y, p_color);

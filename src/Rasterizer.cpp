@@ -208,9 +208,9 @@ void Rasterizer::FillTriangles(Vec3 & v1, Vec3 & v2, Vec3 & v3, Color& p_color, 
 			float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
 			float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
 
-			if (u >= 0 && v >= 0 && u + v < 1 )
+			if (u >= 0.0f && v >= 0.0f && u + v < 1.0f )
 			{
-				float tmpZ = v2.mf_z * v + v3.mf_z * u + (v1.mf_z * ((1 - v) + (1 - u)));
+				float tmpZ = v2.mf_z * v + v3.mf_z * u + (v1.mf_z * ((1.0f - v) + (1.0f - u)));
 
 				if (ZBuffer(x, y, tmpZ))
 				{

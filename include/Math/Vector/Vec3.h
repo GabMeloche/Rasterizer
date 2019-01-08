@@ -22,6 +22,7 @@ namespace Math::Vector
 		static float dotProduct(Vec3& p_v1, Vec3& p_v2);
 		static Vec3 crossProduct(Vec3& p_v1, Vec3& p_v2);
 		void Normalize();
+		static float Angle(Vec3& p_v1, Vec3& p_v2);
 
 		Vec3 operator*(float pf_scalar);
 		Vec3 operator*(Vec3& p_other);

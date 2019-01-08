@@ -87,8 +87,20 @@ void Light::CalculateLight(const unsigned int p_x, const unsigned int p_y, Textu
 	//DIFFUSE
 	Vec3 lightDir = this->getPosition() - Point;
 	//lightDir.Normalize();
-	float diff = std::abs(Vec3::dotProduct(lightDir, p_triangle.m_normal));
-	Vec3 diffuse = lightColor * diff;
+	//float diff = std::abs(Vec3::dotProduct(lightDir, p_triangle.m_normal));
+	float angle = Vec3::Angle(lightDir, p_triangle.m_normal);
+	
+	if (angle >= 0.0f)
+	{
+		angle /= 90.0f;
+	}
+	else if (angle < 0.0f)
+	{
+		angle *= -1;
+		angle /= 90.0f;
+	}
+
+	Vec3 diffuse = lightColor * angle; //diff;
 
 	Vec3 test = { pixelColor.ucm_r / 255.0f, pixelColor.ucm_g / 255.0f, pixelColor.ucm_b / 255.0f };
 	Vec3 temp = result + diffuse;

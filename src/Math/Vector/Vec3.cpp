@@ -78,6 +78,15 @@ void Vec3::Normalize()
 	mf_z = mf_z / length;
 }
 
+float Vec3::Angle(Vec3& p_v1, Vec3& p_v2)
+{
+	float angle = Vec3::dotProduct(p_v1, p_v2);
+	float mag1 = p_v1.GetMagnitude();
+	float mag2 = p_v2.GetMagnitude();
+	angle /= mag1 * mag2;
+	return acos(angle);
+}
+
 Vec3 Vec3::operator*(float pf_scalar)
 {
 	float x = mf_x * pf_scalar;

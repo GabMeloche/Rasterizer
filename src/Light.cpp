@@ -62,7 +62,7 @@ float Light::getSpecular()
 	return m_specular;
 }
 
-//NaN problem is with p_triangle normals (-NaN(ind))
+
 void Light::CalculateLight(const unsigned int p_x, const unsigned int p_y, Texture* p_texture, Triangle& p_triangle, float p_z)
 {
 
@@ -89,11 +89,7 @@ void Light::CalculateLight(const unsigned int p_x, const unsigned int p_y, Textu
 	//DIFFUSE
 	Vec3 lightDir = this->getPosition();
 	lightDir.Normalize();
-	lightDir = lightDir - Point;
-	
-	/*float diff = Vec3::dotProduct(lightDir, p_triangle.m_normal);
-	if (diff < 0.0f)
-		diff = 0.0f;*/
+	lightDir = Point - lightDir;
 
 	float angle = Vec3::Angle(lightDir, p_triangle.m_normal);
 	Vec3 diffuse = lightColor * angle;

@@ -168,13 +168,13 @@ Mat4 Math::Matrix::Mat4::Vec2dOrtho(const Vector::Vec4 & p_Vec3D, float distance
 {
 	Mat4 Ortho;
 
-	float finalZ = 1 / (distance - p_Vec3D.mf_z);
+	float finalZ = 1.0f / (distance - p_Vec3D.mf_z);
 
 	float OrthoMatrix[4][4] = {
-	{ 1,0,0,0 },
-	{ 0,1,0,0 },
-	{ 0,0, finalZ,0 },
-	{ 0,0,0,1 }
+	{ 1.0f,0.0f,0.0f,0.0f },
+	{ 0.0f,1.0f,0.0f,0.0f },
+	{ 0.0f,0.0f,finalZ,0.0f },
+	{ 0.0f,0.0f,0.0f,1.0f }
 	};
 
 	Ortho.SetMatrix(OrthoMatrix);

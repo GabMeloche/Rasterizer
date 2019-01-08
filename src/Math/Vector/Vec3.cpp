@@ -33,14 +33,14 @@ Vec3::~Vec3()
 
 float Vec3::GetMagnitude() const
 {
-	return sqrt(pow(mf_x, 2) + pow(mf_y, 2) + pow(mf_z, 2));
+	return sqrt(pow(mf_x, 2.0f) + pow(mf_y, 2.0f) + pow(mf_z, 2.0f));
 }
 
 float Vec3::DistanceBtwPts(const Vec3& p_v1, const Vec3& p_v2)
 {
-	return sqrt(pow(p_v1.mf_x - p_v2.mf_x, 2) 
-		+ pow(p_v1.mf_y - p_v2.mf_y, 2) 
-		+ pow(p_v1.mf_z - p_v2.mf_z, 2));
+	return sqrt(pow(p_v1.mf_x - p_v2.mf_x, 2.0f) 
+		+ pow(p_v1.mf_y - p_v2.mf_y, 2.0f) 
+		+ pow(p_v1.mf_z - p_v2.mf_z, 2.0f));
 }
 
 float Vec3::dotProduct(Vec3 & p_v1, Vec3 & p_v2)
@@ -64,14 +64,14 @@ Vec3 Vec3::crossProduct(Vec3 & p_v1, Vec3 & p_v2)
 
 void Vec3::Normalize()
 {
-	if(mf_x != 0)
-		mf_x = mf_x / sqrt(pow(mf_x, 2));
-	if (mf_y != 0)
-		mf_y = mf_y / sqrt(pow(mf_y, 2));
-	if (mf_z != 0)
-		mf_z = mf_z / sqrt(pow(mf_z, 2));
+	if(mf_x != 0.0f)
+		mf_x = mf_x / sqrt(pow(mf_x, 2.0f));
+	if (mf_y != 0.0f)
+		mf_y = mf_y / sqrt(pow(mf_y, 2.0f));
+	if (mf_z != 0.0f)
+		mf_z = mf_z / sqrt(pow(mf_z, 2.0f));
 
-	float length = sqrt(pow(mf_x, 2) + pow(mf_y, 2) + pow(mf_z, 2));
+	float length = sqrt(pow(mf_x, 2.0f) + pow(mf_y, 2.0f) + pow(mf_z, 2.0f));
 
 	mf_x = mf_x / length;
 	mf_y = mf_y / length;

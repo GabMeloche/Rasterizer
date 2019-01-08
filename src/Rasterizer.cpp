@@ -44,8 +44,8 @@ void Rasterizer::setScene(Scene * p_scene)
 void Rasterizer::Convert2Dto3D(Vertex& m_inPoint)
 {
 	std::cout << m_inPoint.m_position.mf_x << '\n';
-	m_inPoint.m_position.mf_x = ((m_inPoint.m_position.mf_x / 5) + 1) * 0.5 * 1024;
-	m_inPoint.m_position.mf_y = 768 - ((m_inPoint.m_position.mf_y / 5) + 1) * 0.5 * 768;
+	m_inPoint.m_position.mf_x = ((m_inPoint.m_position.mf_x / 5.0f) + 1.0f) * 0.5f * 1024.0f;
+	m_inPoint.m_position.mf_y = 768.0f - ((m_inPoint.m_position.mf_y / 5.0f) + 1.0f) * 0.5f * 768.0f;
 	std::cout << m_inPoint.m_position.mf_x << '\n';
 }
 
@@ -53,9 +53,9 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 {
 	//calculate rotation angle
 	if (pAngle < 360.0f)
-		pAngle += 2;
+		pAngle += 2.0f;
 	else
-		pAngle = 2;
+		pAngle = 2.0f;
 
 	std::vector<Entity*>& allEntities = p_scene->getEntities();
 	size_t eSize = allEntities.size();
@@ -66,7 +66,7 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 	{
 		//Calculate Transformation Matrix
 		Mat4 Translation;
-		Translation = Mat4::CreateTranslationMatrix({ 0.0f, 0.0f, -1.0f });
+		Translation = Mat4::CreateTranslationMatrix({ 0.0f, -1.0f, -1.0f });
 
 		Mat4 Rotation;
 		Rotation = Mat4::CreateRotationMatrix(pAngle, 0, 1, 1);
@@ -143,11 +143,10 @@ Vec3 Rasterizer::PixelPosRatio(Vec4& p_v)
 	float offsetX = (1024.0f / 2.0f);
 	float offsetY = (768.0f / 2.0f);
 
-	float scaleX = (1.0f / (offsetX / 2.0f));
 	float scaleY = (1.0f / (offsetY / 2.0f));
 
 	float x = (p_v.mf_x / scaleY) + offsetX;
-	float y = (p_v.mf_y / scaleY) + offsetY;
+	float y = -(p_v.mf_y / scaleY) + offsetY;
 	float z = p_v.mf_z;
 
 	return Vec3(x, y, z);
@@ -189,6 +188,12 @@ void Rasterizer::FillTriangles(Vec3 & v1, Vec3 & v2, Vec3 & v3, Color& p_color, 
 	vm1.mf_x = v2.mf_x - v1.mf_x;
 	vm1.mf_y = v2.mf_y - v1.mf_y;
 
+	//calculate dot product of 3/5 points
+	float dot00 = Vec3::dotProduct(vm0, vm0);
+	float dot01 = Vec3::dotProduct(vm0, vm1);
+	float dot11 = Vec3::dotProduct(vm1, vm1);
+
+
 	for (int y = point.mf_y; y < maxY; ++y)
 	{
 		for (int x = minX; x < maxX; ++x)
@@ -198,13 +203,11 @@ void Rasterizer::FillTriangles(Vec3 & v1, Vec3 & v2, Vec3 & v3, Color& p_color, 
 			vm2.mf_x = point.mf_x - v1.mf_x;
 			vm2.mf_y = point.mf_y - v1.mf_y;
 
-			float dot00 = Vec3::dotProduct(vm0, vm0);
-			float dot01 = Vec3::dotProduct(vm0, vm1);
+			//calculate dot products of the 2 other points
 			float dot02 = Vec3::dotProduct(vm0, vm2);
-			float dot11 = Vec3::dotProduct(vm1, vm1);
 			float dot12 = Vec3::dotProduct(vm1, vm2);
 
-			float invDenom = 1 / (dot00 * dot11 - dot01 * dot01);
+			float invDenom = 1.0f / (dot00 * dot11 - dot01 * dot01);
 			float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
 			float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
 

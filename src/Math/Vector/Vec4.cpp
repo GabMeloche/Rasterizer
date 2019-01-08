@@ -22,7 +22,7 @@ Vec4::Vec4(const Vec4& p_other)
 
 void Vec4::Homogenize()
 {
-	if (mf_w == 0)
+	if (mf_w == 0.0f)
 		return;
 
 	mf_x /= mf_w;
@@ -38,7 +38,7 @@ float Vec4::GetMagnitude() const
 	float x = mf_x / mf_w;
 	float y = mf_y / mf_w;
 	float z = mf_z / mf_w;
-	return sqrt(pow(x, 2)+ pow(y, 2) + pow(z, 2));
+	return sqrt(pow(x, 2.0f)+ pow(y, 2.0f) + pow(z, 2.0f));
 }
 
 void Vec4::Normalize()

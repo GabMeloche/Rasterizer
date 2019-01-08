@@ -101,9 +101,9 @@ Mesh * Mesh::CreateSphere(const float p_Size, const int precision)
 			Vertex c = GetMiddlePoint(tri.m_v3, tri.m_v1);
 
 			////get magnitude
-			float magnA = sqrt(pow(a.m_position.mf_x, 2) + pow(a.m_position.mf_y, 2) + pow(a.m_position.mf_z, 2));
-			float magnB = sqrt(pow(b.m_position.mf_x, 2) + pow(b.m_position.mf_y, 2) + pow(b.m_position.mf_z, 2));
-			float magnC = sqrt(pow(c.m_position.mf_x, 2) + pow(c.m_position.mf_y, 2) + pow(c.m_position.mf_z, 2));
+			float magnA = sqrt(pow(a.m_position.mf_x, 2.0f) + pow(a.m_position.mf_y, 2.0f) + pow(a.m_position.mf_z, 2.0f));
+			float magnB = sqrt(pow(b.m_position.mf_x, 2.0f) + pow(b.m_position.mf_y, 2.0f) + pow(b.m_position.mf_z, 2.0f));
+			float magnC = sqrt(pow(c.m_position.mf_x, 2.0f) + pow(c.m_position.mf_y, 2.0f) + pow(c.m_position.mf_z, 2.0f));
 
 			a.m_position.mf_x *= (radius / magnA);
 			a.m_position.mf_y *= (radius / magnA);

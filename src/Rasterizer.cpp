@@ -72,7 +72,7 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 		Translation = Mat4::CreateTranslationMatrix({ cos(ggg / 10), 0.0f, 0.0f });
 
 		Mat4 Rotation;
-		Rotation = Mat4::CreateRotationMatrix(pAngle, 0, 0, 0);
+		Rotation = Mat4::CreateRotationMatrix(pAngle, 1, 1, 1);
 
 		Mat4 Scale;
 		Scale = Mat4::CreateScaleMatrix(0.8f);

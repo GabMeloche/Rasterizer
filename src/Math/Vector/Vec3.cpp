@@ -2,6 +2,7 @@
 #include <Math/Vector/Vec4.h>
 #include <math.h>
 #include <Color.h>
+#include <iostream>
 
 
 using namespace Math::Vector;
@@ -80,11 +81,8 @@ void Vec3::Normalize()
 
 float Vec3::Angle(Vec3& p_v1, Vec3& p_v2)
 {
-	float angle = Vec3::dotProduct(p_v1, p_v2);
-	float mag1 = p_v1.GetMagnitude();
-	float mag2 = p_v2.GetMagnitude();
-	angle /= mag1 * mag2;
-	return acos(angle);
+	float cos = (Vec3::dotProduct(p_v1, p_v2) / (p_v1.GetMagnitude() * p_v2.GetMagnitude()));
+	return cos;
 }
 
 Vec3 Vec3::operator*(float pf_scalar)

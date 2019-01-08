@@ -30,7 +30,7 @@ void App::Startup()
 {
 	Mesh* cube = new Mesh;
 	//Mesh* cube2 = new Mesh;
-	cube = Mesh::CreateCube(1);
+	cube = Mesh::CreateSphere(1);
 	//cube2 = Mesh::CreateCube(1);
 
 	Light light = Light();

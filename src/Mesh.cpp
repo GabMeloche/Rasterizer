@@ -12,15 +12,15 @@ Mesh* Mesh::CreateCube(const float p_Size)
 
 	float fPointPos = p_Size / 2.0f;
 
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -fPointPos, fPointPos, -fPointPos } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ fPointPos, fPointPos, -fPointPos } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ fPointPos, -fPointPos, -fPointPos } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -fPointPos, -fPointPos, -fPointPos } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -fPointPos, fPointPos, -fPointPos } }); //0
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ fPointPos, fPointPos, -fPointPos } }); //1
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ fPointPos, -fPointPos, -fPointPos } }); //2
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -fPointPos, -fPointPos, -fPointPos } }); //3
 
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -fPointPos, fPointPos, fPointPos } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ fPointPos, fPointPos, fPointPos } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ fPointPos, -fPointPos, fPointPos } });
-	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -fPointPos, -fPointPos, fPointPos } });
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -fPointPos, fPointPos, fPointPos } }); //4
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ fPointPos, fPointPos, fPointPos } }); //5
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ fPointPos, -fPointPos, fPointPos } }); //6
+	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -fPointPos, -fPointPos, fPointPos } }); //7
 
 	//mesh->makeTriangles();
 	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[0], 
@@ -127,8 +127,6 @@ Mesh * Mesh::CreateSphere(const float p_Size, const int precision)
 		mesh = mesh2;
 
 	}
-
-	std::cout << "number of triangle : " << mesh->m_triangles.size() << '\n';
 
 	for (int i = 0; i < mesh->m_triangles.size(); ++i)
 	{

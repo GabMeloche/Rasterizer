@@ -8,6 +8,7 @@ struct Triangle
 	Vertex m_v1;
 	Vertex m_v2;
 	Vertex m_v3;
+	Vec3 m_normal;
 	Color m_color;
 
 	Vertex& operator[](int p_index)

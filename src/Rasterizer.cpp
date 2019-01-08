@@ -173,6 +173,13 @@ void Rasterizer::FillTriangles(Vec3 & v1, Vec3 & v2, Vec3 & v3, Color& p_color, 
 	Vec3 vm2;
 	Vec3 point;
 
+	Vec3 e1 = v2 - v1;
+	Vec3 e2 = v3 - v1;
+
+	Vec3 cross = Vec3::crossProduct(e1, e2);
+	cross.Normalize();
+	p_triangle.m_normal = cross;
+
 	int maxY;
 	int minX;
 	int maxX;

@@ -1,7 +1,6 @@
 #include <Texture.h>
 #include <Color.h>
 #include <cassert>
-#include <iostream>
 
 Texture::Texture(unsigned int pui_w, unsigned int pui_h) : mui_w {pui_w}, mui_h {pui_h}
 {

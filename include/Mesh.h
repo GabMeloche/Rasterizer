@@ -15,7 +15,7 @@ public:
 	static Mesh* CreateSphere(const float p_Size, const int precision = 3);
 
 	static Vertex GetMiddlePoint(Vertex& v1, Vertex& v2);
-	void Normalize();
+	void CreateNormals();
 
 	std::vector<Triangle>& getTriangles();
 	std::vector<Vertex>& getVertices();

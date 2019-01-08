@@ -3,7 +3,6 @@
 #include <Vertex.h>
 #include <vector>
 #include <cmath>
-#include <iostream>
 #include <cassert>
 
 Mesh* Mesh::CreateCube(const float p_Size)
@@ -22,7 +21,6 @@ Mesh* Mesh::CreateCube(const float p_Size)
 	mesh->m_vertices.emplace_back(Vertex{ Vec3{ fPointPos, -fPointPos, fPointPos } }); //6
 	mesh->m_vertices.emplace_back(Vertex{ Vec3{ -fPointPos, -fPointPos, fPointPos } }); //7
 
-	//mesh->makeTriangles();
 	mesh->m_triangles.emplace_back(Triangle{ mesh->m_vertices[0], 
 											mesh->m_vertices[1], 
 											mesh->m_vertices[2] });
@@ -75,7 +73,7 @@ Mesh* Mesh::CreateCube(const float p_Size)
 		}
 	}
 
-	mesh->Normalize();
+	mesh->CreateNormals();
 	return mesh;
 }
 
@@ -137,7 +135,7 @@ Mesh * Mesh::CreateSphere(const float p_Size, const int precision)
 		}
 	}
 
-	mesh->Normalize();
+	mesh->CreateNormals();
 
 	return mesh;
 }
@@ -155,7 +153,7 @@ Vertex Mesh::GetMiddlePoint(Vertex& v1, Vertex& v2)
 	return middle;
 }
 
-void Mesh::Normalize()
+void Mesh::CreateNormals()
 {
 
 	for (int i = 0; i < m_triangles.size(); ++i)
@@ -166,8 +164,6 @@ void Mesh::Normalize()
 
 		Vec3 cross = Vec3::crossProduct(e1, e2);
 		cross.Normalize();
-		/*if (i % 2 == 1)
-			cross = cross * -1;*/
 
 		m_triangles[i].m_normal = cross;
 	}

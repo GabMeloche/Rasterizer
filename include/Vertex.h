@@ -5,6 +5,7 @@
 
 using namespace Math::Vector;
 using namespace Math::Matrix;
+
 struct Vertex
 {
 	Vec3 m_position;

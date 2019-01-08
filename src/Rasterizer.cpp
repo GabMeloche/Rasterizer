@@ -2,13 +2,7 @@
 #include <Vertex.h>
 #include <Triangle.h>
 #include <Math/Vector/Vec3.h>
-#include <iostream>
 #include <algorithm>
-
-
-Mat4 Ortho;
-float pAngle = 0;
-float ggg = 0;
 
 Rasterizer::Rasterizer()
 {
@@ -42,23 +36,19 @@ void Rasterizer::setScene(Scene * p_scene)
 	m_scene = p_scene;
 }
 
-void Rasterizer::Convert2Dto3D(Vertex& m_inPoint)
+void Rasterizer::setRenderer(SDL_Renderer* p_renderer)
 {
-	std::cout << m_inPoint.m_position.mf_x << '\n';
-	m_inPoint.m_position.mf_x = ((m_inPoint.m_position.mf_x / 5.0f) + 1.0f) * 0.5f * 1024.0f;
-	m_inPoint.m_position.mf_y = 768.0f - ((m_inPoint.m_position.mf_y / 5.0f) + 1.0f) * 0.5f * 768.0f;
-	std::cout << m_inPoint.m_position.mf_x << '\n';
+	m_renderer = p_renderer;
 }
 
 void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 {
+	static float pAngle = 0.0f;
 	//calculate rotation angle
 	if (pAngle < 360.0f)
 		pAngle += 2.0f;
 	else
 		pAngle = 2.0f;
-
-	ggg += 1;
 
 	std::vector<Entity*>& allEntities = p_scene->getEntities();
 	size_t eSize = allEntities.size();
@@ -69,7 +59,7 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 	{
 		//Calculate Transformation Matrix
 		Mat4 Translation;
-		Translation = Mat4::CreateTranslationMatrix({ cos(ggg / 10), 0.0f, 0.0f });
+		Translation = Mat4::CreateTranslationMatrix({ static_cast<float>(i), 0.0f, 0.0f });
 
 		Mat4 Rotation;
 		Rotation = Mat4::CreateRotationMatrix(pAngle, 1, 1, 1);
@@ -82,7 +72,7 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 
 		//find projection matrix using the first triangle
 		Mat4 Proj;
-		Proj = Mat4::Vec2dOrtho(*p_scene->getEntities()[i]->getMesh()->getTriangles()[0][0].m_pos, 2);
+		Proj = Mat4::Vec2dOrtho(*allEntities[i]->getMesh()->getTriangles()[0][0].m_pos, 2);
 
 		size_t tSize = allEntities[i]->getMesh()->getTriangles().size();
 		//FOR EACH TRIANGLE IN THE MESH
@@ -90,7 +80,7 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 		{
 			//Get Current triangle
 			int m_width = p_Target.mui_w;
-			Triangle& currTriangle = p_scene->getEntities()[i]->getMesh()->getTriangles()[k];
+			Triangle& currTriangle = allEntities[i]->getMesh()->getTriangles()[k];
 
 
 			//LOOP FOR EACH LINE OF THE TRIANGLE
@@ -126,8 +116,8 @@ bool Rasterizer::ZBuffer(unsigned int p_x, unsigned int p_y, float p_z)
 		m_zBuffer[p_x][p_y] = p_z;
 		return true;
 	}
-	else
-		return false;
+
+	return false;
 }
 
 void Rasterizer::ClearZBuffer() 
@@ -226,12 +216,12 @@ void Rasterizer::FillTriangles(Vec3 & v1, Vec3 & v2, Vec3 & v3, Color& p_color, 
 						light.CalculateLight(x, y, m_texture, p_triangle, tmpZ);
 					}
 					Color* tmpColor = &m_texture->GetPixelColor(x, y);
-					SDL_SetRenderDrawColor(p_renderer, 
+					SDL_SetRenderDrawColor(m_renderer, 
 						tmpColor->ucm_r, 
 						tmpColor->ucm_g, 
 						tmpColor->ucm_b, 
 						tmpColor->ucm_a);
-					SDL_RenderDrawPoint(p_renderer, x, y);
+					SDL_RenderDrawPoint(m_renderer, x, y);
 				}
 			}
 		}

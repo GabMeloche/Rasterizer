@@ -8,6 +8,7 @@
 
 Mat4 Ortho;
 float pAngle = 0;
+float ggg = 0;
 
 Rasterizer::Rasterizer()
 {
@@ -57,6 +58,8 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 	else
 		pAngle = 2.0f;
 
+	ggg += 1;
+
 	std::vector<Entity*>& allEntities = p_scene->getEntities();
 	size_t eSize = allEntities.size();
 	
@@ -66,10 +69,10 @@ void Rasterizer::RenderScene(Scene* p_scene, Texture& p_Target)
 	{
 		//Calculate Transformation Matrix
 		Mat4 Translation;
-		Translation = Mat4::CreateTranslationMatrix({ 0.0f, -1.0f, -1.0f });
+		Translation = Mat4::CreateTranslationMatrix({ cos(ggg / 10), 0.0f, 0.0f });
 
 		Mat4 Rotation;
-		Rotation = Mat4::CreateRotationMatrix(pAngle, 0, 1, 1);
+		Rotation = Mat4::CreateRotationMatrix(pAngle, 0, 0, 0);
 
 		Mat4 Scale;
 		Scale = Mat4::CreateScaleMatrix(0.8f);
